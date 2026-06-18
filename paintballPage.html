@@ -1,0 +1,98 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <title>harrisryder</title>
+    <meta name="description" content="Harris Ryder">
+    <meta name="keywords" content="Harris Ryder">
+
+
+    <link rel="icon" type="image/x-icon" href="images/favicon.png">
+
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="/src/main.ts"></script>
+</head>
+
+
+
+
+<body a="light">
+    <main class="page-content" aria-label="Content">
+
+
+
+        <div class="w">
+
+            <a href="index.html">..</a>
+
+            <p class="post-meta">
+                <time datetime="2022-09-18 00:00:00 +0000">2022-09-18</time>
+            </p>
+
+            <h1>Automated Paint Ball Gun</h1>
+
+            
+
+            <p>This was one of those "what if?" ideas I actually committed to. The idea is quite simple, buy a cheap paint ball gun, mount it on to a turret I cheaply made from spare plastic and stepper motors. Make the turret stupidly accurate and see if I can make any decent art.</p>
+
+                        
+
+
+
+            <hr data-content="Concept Design" />
+            <p><img src="images/paintball/paintball1.png" alt="Paint ball Project" /></p>
+            <p><img src="images/paintball/paintball3.png" alt="Paint ball Project" /></p>
+            <p><img src="images/paintball/paintball2.png" alt="Paint ball Project" /></p>
+            <p>The gun is made out of entirely 3D printed plastic parts (excluding bearings, motors etc). So much of the design was jigsawed together due to the 3D print size limits. A simple color key is used, blue/orange are 3D printed and teal is electronics.</p>
+
+            <p>Some key features highlighted:</p>
+            <ol>
+                <li>1. Vertical axis motor mount - Works on a pulley system, with a gear ratio of </li>
+                <li>2. Horizontal axis motor mount - Employs identical pulley system as vertical axis motor. </li>
+                <li>3. Three Motors Controllers and an Arduino - The design has 3 motors, two for motion and one to pull the trigger.</li>
+                <li>4. Vertical axis limit switch - Allows the turret to home.</li>
+                <li>5. Laser pointer adaptor - A quick fit laser pointer attachment so that I can verify the guns movements before starting an actual print.</li>
+            </ol>
+
+            <p><img src="images/paintball/paintball4.png" alt="Paint ball Project" /></p>
+            <p>This is the first sub-assembly I created for this design. Instead of automating the design such as by-passing the trigger system and using an electronically controlled air valve, I opted to go for a more roundabout approach using a stepper motor to drive a lead screw. I did this because I wanted a contraption that resembled something out of Mad Max. </p>
+            <p> Those two grey rings are the bearings. They are complete overkill, the look cool though and add stability to the design.</p>
+            
+            <hr data-content="Actual Design" />
+            <p><img src="images/paintball/paintball5.png" alt="Paint ball Project" /></p>
+            <p><img src="images/paintball/paintball6.png" alt="Paint ball Project" /></p>
+            <p><img src="images/paintball/paintball7.png" alt="Paint ball Project" /></p>
+
+            <hr data-content="Software" />
+            <p>Software was written in the using the arduino language. The software logic at this stage is simple, the inputs include:</p>
+            <ol>
+                <li>Canvas height</li>
+                <li>Canvas width </li>
+                <li>Turrets x position from the bottom left corner of the Canvas</li>
+                <li>Turrets y position from the bottom left corner of the Canvas</li>
+
+            </ol>
+            <p> This input then allows me to compute for a given x,z coordinate on the canvas what angle change is needed by the turret to aim.</p>
+
+            <p> The resolution is determined by the smallest angle I can make the turret turn (vertically & horizontally). The gear ratio between the motor cog and the large cog is 150:10. Using the stepper drivers I am microstepping by </p>
+
+
+            <hr data-content="Videos" />
+            <p><img src="images/paintball/video1.png" alt="Paint ball Project" /></p>
+            <a href="https://youtube.com/shorts/OoE_Ep4ovDs?feature=share">Testing the trigger system</a> </br>
+            <a href="https://youtube.com/shorts/3OJhmOg1Wus?feature=share">Testing the movement system</a> </br>
+            
+
+
+        </div>
+    </main>
+
+
+
+
+</body>
+
+</html>
