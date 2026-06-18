@@ -3,12 +3,12 @@
 <html>
 
 <head>
-    <title>harrisryder</title>
+    <title>Harris Ryder</title>
     <meta name="description" content="Harris Ryder">
     <meta name="keywords" content="Harris Ryder">
 
 
-    <link rel="icon" type="image/x-icon" href="images/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
 
 
@@ -28,15 +28,13 @@
 
             <a href="index.html">..</a>
 
-            <p class="post-meta">
-                <time datetime="2022-09-18 00:00:00 +0000">2022-09-18</time>
-            </p>
+            <h1>Automated Paintball Gun</h1>
 
-            <h1>Automated Paint Ball Gun</h1>
+            <time datetime="2022-09-18 00:00:00 +0000">2022-09-18</time>
 
             
 
-            <p>This was one of those "what if?" ideas I actually committed to. The idea is quite simple, buy a cheap paint ball gun, mount it on to a turret I cheaply made from spare plastic and stepper motors. Make the turret stupidly accurate and see if I can make any decent art.</p>
+            <p>I wanted to know if a machine could make decent paintball art. So I bought a cheap gun, built a turret out of spare parts and stepper motors, and tried to make it accurate enough to find out.</p>
 
                         
 
@@ -46,20 +44,20 @@
             <p><img src="images/paintball/paintball1.png" alt="Paint ball Project" /></p>
             <p><img src="images/paintball/paintball3.png" alt="Paint ball Project" /></p>
             <p><img src="images/paintball/paintball2.png" alt="Paint ball Project" /></p>
-            <p>The gun is made out of entirely 3D printed plastic parts (excluding bearings, motors etc). So much of the design was jigsawed together due to the 3D print size limits. A simple color key is used, blue/orange are 3D printed and teal is electronics.</p>
+            <p>The gun is made entirely from 3D printed parts (excluding bearings, motors, etc). Much of the design was split into sections due to print bed size limits. Blue/orange parts are 3D printed, teal is electronics.</p>
 
-            <p>Some key features highlighted:</p>
+            <p>Key features:</p>
             <ol>
-                <li>1. Vertical axis motor mount - Works on a pulley system, with a gear ratio of </li>
-                <li>2. Horizontal axis motor mount - Employs identical pulley system as vertical axis motor. </li>
-                <li>3. Three Motors Controllers and an Arduino - The design has 3 motors, two for motion and one to pull the trigger.</li>
-                <li>4. Vertical axis limit switch - Allows the turret to home.</li>
-                <li>5. Laser pointer adaptor - A quick fit laser pointer attachment so that I can verify the guns movements before starting an actual print.</li>
+                <li>Vertical axis motor mount runs on a pulley system with a gear ratio of 150:10.</li>
+                <li>Horizontal axis motor mount uses the same pulley system.</li>
+                <li>Three motor controllers and an Arduino. Two motors for motion, one to pull the trigger.</li>
+                <li>Vertical axis limit switch lets the turret home itself.</li>
+                <li>Laser pointer adaptor is a quick-fit attachment to verify aim before a real print.</li>
             </ol>
 
             <p><img src="images/paintball/paintball4.png" alt="Paint ball Project" /></p>
-            <p>This is the first sub-assembly I created for this design. Instead of automating the design such as by-passing the trigger system and using an electronically controlled air valve, I opted to go for a more roundabout approach using a stepper motor to drive a lead screw. I did this because I wanted a contraption that resembled something out of Mad Max. </p>
-            <p> Those two grey rings are the bearings. They are complete overkill, the look cool though and add stability to the design.</p>
+            <p>The first sub-assembly. Rather than bypassing the trigger with an electronically controlled air valve, I used a stepper motor driving a lead screw to pull it mechanically.</p>
+            <p>The two grey rings are bearings. Oversized for this application, but they add stability.</p>
             
             <hr data-content="Actual Design" />
             <p><img src="images/paintball/paintball5.png" alt="Paint ball Project" /></p>
@@ -67,7 +65,7 @@
             <p><img src="images/paintball/paintball7.png" alt="Paint ball Project" /></p>
 
             <hr data-content="Software" />
-            <p>Software was written in the using the arduino language. The software logic at this stage is simple, the inputs include:</p>
+            <p>Software was written using the Arduino language. The logic is straightforward. Inputs:</p>
             <ol>
                 <li>Canvas height</li>
                 <li>Canvas width </li>
@@ -77,13 +75,14 @@
             </ol>
             <p> This input then allows me to compute for a given x,z coordinate on the canvas what angle change is needed by the turret to aim.</p>
 
-            <p> The resolution is determined by the smallest angle I can make the turret turn (vertically & horizontally). The gear ratio between the motor cog and the large cog is 150:10. Using the stepper drivers I am microstepping by </p>
+            <p> The resolution is determined by the smallest angle the turret can turn (vertically and horizontally). The gear ratio between the motor cog and the large cog is 150:10. Using the stepper drivers I am microstepping by 1/16, which gives 48,000 steps per full turret rotation, giving a resolution of 0.0075 degrees per step.</p>
 
 
             <hr data-content="Videos" />
-            <p><img src="images/paintball/video1.png" alt="Paint ball Project" /></p>
-            <a href="https://youtube.com/shorts/OoE_Ep4ovDs?feature=share">Testing the trigger system</a> </br>
-            <a href="https://youtube.com/shorts/3OJhmOg1Wus?feature=share">Testing the movement system</a> </br>
+            <p>Testing the trigger system</p>
+            <iframe width="100%" height="400" src="https://www.youtube.com/embed/OoE_Ep4ovDs" frameborder="0" allowfullscreen></iframe>
+            <p>Testing the movement system</p>
+            <iframe width="100%" height="400" src="https://www.youtube.com/embed/3OJhmOg1Wus" frameborder="0" allowfullscreen></iframe>
             
 
 
