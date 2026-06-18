@@ -1,4 +1,11 @@
 
+@font-face {
+    font-family: 'LLMono';
+    src: url('/fonts/LLMonoBook.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
 html,
 body {
     background: white
@@ -10,12 +17,13 @@ html {
 
 body {
     color: black;
-    font-family: monospace;
-    font-size: 16px;
-    line-height: 1.4;
+    font-family: 'LLMono', monospace;
+    font-size: 15px;
+    line-height: 1.9;
     margin: 0;
     min-height: 100%;
-    overflow-wrap: break-word
+    overflow-wrap: break-word;
+    text-transform: uppercase
 }
 
 .post-meta {
@@ -24,13 +32,13 @@ body {
 
 h1 {
     font-size: 1rem;
-    font-weight: 300;
+    font-weight: normal;
     margin-bottom: 0.1rem
 }
 
 time {
     display: block;
-    margin-bottom: 2rem
+    margin-bottom: 3rem
 }
 
 h2,
@@ -49,6 +57,23 @@ p {
     margin: 1rem 0
 }
 
+ul {
+    list-style: none;
+    padding-left: 0
+}
+
+ul > ul {
+    margin-bottom: 2rem
+}
+
+.sections {
+    margin-top: 0.2rem
+}
+
+.sections > li + li {
+    margin-top: 2rem
+}
+
 li {
     margin: 0.4rem 0
 }
@@ -60,7 +85,7 @@ li {
 .w {
     max-width: 640px;
     margin: 0 auto;
-    padding: 4rem 2rem
+    padding: 4rem 2.5rem
 }
 
 hr {
