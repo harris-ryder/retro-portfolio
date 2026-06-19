@@ -101,24 +101,23 @@ export default function Home() {
   const browserMinimized = browser?.minimized ?? false
 
   return (
-    <main aria-label="Content" className="flex justify-end items-center">
+    <main aria-label="Content" className="flex justify-end items-center text-[15px] leading-[1.9]">
       <div className="px-10 py-8 lg:pr-16">
         <header>
-          <h1>Harris Ryder</h1>
+          <h1 className="font-normal mb-[0.1rem] text-[1rem]">Harris Ryder</h1>
         </header>
-        <ul className="sections">
-          <li>Design Engineer at <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer">Nothing</a> · prev <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer">Workflow</a></li>
+        <ul className="list-none pl-0 mt-[0.2rem] [&>li+li]:mt-8">
+          <li>Design Engineer at <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer" className="underline">Nothing</a> · prev <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="underline">Workflow</a></li>
           <li>
-            <a href="https://x.com/isHarrisRyder" target="_blank" rel="noopener noreferrer">X</a>
+            <a href="https://x.com/isHarrisRyder" target="_blank" rel="noopener noreferrer" className="underline">X</a>
             {' · '}
-            <a href="mailto:harrisryder321@gmail.com">Email</a>
+            <a href="mailto:harrisryder321@gmail.com" className="underline">Email</a>
             {' · '}
-            <a href="https://www.linkedin.com/in/harris-ryder/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://www.linkedin.com/in/harris-ryder/" target="_blank" rel="noopener noreferrer" className="underline">LinkedIn</a>
             {' · '}
-            <a href="https://github.com/harris-ryder" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/harris-ryder" target="_blank" rel="noopener noreferrer" className="underline">GitHub</a>
           </li>
-          <li>projects</li>
-          <ul>
+          <ul className="list-none pl-0 mt-8 mb-8 [&>li]:my-[0.4rem]">
             <li>2025 <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => openInBrowser('ModelNote', 'https://modelnote.io/')}>ModelNote</button></li>
             <li>2025 <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => openInBrowser('Everything', 'https://everything.harris-ryder.com/')}>Everything</button></li>
             <li>2025 <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => openInBrowser('Crema', 'https://singyulam.com/crema')}>Crema</button> (WIP)</li>
