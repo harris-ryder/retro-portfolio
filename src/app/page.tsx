@@ -107,7 +107,7 @@ export default function Home() {
           <h1>Harris Ryder</h1>
         </header>
         <ul className="sections">
-          <li>Design Engineer at <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer">Nothing.Tech</a> · prev <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer">Workflow Design</a></li>
+          <li>Design Engineer at <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer">Nothing</a> · prev <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer">Workflow</a></li>
           <li>
             <a href="https://x.com/isHarrisRyder" target="_blank" rel="noopener noreferrer">X</a>
             {' · '}
