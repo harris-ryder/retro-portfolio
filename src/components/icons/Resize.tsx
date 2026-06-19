@@ -1,0 +1,8 @@
+export default function Resize({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" className={className}>
+      <rect x="3.5" y="3.5" width="12" height="12" fill="white" stroke="black"/>
+      <rect x="0.5" y="0.5" width="9" height="9" fill="white" stroke="black"/>
+    </svg>
+  )
+}

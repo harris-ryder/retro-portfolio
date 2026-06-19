@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'ChicagoKare';
+    src: url('/fonts/ChicagoKare-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.project-content {
+    font-family: var(--font-vt323), monospace;
+    text-transform: none;
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+}
+
+@layer base {
+    html, body {
+        @apply bg-white;
+    }
+
+    html {
+        @apply h-full;
+    }
+
+    body {
+        @apply text-black m-0 min-h-full break-words uppercase;
+        font-family: 'ChicagoKare', monospace;
+        font-size: 15px;
+        line-height: 1.9;
+    }
+
+    a {
+        @apply underline;
+    }
+
+    h1 {
+        @apply font-normal mb-[0.1rem];
+        font-size: 1rem;
+    }
+
+    time {
+        @apply block mb-12;
+    }
+
+    h2, h3, h4, h5, h6 {
+        @apply mt-12;
+    }
+
+    hr {
+        @apply text-center border-0 my-8;
+        color: inherit;
+    }
+
+    hr:before {
+        content: "/// ";
+    }
+
+    hr:after {
+        content: attr(data-content) " ///";
+    }
+
+    p {
+        @apply my-4;
+    }
+
+    ul {
+        @apply list-none pl-0;
+    }
+
+    ul > ul {
+        @apply mb-8;
+    }
+
+    .sections {
+        @apply mt-[0.2rem];
+    }
+
+    .sections > li + li {
+        @apply mt-8;
+    }
+
+    li {
+        @apply my-[0.4rem];
+    }
+
+    *:target {
+        background: yellow;
+    }
+
+    table {
+        @apply w-full;
+    }
+
+    table, th, td {
+        @apply border border-black border-collapse p-[0.4rem];
+    }
+
+    code {
+        @apply text-white bg-black;
+    }
+
+    div.highlighter-rouge code {
+        @apply block overflow-x-auto whitespace-pre-wrap p-4;
+    }
+
+    blockquote {
+        @apply italic border border-black p-4;
+    }
+
+    blockquote p {
+        @apply m-0;
+    }
+
+    img {
+        @apply max-w-full block mx-auto;
+    }
+}
