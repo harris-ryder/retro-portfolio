@@ -101,7 +101,7 @@ export default function Home() {
   const browserMinimized = browser?.minimized ?? false
 
   return (
-    <main aria-label="Content" className="flex justify-end items-center text-[15px] leading-[1.9]">
+    <main aria-label="Content" className="flex justify-center md:justify-end items-center text-[15px] leading-[1.9]">
       <div className="px-10 py-8 lg:pr-16">
         <header>
           <h1 className="font-normal mb-[0.1rem] text-[1rem]">Harris Ryder</h1>
