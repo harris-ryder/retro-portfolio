@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
 @font-face {
-    font-family: 'Velvelyne';
-    src: url('/fonts/Velvelyne-Regular.woff2') format('woff2');
+    font-family: 'ABCDiatype';
+    src: url('/fonts/ABCDiatypeSemiMono-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
+
 .project-content {
-    font-family: 'Velvelyne', sans-serif;
+    font-family: 'ABCDiatype', sans-serif;
     text-transform: none;
     font-size: 16px;
     line-height: 1.7;
@@ -16,6 +17,10 @@
 }
 
 @layer base {
+    * {
+        font-family: 'ABCDiatype', sans-serif;
+    }
+
     html, body {
         @apply bg-white;
     }
@@ -26,7 +31,7 @@
 
     body {
         @apply text-black m-0 min-h-full break-words;
-        font-family: 'Velvelyne', sans-serif;
+        font-family: 'ABCDiatype', sans-serif;
         font-size: 15px;
         line-height: 1.9;
     }

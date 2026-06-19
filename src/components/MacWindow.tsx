@@ -85,7 +85,7 @@ export default function MacWindow({ project, cascadeIndex, zIndex, onClose, onMi
       onMouseDown={onFocus}
       style={{
         top: `calc(8vh + ${cascadeIndex * CASCADE}px)`,
-        right: `calc(2rem + ${cascadeIndex * CASCADE}px)`,
+        left: `calc(2rem + ${cascadeIndex * CASCADE}px)`,
         zIndex,
       }}
     >
