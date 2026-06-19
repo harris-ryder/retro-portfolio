@@ -102,7 +102,7 @@ export default function Home() {
 
   return (
     <main aria-label="Content" className="flex justify-end items-center">
-      <div className="px-10 py-16 lg:pr-32">
+      <div className="px-10 py-8 lg:pr-16">
         <header>
           <h1>Harris Ryder</h1>
         </header>
