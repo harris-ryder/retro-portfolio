@@ -104,9 +104,9 @@ export default function Home() {
     <main aria-label="Content" className="flex justify-center md:justify-end items-center text-[15px] leading-[1.9]">
       <div className="px-10 py-8 lg:pr-16">
         <header>
-          <h1 className="font-normal mb-[0.1rem] text-[1rem]">Harris Ryder</h1>
+          <h1 className="font-normal text-[1rem]">Harris Ryder</h1>
         </header>
-        <ul className="list-none pl-0 mt-[0.2rem] [&>li+li]:mt-8">
+        <ul className="list-none pl-0 [&>li+li]:mt-8">
           <li>Design Engineer at <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer" className="underline">Nothing</a> · prev <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="underline">Workflow</a></li>
           <li>
             <a href="https://x.com/isHarrisRyder" target="_blank" rel="noopener noreferrer" className="underline">X</a>

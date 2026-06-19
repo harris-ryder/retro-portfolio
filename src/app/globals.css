@@ -18,12 +18,5 @@
     a {
         @apply underline;
     }
-}
 
-.project-content {
-    font-family: 'ABCDiatype', sans-serif;
-    text-transform: none;
-    font-size: 16px;
-    line-height: 1.7;
-    letter-spacing: 0.03em;
 }

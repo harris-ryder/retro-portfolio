@@ -115,9 +115,9 @@ export default function MacWindow({ project, cascadeIndex, zIndex, onClose, onMi
           ref={contentRef}
           onScroll={updateScroll}
         >
-          <h1>{project.title}</h1>
-          <time dateTime={project.date}>{project.date}</time>
-          <div className="project-content">{project.content}</div>
+          <h1 className="font-normal text-[1rem]">{project.title}</h1>
+          <time dateTime={project.date} className="block mb-8 text-[15px] leading-[1.9]">{project.date}</time>
+          <div className="text-[15px] leading-[1.9] [&_p]:my-4 [&_ol]:my-4 [&_li]:my-1 [&_iframe]:my-8 [&_img]:w-full">{project.content}</div>
         </div>
 
         {/* Vertical scrollbar */}
