@@ -51,7 +51,7 @@ export default function Home() {
 
   return (
     <main aria-label="Content">
-      <div className="max-w-[640px] mx-auto px-10 py-16">
+      <div className="px-10 py-16 ml-[66.67%]">
         <header>
           <h1>Harris Ryder</h1>
         </header>
