@@ -21,6 +21,18 @@ type BrowserState = {
   activeTabId: string
 }
 
+const browserLinks = [
+  { year: '2025', title: 'ModelNote', url: 'https://modelnote.io/' },
+  { year: '2025', title: 'Everything', url: 'https://everything.harris-ryder.com/' },
+  { year: '2025', title: 'Crema', label: 'Crema (WIP)', url: 'https://singyulam.com/crema' },
+  { year: '2024', title: 'CRT Shader', url: 'https://shader-crt.harris-ryder.com/' },
+  { year: '2024', title: 'Planet Shader', url: 'https://advanced-planet-shader-git-main-harris-ryders-projects.vercel.app/' },
+  { year: '2025', title: 'Architecture Portfolio', url: 'https://www.letiryder.com/' },
+  { year: '2024', title: 'Old portfolio', url: 'https://portfolio-six-hazel-78.vercel.app/' },
+]
+
+const itemBtn = 'bg-transparent p-0 underline cursor-pointer [text-transform:inherit] text-left'
+
 export default function Home() {
   const [windows, setWindows] = useState<WinState[]>([])
   const [zOrder, setZOrder] = useState<string[]>([])
@@ -55,7 +67,6 @@ export default function Home() {
         setZOrder(zo => [...zo, 'browser'])
         return { open: true, minimized: false, cascade, tabs: [{ id: tabId, title, url }], activeTabId: tabId }
       }
-      // if tab with same url already exists, just focus it
       const existing = prev.tabs.find(t => t.url === url)
       if (existing) {
         setZOrder(zo => [...zo.filter(i => i !== 'browser'), 'browser'])
@@ -95,42 +106,50 @@ export default function Home() {
   }
 
   const browserZIndex = 100 + zOrder.indexOf('browser')
-  const allMinimized = [
-    ...windows.filter(w => w.minimized),
-  ]
+  const allMinimized = windows.filter(w => w.minimized)
   const browserMinimized = browser?.minimized ?? false
 
   return (
     <main aria-label="Content" className="flex justify-center md:justify-end items-center text-[15px] leading-[1.9]">
       <div className="px-10 py-8 lg:pr-16">
-        <header>
+        <header className="mb-8">
           <h1 className="font-normal text-[1rem]">Harris Ryder</h1>
         </header>
-        <ul className="list-none pl-0 [&>li+li]:mt-8">
-          <li>Design Engineer at <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer" className="underline">Nothing</a> · prev <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="underline">Workflow</a></li>
-          <li>
-            <a href="https://x.com/isHarrisRyder" target="_blank" rel="noopener noreferrer" className="underline">X</a>
-            {' · '}
-            <a href="mailto:harrisryder321@gmail.com" className="underline">Email</a>
-            {' · '}
-            <a href="https://www.linkedin.com/in/harris-ryder/" target="_blank" rel="noopener noreferrer" className="underline">LinkedIn</a>
-            {' · '}
-            <a href="https://github.com/harris-ryder" target="_blank" rel="noopener noreferrer" className="underline">GitHub</a>
-          </li>
-          <ul className="list-none pl-0 mt-8 mb-8 [&>li]:my-[0.4rem]">
-            <li>2025 <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => openInBrowser('ModelNote', 'https://modelnote.io/')}>ModelNote</button></li>
-            <li>2025 <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => openInBrowser('Everything', 'https://everything.harris-ryder.com/')}>Everything</button></li>
-            <li>2025 <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => openInBrowser('Crema', 'https://singyulam.com/crema')}>Crema</button> (WIP)</li>
-            <li>2024 <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => openInBrowser('CRT Shader', 'https://shader-crt.harris-ryder.com/')}>CRT Shader</button></li>
-            <li>2024 <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => openInBrowser('Planet Shader', 'https://advanced-planet-shader-git-main-harris-ryders-projects.vercel.app/')}>Planet Shader</button></li>
-            <li>2025 <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => openInBrowser('Architecture Portfolio', 'https://www.letiryder.com/')}>Architecture Portfolio</button></li>
-            <li>2024 <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => openInBrowser('Old portfolio', 'https://portfolio-six-hazel-78.vercel.app/')}>Old portfolio</button></li>
-            {projects.map(p => (
-              <li key={p.slug}>
-                {p.date} <button className="bg-transparent p-0 underline cursor-pointer [text-transform:inherit]" onClick={() => open(p.slug)}>{p.title}</button>
-              </li>
-            ))}
-          </ul>
+
+        <p className="mb-8">
+          Design Engineer at{' '}
+          <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer">Nothing</a>
+          {' · prev '}
+          <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer">Workflow</a>
+        </p>
+
+        <p className="mb-8">
+          <a href="https://x.com/isHarrisRyder" target="_blank" rel="noopener noreferrer">X</a>
+          {' · '}
+          <a href="mailto:harrisryder321@gmail.com">Email</a>
+          {' · '}
+          <a href="https://www.linkedin.com/in/harris-ryder/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          {' · '}
+          <a href="https://github.com/harris-ryder" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </p>
+
+        <ul className="list-none pl-0 [&>li]:my-[0.4rem]">
+          {browserLinks.map(link => (
+            <li key={link.url} className="flex gap-[2ch]">
+              <span className="tabular-nums w-[4ch] shrink-0">{link.year}</span>
+              <button className={itemBtn} onClick={() => openInBrowser(link.title, link.url)}>
+                {link.label ?? link.title}
+              </button>
+            </li>
+          ))}
+          {projects.map(p => (
+            <li key={p.slug} className="flex gap-[2ch]">
+              <span className="tabular-nums w-[4ch] shrink-0">{p.date}</span>
+              <button className={itemBtn} onClick={() => open(p.slug)}>
+                {p.title}
+              </button>
+            </li>
+          ))}
         </ul>
       </div>
 
