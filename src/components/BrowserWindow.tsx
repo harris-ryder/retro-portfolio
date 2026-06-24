@@ -128,6 +128,13 @@ export default function BrowserWindow({ tabs, activeTabId, cascadeIndex, zIndex,
           />
         ))}
       </div>
+
+      {/* URL bar */}
+      <div className="shrink-0 border-t border-black px-3 h-[26px] flex items-center bg-white overflow-hidden">
+        <span className="text-[13px] text-black truncate select-text font-mono">
+          {tabs.find(t => t.id === activeTabId)?.url ?? ''}
+        </span>
+      </div>
     </div>
   )
 }
