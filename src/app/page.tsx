@@ -3,13 +3,13 @@ import { projects } from '@/data/projects'
 import { TypewriterItem } from '@/components/TypewriterItem'
 
 const browserLinks = [
-  { year: '2025', title: 'ModelNote', tagline: 'A web review tool for 3D models', url: 'https://modelnote.io/' },
-  { year: '2025', title: 'Everything', tagline: 'A gallery of interactive web experiments', url: 'https://everything.harris-ryder.com/' },
-  { year: '2025', title: 'Crema', label: 'Crema (WIP)', tagline: 'A specialty coffee discovery app', url: 'https://singyulam.com/crema' },
-  { year: '2024', title: 'CRT Shader', tagline: 'A retro CRT monitor shader effect in WebGL', url: 'https://shader-crt.harris-ryder.com/' },
-  { year: '2024', title: 'Planet Shader', tagline: 'A procedural planet renderer in WebGL', url: 'https://advanced-planet-shader-git-main-harris-ryders-projects.vercel.app/' },
-  { year: '2025', title: 'Architecture Portfolio', tagline: 'Portfolio site for architect Leti Ryder', url: 'https://www.letiryder.com/' },
-  { year: '2024', title: 'Old portfolio', tagline: "Harris's previous portfolio site", url: 'https://portfolio-six-hazel-78.vercel.app/' },
+  { year: '2025', title: 'ModelNote', tagline: 'A review tool I built for 3D model feedback', url: 'https://modelnote.io/' },
+  { year: '2025', title: 'Everything', tagline: 'Where I dump fun web experiments', url: 'https://everything.harris-ryder.com/' },
+  { year: '2025', title: 'Crema', label: 'Crema (WIP)', tagline: 'A coffee app I\'m building with a friend', url: 'https://singyulam.com/crema' },
+  { year: '2024', title: 'CRT Shader', tagline: 'A CRT monitor shader I wrote in WebGL', url: 'https://shader-crt.harris-ryder.com/' },
+  { year: '2024', title: 'Planet Shader', tagline: 'A procedural planet shader I wrote in WebGL', url: 'https://advanced-planet-shader-git-main-harris-ryders-projects.vercel.app/' },
+  { year: '2025', title: 'Architecture Portfolio', tagline: 'A portfolio I built for my sister Leti', url: 'https://www.letiryder.com/' },
+  { year: '2024', title: 'Old portfolio', tagline: 'My old portfolio before this one', url: 'https://portfolio-six-hazel-78.vercel.app/' },
 ]
 
 const itemLink = 'no-underline cursor-pointer'

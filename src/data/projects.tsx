@@ -12,7 +12,7 @@ export const projects: Project[] = [
   {
     slug: 'paintball',
     title: 'Automated Paintball Gun',
-    tagline: 'A motorised turret that paints canvases with paintballs',
+    tagline: 'I built a motorised turret that paints with a paintball gun',
     date: '2023',
     content: (
       <>
@@ -58,7 +58,7 @@ export const projects: Project[] = [
   {
     slug: 'infinity',
     title: 'Infinity Ring',
-    tagline: 'Gymnastic rings with a hollow core for neat strap storage',
+    tagline: 'A company I founded making gymnastic rings with built-in strap storage',
     date: '2022',
     content: (
       <>
@@ -80,7 +80,7 @@ export const projects: Project[] = [
   {
     slug: 'van',
     title: 'Building a Campervan',
-    tagline: 'A Toyota Hiace converted with solar, cabinets, and a bed',
+    tagline: 'I converted a Toyota Hiace into a campervan from scratch',
     date: '2021',
     content: (
       <>
@@ -109,7 +109,7 @@ export const projects: Project[] = [
   {
     slug: 'doge',
     title: 'Doge Rocket App',
-    tagline: 'A Flappy Bird-style game with SpaceX-inspired rocket physics',
+    tagline: 'A Flappy Bird clone I built with SpaceX rocket physics',
     date: '2022',
     content: (
       <>
@@ -123,7 +123,7 @@ export const projects: Project[] = [
   {
     slug: 'masks',
     title: 'Making Masks for the NHS',
-    tagline: '3D printed face shields produced for NHS staff during Covid',
+    tagline: 'I 3D printed face shields for NHS staff during Covid',
     date: '2020',
     content: (
       <>
@@ -145,7 +145,7 @@ export const projects: Project[] = [
   {
     slug: 'centrifuge',
     title: 'Hawksley Centrifuge Design',
-    tagline: 'A lab centrifuge designed from brief to certified prototype',
+    tagline: 'I designed a lab centrifuge from brief to certified prototype',
     date: '2019',
     content: (
       <>
@@ -167,7 +167,7 @@ export const projects: Project[] = [
   {
     slug: 'muracle',
     title: 'Automated Mural Painter',
-    tagline: 'A robot that paints large-scale murals on walls autonomously',
+    tagline: 'My final year project, a robot that paints murals on walls',
     date: '2019',
     content: (
       <>
@@ -197,7 +197,7 @@ export const projects: Project[] = [
   {
     slug: 'panl',
     title: 'Panl, the Frustrating Puzzle App',
-    tagline: 'A sliding-tile puzzle game built from scratch in Swift',
+    tagline: 'I taught myself Swift to build this sliding-tile puzzle app',
     date: '2019',
     content: (
       <>
@@ -211,7 +211,7 @@ export const projects: Project[] = [
   {
     slug: 'vacuum',
     title: 'Designing a Roomba-like Vacuum',
-    tagline: 'A Roomba redesigned in a new brand\'s aesthetic',
+    tagline: 'I redesigned a Roomba in a completely different brand\'s style',
     date: '2018',
     content: (
       <>
