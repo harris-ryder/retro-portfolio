@@ -3,6 +3,7 @@ import React from 'react'
 export type Project = {
   slug: string
   title: string
+  tagline: string
   date: string
   content: React.ReactNode
 }
@@ -11,6 +12,7 @@ export const projects: Project[] = [
   {
     slug: 'paintball',
     title: 'Automated Paintball Gun',
+    tagline: 'A motorised turret that paints canvases with paintballs',
     date: '2023',
     content: (
       <>
@@ -56,6 +58,7 @@ export const projects: Project[] = [
   {
     slug: 'infinity',
     title: 'Infinity Ring',
+    tagline: 'Gymnastic rings with a hollow core for neat strap storage',
     date: '2022',
     content: (
       <>
@@ -77,6 +80,7 @@ export const projects: Project[] = [
   {
     slug: 'van',
     title: 'Building a Campervan',
+    tagline: 'A Toyota Hiace converted with solar, cabinets, and a bed',
     date: '2021',
     content: (
       <>
@@ -105,6 +109,7 @@ export const projects: Project[] = [
   {
     slug: 'doge',
     title: 'Doge Rocket App',
+    tagline: 'A Flappy Bird-style game with SpaceX-inspired rocket physics',
     date: '2022',
     content: (
       <>
@@ -118,6 +123,7 @@ export const projects: Project[] = [
   {
     slug: 'masks',
     title: 'Making Masks for the NHS',
+    tagline: '3D printed face shields produced for NHS staff during Covid',
     date: '2020',
     content: (
       <>
@@ -139,6 +145,7 @@ export const projects: Project[] = [
   {
     slug: 'centrifuge',
     title: 'Hawksley Centrifuge Design',
+    tagline: 'A lab centrifuge designed from brief to certified prototype',
     date: '2019',
     content: (
       <>
@@ -160,6 +167,7 @@ export const projects: Project[] = [
   {
     slug: 'muracle',
     title: 'Automated Mural Painter',
+    tagline: 'A robot that paints large-scale murals on walls autonomously',
     date: '2019',
     content: (
       <>
@@ -189,6 +197,7 @@ export const projects: Project[] = [
   {
     slug: 'panl',
     title: 'Panl, the Frustrating Puzzle App',
+    tagline: 'A sliding-tile puzzle game built from scratch in Swift',
     date: '2019',
     content: (
       <>
@@ -202,6 +211,7 @@ export const projects: Project[] = [
   {
     slug: 'vacuum',
     title: 'Designing a Roomba-like Vacuum',
+    tagline: 'A Roomba redesigned in a new brand\'s aesthetic',
     date: '2018',
     content: (
       <>
