@@ -39,3 +39,27 @@
     }
 
 }
+
+:root {
+    --shadow-media: 0 4px 12px -2px #0000000d, 0 1px 3px 0 #00000008;
+    --squircle-radius: 12px;
+    --media-margin: 54px;
+}
+
+.article-content img,
+.article-content video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin-top: var(--media-margin);
+    margin-bottom: var(--media-margin);
+    object-fit: cover;
+    object-position: center;
+    border: 1px solid rgba(50, 50, 50, 0.12);
+    box-shadow: var(--shadow-media);
+    display: block;
+    border-radius: var(--squircle-radius);
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
