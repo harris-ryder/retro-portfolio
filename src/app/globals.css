@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+    --color-neutral-400: #929292;
+    --color-neutral-800: #323232;
+}
+
 @font-face {
     font-family: 'ABCDiatype';
     src: url('/fonts/ABCDiatypeSemiMono-Regular.otf') format('opentype');
@@ -8,6 +13,11 @@
 }
 
 @layer base {
+    body {
+        background-color: #FCFCFC;
+        color: #323232;
+    }
+
     *, *::before, *::after {
         box-sizing: border-box;
         margin: 0;
