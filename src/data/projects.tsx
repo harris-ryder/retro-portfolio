@@ -5,6 +5,7 @@ export type Project = {
   title: string
   tagline: string
   date: string
+  hidden?: boolean
   content: React.ReactNode
 }
 
@@ -22,6 +23,7 @@ export const projects: Project[] = [
   {
     slug: 'nothing-ai-builder',
     title: 'Nothing Gen UI',
+    hidden: true,
     tagline: 'A ground-up rewrite of the Gen UI product at Nothing',
     date: '2026',
     content: (

@@ -42,7 +42,7 @@ export default function Home() {
         <ul className="list-none pl-0 [&>li]:mb-2">
           {[
             ...browserLinks.map(l => ({ year: l.year, title: l.label ?? l.title, tagline: l.tagline, href: l.url, external: true as const })),
-            ...projects.map(p => ({ year: p.date, title: p.title, tagline: p.tagline, href: `/work/${p.slug}`, external: false as const })),
+            ...projects.filter(p => !p.hidden).map(p => ({ year: p.date, title: p.title, tagline: p.tagline, href: `/work/${p.slug}`, external: false as const })),
           ]
             .sort((a, b) => Number(b.year) - Number(a.year))
             .map(item => (
