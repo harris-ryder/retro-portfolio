@@ -49,9 +49,9 @@ export const projects: Project[] = [
         <p>The resolution is determined by the smallest angle the turret can turn (vertically and horizontally). The gear ratio between the motor cog and the large cog is 150:10. Using the stepper drivers I am microstepping by 1/16, which gives 48,000 steps per full turret rotation, giving a resolution of 0.0075 degrees per step.</p>
         <h2>Videos</h2>
         <p>Testing the trigger system</p>
-        <iframe width="100%" height="400" src="https://www.youtube.com/embed/OoE_Ep4ovDs" frameBorder={0} allowFullScreen />
+        <div className="video-wrap"><iframe width="100%" height="400" src="https://www.youtube.com/embed/OoE_Ep4ovDs" frameBorder={0} allowFullScreen /></div>
         <p>Testing the movement system</p>
-        <iframe width="100%" height="400" src="https://www.youtube.com/embed/3OJhmOg1Wus" frameBorder={0} allowFullScreen />
+        <div className="video-wrap"><iframe width="100%" height="400" src="https://www.youtube.com/embed/3OJhmOg1Wus" frameBorder={0} allowFullScreen /></div>
       </>
     ),
   },
@@ -135,7 +135,7 @@ export const projects: Project[] = [
         <p><img src="/images/masks/masks2.png" alt="NHS Masks Project" /></p>
         <p>I spent days increasing output by trying different print settings. Such as print arrangements on the bed, trying to reduce unproductive nozzle movement. Thinning out the actual product design.</p>
         <p>I also added custom GCODE so the printer could automatically remove the print from the bed and start the next one. This doubled output. No human required, the printers ran all night.</p>
-        <iframe width="100%" height="400" src="https://www.youtube.com/embed/X5QgLEhHpdw" frameBorder={0} allowFullScreen />
+        <div className="video-wrap"><iframe width="100%" height="400" src="https://www.youtube.com/embed/X5QgLEhHpdw" frameBorder={0} allowFullScreen /></div>
         <p><img src="/images/masks/masks5.png" alt="NHS Masks Project" /></p>
         <p>We produced over 2000 masks, we sold 1500 to the NHS and donated 500+ to care homes.</p>
         <p><img src="/images/masks/masks4.png" alt="NHS Masks Project" /></p>
@@ -173,7 +173,7 @@ export const projects: Project[] = [
       <>
         <p>Final Year Project brief: design a product that automates a task, then produce a business plan and Kickstarter video.</p>
         <p>Murals are expensive. Most people can&apos;t afford one. We wanted to build something that could paint a wall on its own, without it looking like a machine did it.</p>
-        <iframe width="100%" height="400" src="https://www.youtube.com/embed/bsFB_Ysv0cc" frameBorder={0} allowFullScreen />
+        <div className="video-wrap"><iframe width="100%" height="400" src="https://www.youtube.com/embed/bsFB_Ysv0cc" frameBorder={0} allowFullScreen /></div>
         <h2>Prototypes</h2>
         <p><img src="/images/muracle/prototype1.png" alt="Muracle Design Project" /></p>
         <p><img src="/images/muracle/prototype2.png" alt="Muracle Design Project" /></p>

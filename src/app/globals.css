@@ -47,7 +47,8 @@
 }
 
 .article-content img,
-.article-content video {
+.article-content video,
+.article-content .video-wrap {
     width: 100%;
     max-width: 100%;
     height: auto;
@@ -55,6 +56,7 @@
     margin-bottom: var(--media-margin);
     object-fit: cover;
     object-position: center;
+    overflow: hidden;
     border: 1px solid rgba(50, 50, 50, 0.12);
     box-shadow: var(--shadow-media);
     display: block;
@@ -62,4 +64,10 @@
     -webkit-user-select: none;
     user-select: none;
     -webkit-user-drag: none;
+}
+
+.article-content .video-wrap iframe {
+    width: 100%;
+    display: block;
+    border: none;
 }
