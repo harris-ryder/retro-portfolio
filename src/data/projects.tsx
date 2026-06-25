@@ -8,7 +8,63 @@ export type Project = {
   content: React.ReactNode
 }
 
+const videoStyle = {
+  border: '1px solid rgba(50,50,50,0.12)',
+  boxShadow: '0 4px 12px -2px #0000000d, 0 1px 3px 0 #00000008',
+  display: 'block',
+  marginTop: '3.5rem',
+  marginBottom: '3.5rem',
+  borderRadius: '12px',
+  width: '100%',
+}
+
 export const projects: Project[] = [
+  {
+    slug: 'nothing-ai-builder',
+    title: 'Nothing Gen UI',
+    tagline: 'A ground-up rewrite of the Gen UI product at Nothing',
+    date: '2026',
+    content: (
+      <>
+        <p>Nothing&apos;s Gen UI lets non-technical users create and deploy AI-powered phone widgets. The original shipped with the core loop working but a lot of rough edges. My team was tasked with rebuilding the entire app in 2 weeks. I had sole responsibility for the frontend.</p>
+
+        <h2>Gallery</h2>
+        <p>The old gallery fetched the full list at once with no pagination or virtualisation. The rewrite fetches only what fits on screen, shows skeleton cards on slow connections, and uses optimistic updates for rename and delete. Fully keyboard-navigable with semantic HTML throughout.</p>
+        <video src="/videos/nothing-ai-builder/gallery-view.mp4" autoPlay muted loop playsInline style={videoStyle} />
+
+        <h2>Deploy Flow</h2>
+        <p>Once happy with the preview you can deploy the widget to your phone. The backend compiles the React Native code into a real app that lives in the widget drawer.</p>
+        <p>The old flow surfaced every AWS log line, noise that means nothing to the user. The new flow hides those logs and starts the build the moment the modal opens, so by the time the user fills in the name and description it is already done.</p>
+        <video src="/videos/nothing-ai-builder/old-deploy-flow.mp4" autoPlay muted loop playsInline style={videoStyle} />
+        <video src="/videos/nothing-ai-builder/new-deploy-flow.mp4" autoPlay muted loop playsInline style={videoStyle} />
+
+        <h2>Mobile</h2>
+        <p>The original app prioritised desktop, which made little sense for a phone company. Mobile also exposed a lot of broken styles. Without shared tokens, ad-hoc component styling compounded into inconsistencies across every screen size. The rewrite enforces a token-based system with Storybook used to catch regressions before they ship.</p>
+        <p>On mobile the editor switches between chat, code, and preview via a tab toggle, the deploy flow becomes a bottom drawer, and navigation collapses into a mobile-specific component.</p>
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '3.5rem', marginBottom: '3.5rem' }}>
+          <video src="/videos/nothing-ai-builder/old-mobile-flow.mp4" autoPlay muted loop playsInline style={{ ...videoStyle, marginTop: 0, marginBottom: 0, flex: 1, minWidth: 0 }} />
+          <video src="/videos/nothing-ai-builder/web-mobile-flow.mp4" autoPlay muted loop playsInline style={{ ...videoStyle, marginTop: 0, marginBottom: 0, flex: 1, minWidth: 0 }} />
+        </div>
+
+        <h2>Preview Architecture</h2>
+        <p>The widget preview runs inside an iframe so a broken widget can&apos;t crash the editor. In the original that iframe had its own backend connection and state, which could drift out of sync with the parent silently. The rewrite makes the main app the single owner of state. The iframe&apos;s only job is to receive files via postMessage, bundle them, and report back.</p>
+
+        <h2>Engineering</h2>
+        <p>The original mixed Tailwind, inline styles, and one-off CSS in the same components. The rewrite uses Tailwind exclusively with design tokens for colour and typography. ESLint bans any, so every prop and API response is fully typed. useEffect was replaced almost entirely with TanStack Query, keeping data in the cache rather than spread across component state. Components are organised by feature, so each area of the app owns its own hooks and utils.</p>
+
+        <h2>Widget Size</h2>
+        <p>The agent optimises the widget for a specific size, so the wrong choice produces broken layouts on device. The old dropdown was easy to miss and gave no visual cue of what each option meant. The rewrite surfaces the choice explicitly with a visual of each size, and shows a dialog if you change it after the widget is built. Responsive design is not enough, the agent needs to rebuild for the new dimensions.</p>
+        <video src="/videos/nothing-ai-builder/size-prompt.mp4" autoPlay muted loop playsInline style={videoStyle} />
+
+        <h2>Fun</h2>
+        <p>Some fun widgets made along the way.</p>
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '3.5rem', marginBottom: '3.5rem' }}>
+          <video src="/videos/nothing-ai-builder/tetris-fun.mp4" autoPlay muted loop playsInline style={{ ...videoStyle, marginTop: 0, marginBottom: 0, flex: 1, minWidth: 0 }} />
+          <img src="/images/nothing-ai-builder/widgets.jpg" alt="Windows 98 themed widgets on device" style={{ ...videoStyle, marginTop: 0, marginBottom: 0, flex: 1, minWidth: 0, objectFit: 'cover' }} />
+        </div>
+      </>
+    ),
+  },
   {
     slug: 'paintball',
     title: 'Automated Paintball Gun',

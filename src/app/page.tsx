@@ -22,14 +22,14 @@ export default function Home() {
           <h1 className="font-normal text-[15px]">Harris Ryder</h1>
         </header>
 
-        <p className="mb-16">
+        <p className="mb-16 [&_a]:no-underline">
           Design Engineer at{' '}
           <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer">Nothing</a>
           {' · prev '}
           <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer">Workflow</a>
         </p>
 
-        <p className="mb-16">
+        <p className="mb-16 [&_a]:no-underline">
           <a href="https://x.com/isHarrisRyder" target="_blank" rel="noopener noreferrer">X</a>
           {' · '}
           <a href="mailto:harrisryder321@gmail.com">Email</a>
@@ -39,27 +39,23 @@ export default function Home() {
           <a href="https://github.com/harris-ryder" target="_blank" rel="noopener noreferrer">GitHub</a>
         </p>
 
-        <ul className="list-none pl-0 [&>li]:my-[0.4rem]">
-          {browserLinks.map(link => (
-            <li key={link.url} className="flex gap-[2ch]">
-              <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">{link.year}</span>
-              <TypewriterItem tagline={link.tagline}>
-                <a className={itemLink} href={link.url} target="_blank" rel="noopener noreferrer">
-                  {link.label ?? link.title}
-                </a>
-              </TypewriterItem>
-            </li>
-          ))}
-          {projects.map(p => (
-            <li key={p.slug} className="flex gap-[2ch]">
-              <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">{p.date}</span>
-              <TypewriterItem tagline={p.tagline}>
-                <Link className={itemLink} href={`/work/${p.slug}`}>
-                  {p.title}
-                </Link>
-              </TypewriterItem>
-            </li>
-          ))}
+        <ul className="list-none pl-0 [&>li]:mb-2">
+          {[
+            ...browserLinks.map(l => ({ year: l.year, title: l.label ?? l.title, tagline: l.tagline, href: l.url, external: true as const })),
+            ...projects.map(p => ({ year: p.date, title: p.title, tagline: p.tagline, href: `/work/${p.slug}`, external: false as const })),
+          ]
+            .sort((a, b) => Number(b.year) - Number(a.year))
+            .map(item => (
+              <li key={item.href} className="flex gap-[2ch]">
+                <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">{item.year}</span>
+                <TypewriterItem tagline={item.tagline}>
+                  {item.external
+                    ? <a className={itemLink} href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a>
+                    : <Link className={itemLink} href={item.href}>{item.title}</Link>
+                  }
+                </TypewriterItem>
+              </li>
+            ))}
         </ul>
       </div>
     </main>
