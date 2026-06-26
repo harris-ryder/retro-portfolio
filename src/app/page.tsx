@@ -1,6 +1,5 @@
-import Link from 'next/link'
 import { projects } from '@/data/projects'
-import { TypewriterItem } from '@/components/TypewriterItem'
+import { ProjectList } from '@/components/ProjectList'
 
 const browserLinks = [
   { year: '2025', title: 'ModelNote', tagline: 'A review tool I built for 3D model feedback', url: 'https://modelnote.io/' },
@@ -12,9 +11,12 @@ const browserLinks = [
   { year: '2024', title: 'Old portfolio', tagline: 'My old portfolio before this one', url: 'https://portfolio-six-hazel-78.vercel.app/' },
 ]
 
-const itemLink = 'no-underline cursor-pointer'
-
 export default function Home() {
+  const items = [
+    ...browserLinks.map(l => ({ year: l.year, title: l.label ?? l.title, tagline: l.tagline, href: l.url, external: true as const })),
+    ...projects.filter(p => !p.hidden).map(p => ({ year: p.date, title: p.title, tagline: p.tagline, href: `/work/${p.slug}`, external: false as const })),
+  ].sort((a, b) => Number(b.year) - Number(a.year))
+
   return (
     <main className="text-[15px] leading-[1.9]">
       <div className="px-10 pt-16 pb-8 lg:px-16">
@@ -39,24 +41,7 @@ export default function Home() {
           <a href="https://github.com/harris-ryder" target="_blank" rel="noopener noreferrer">GitHub</a>
         </p>
 
-        <ul className="list-none pl-0 [&>li]:mb-2">
-          {[
-            ...browserLinks.map(l => ({ year: l.year, title: l.label ?? l.title, tagline: l.tagline, href: l.url, external: true as const })),
-            ...projects.filter(p => !p.hidden).map(p => ({ year: p.date, title: p.title, tagline: p.tagline, href: `/work/${p.slug}`, external: false as const })),
-          ]
-            .sort((a, b) => Number(b.year) - Number(a.year))
-            .map(item => (
-              <li key={item.href} className="flex gap-[2ch]">
-                <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">{item.year}</span>
-                <TypewriterItem tagline={item.tagline}>
-                  {item.external
-                    ? <a className={itemLink} href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a>
-                    : <Link className={itemLink} href={item.href}>{item.title}</Link>
-                  }
-                </TypewriterItem>
-              </li>
-            ))}
-        </ul>
+        <ProjectList items={items} />
       </div>
     </main>
   )
