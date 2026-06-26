@@ -51,10 +51,10 @@
     --media-margin: 54px;
 }
 
-/* Dots cycle . → .. → ... */
+/* Dots cycle (empty) → . → .. → ... — fixed-width container so "loading" never shifts */
 @keyframes loading-dots {
-    0%   { width: 1ch; }
-    100% { width: 4ch; }
+    0%   { clip-path: inset(0 3ch 0 0); }
+    100% { clip-path: inset(0 -1ch 0 0); }
 }
 
 /* Reserves the correct aspect-ratio space before media loads */
@@ -66,11 +66,16 @@
     border-radius: var(--squircle-radius);
     border: 1px solid rgba(50, 50, 50, 0.12);
     box-shadow: var(--shadow-media);
+    transition: box-shadow 0.25s;
     margin-top: var(--media-margin);
     margin-bottom: var(--media-margin);
     background-color: #FCFCFC;
     -webkit-user-select: none;
     user-select: none;
+}
+
+.media-skeleton {
+    box-shadow: none;
 }
 
 .media-loading {
@@ -79,17 +84,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
-    color: rgba(50, 50, 50, 0.35);
-    letter-spacing: 0.01em;
+    font-size: 15px;
+    color: var(--color-neutral-400);
     pointer-events: none;
 }
 
 .media-loading-dots {
     display: inline-block;
-    overflow: hidden;
-    width: 1ch;
-    animation: loading-dots 1.2s steps(3, end) infinite;
+    width: 3ch;
+    clip-path: inset(0 3ch 0 0);
+    animation: loading-dots 1.6s steps(4, end) infinite;
 }
 
 /* img/video inside the wrapper — decoration lives on the wrapper */
