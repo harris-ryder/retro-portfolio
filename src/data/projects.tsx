@@ -27,7 +27,7 @@ export const projects: Project[] = [
     date: '2026',
     content: (
       <>
-        <p>Nothing&apos;s Gen UI lets non-technical users create and deploy AI-powered phone widgets. The original shipped with the core loop working but a lot of rough edges. My team was tasked with rebuilding the entire app in 2 weeks. I had sole responsibility for the frontend.</p>
+        <p>Nothing&apos;s Gen UI lets non-technical users create and deploy AI-powered phone widgets. The original shipped with the core loop working but a lot of rough edges. My team was tasked with rebuilding the entire app in a single sprint. I had sole responsibility for the frontend.</p>
 
         <h2>Gallery</h2>
         <p>The old gallery fetched the full list at once with no pagination or virtualisation. The rewrite fetches only what fits on screen, shows skeleton cards on slow connections, and uses optimistic updates for rename and delete. Fully keyboard-navigable with semantic HTML throughout.</p>
