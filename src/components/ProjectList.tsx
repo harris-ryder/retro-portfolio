@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { TypewriterItem } from '@/components/TypewriterItem'
 
@@ -14,18 +14,43 @@ type Item = {
 
 const itemLink = 'no-underline cursor-pointer'
 
-function Row({ item, index, animate }: { item: Item; index: number; animate?: boolean }) {
+function useTypeIn(text: string, active: boolean, startDelay: number) {
+  const [count, setCount] = useState(active ? 0 : text.length)
+  useEffect(() => {
+    if (!active) return
+    const t = setTimeout(() => {
+      let i = 0
+      const id = setInterval(() => {
+        i++
+        setCount(i)
+        if (i >= text.length) clearInterval(id)
+      }, 38)
+      return () => clearInterval(id)
+    }, startDelay)
+    return () => clearTimeout(t)
+  }, [active, text, startDelay])
+  return count
+}
+
+function Row({ item, index, typeIn }: { item: Item; index: number; typeIn?: boolean }) {
+  const rowDelay = index * 120
+  const yearCount = useTypeIn(item.year, !!typeIn, rowDelay)
+  const titleCount = useTypeIn(item.title, !!typeIn, rowDelay)
+  const titleDone = titleCount >= item.title.length
+
+  const titleNode = titleDone
+    ? (item.external
+        ? <a className={itemLink} href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a>
+        : <Link className={itemLink} href={item.href}>{item.title}</Link>)
+    : <span>{item.title.slice(0, titleCount)}<span className="opacity-50">|</span></span>
+
   return (
-    <li
-      className="flex gap-[2ch]"
-      style={animate ? { animation: 'fade-in 0.3s ease both', animationDelay: `${index * 40}ms` } : undefined}
-    >
-      <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">{item.year}</span>
+    <li className={`flex gap-[2ch]${typeIn && !titleDone ? ' pointer-events-none' : ''}`}>
+      <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">
+        {typeIn ? item.year.slice(0, yearCount) : item.year}
+      </span>
       <TypewriterItem tagline={item.tagline}>
-        {item.external
-          ? <a className={itemLink} href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a>
-          : <Link className={itemLink} href={item.href}>{item.title}</Link>
-        }
+        {titleNode}
       </TypewriterItem>
     </li>
   )
@@ -54,7 +79,7 @@ export function ProjectList({ items }: { items: Item[] }) {
               </button>
             </li>
           )}
-          {open && older.map((item, i) => <Row key={item.href} item={item} index={i} animate />)}
+          {open && older.map((item, i) => <Row key={item.href} item={item} index={i} typeIn />)}
         </>
       )}
     </ul>
