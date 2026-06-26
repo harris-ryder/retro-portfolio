@@ -16,6 +16,11 @@ export function Img({ src, alt, width, height, wrapperStyle }: Props) {
       className={`media-wrapper${loaded ? '' : ' media-skeleton'}`}
       style={{ aspectRatio: `${width} / ${height}`, ...wrapperStyle }}
     >
+      {!loaded && (
+        <span className="media-loading" aria-hidden="true">
+          loading<span className="media-loading-dots">...</span>
+        </span>
+      )}
       <img
         src={src}
         alt={alt}

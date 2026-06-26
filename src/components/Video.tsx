@@ -15,6 +15,11 @@ export function Video({ src, width, height, wrapperStyle }: Props) {
       className={`media-wrapper${ready ? '' : ' media-skeleton'}`}
       style={{ aspectRatio: `${width} / ${height}`, ...wrapperStyle }}
     >
+      {!ready && (
+        <span className="media-loading" aria-hidden="true">
+          loading<span className="media-loading-dots">...</span>
+        </span>
+      )}
       <video
         src={src}
         autoPlay

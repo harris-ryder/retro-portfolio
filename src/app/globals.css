@@ -51,15 +51,10 @@
     --media-margin: 54px;
 }
 
-/* Animates a bright spot around the border outline while media loads */
-@property --border-angle {
-    syntax: '<angle>';
-    initial-value: 0deg;
-    inherits: false;
-}
-
-@keyframes border-chase {
-    to { --border-angle: 360deg; }
+/* Dots cycle . → .. → ... */
+@keyframes loading-dots {
+    0%   { width: 1ch; }
+    100% { width: 4ch; }
 }
 
 /* Reserves the correct aspect-ratio space before media loads */
@@ -78,20 +73,23 @@
     user-select: none;
 }
 
-.media-skeleton {
-    /* Layer 1: page-bg fills the interior (padding-box), hiding the gradient there.
-       Layer 2: conic gradient fills border-box — only visible in the 1px border strip. */
-    border-color: transparent;
-    background:
-        linear-gradient(#FCFCFC, #FCFCFC) padding-box,
-        conic-gradient(
-            from var(--border-angle),
-            rgba(50, 50, 50, 0.07),
-            rgba(50, 50, 50, 0.07) 80%,
-            rgba(50, 50, 50, 0.55) 90%,
-            rgba(50, 50, 50, 0.07) 100%
-        ) border-box;
-    animation: border-chase 2.5s linear infinite;
+.media-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: rgba(50, 50, 50, 0.35);
+    letter-spacing: 0.01em;
+    pointer-events: none;
+}
+
+.media-loading-dots {
+    display: inline-block;
+    overflow: hidden;
+    width: 1ch;
+    animation: loading-dots 1.2s steps(3, end) infinite;
 }
 
 /* img/video inside the wrapper — decoration lives on the wrapper */
