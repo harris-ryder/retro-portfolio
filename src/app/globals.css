@@ -51,9 +51,15 @@
     --media-margin: 54px;
 }
 
-@keyframes shimmer {
-    from { background-position: -200% 0; }
-    to   { background-position:  200% 0; }
+/* Animates a bright spot around the border outline while media loads */
+@property --border-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes border-chase {
+    to { --border-angle: 360deg; }
 }
 
 /* Reserves the correct aspect-ratio space before media loads */
@@ -67,15 +73,25 @@
     box-shadow: var(--shadow-media);
     margin-top: var(--media-margin);
     margin-bottom: var(--media-margin);
-    background-color: #efefef;
+    background-color: #FCFCFC;
     -webkit-user-select: none;
     user-select: none;
 }
 
 .media-skeleton {
-    background: linear-gradient(90deg, #efefef 25%, #e5e5e5 50%, #efefef 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s ease-in-out infinite;
+    /* Layer 1: page-bg fills the interior (padding-box), hiding the gradient there.
+       Layer 2: conic gradient fills border-box — only visible in the 1px border strip. */
+    border-color: transparent;
+    background:
+        linear-gradient(#FCFCFC, #FCFCFC) padding-box,
+        conic-gradient(
+            from var(--border-angle),
+            rgba(50, 50, 50, 0.07),
+            rgba(50, 50, 50, 0.07) 80%,
+            rgba(50, 50, 50, 0.55) 90%,
+            rgba(50, 50, 50, 0.07) 100%
+        ) border-box;
+    animation: border-chase 2.5s linear infinite;
 }
 
 /* img/video inside the wrapper — decoration lives on the wrapper */
