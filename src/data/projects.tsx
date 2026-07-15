@@ -29,6 +29,8 @@ export const projects: Project[] = [
     content: (
       <>
         <p>Nothing&apos;s Gen UI lets non-technical users create and deploy AI-powered phone widgets. My team was tasked with rebuilding the entire app in a single sprint to raise the bar across the board. I had sole responsibility for the frontend.</p>
+        <p><Img src="/images/nothing-ai-builder/overview.webp" alt="Overview of the Essential App Builder editor" width={2000} height={1405} /></p>
+        <p>The editor is split into a chat panel for prompting the agent, a code view, and a live preview, with a gallery of every widget you have created so far.</p>
 
         <h2>Gallery</h2>
         <p>The rewrite fetches only what fits on screen, shows skeleton cards on slow connections, and uses optimistic updates for rename and delete. Fully keyboard-navigable with semantic HTML throughout.</p>
@@ -57,6 +59,10 @@ export const projects: Project[] = [
         <h2>Widget Size</h2>
         <p>The agent optimises the widget for a specific size, so the wrong choice produces broken layouts on device. The original surfaced this as a dropdown that was easy to miss. The rewrite surfaces the choice explicitly with a visual of each size, and shows a dialog if you change it after the widget is built — responsive design is not enough, the agent needs to rebuild for the new dimensions.</p>
         <Video src="/videos/nothing-ai-builder/size-prompt.mp4" width={1920} height={1398} />
+
+        <h2>Tooltips</h2>
+        <p>Icon-only buttons are ambiguous, so every one got a tooltip explaining what it does.</p>
+        <p><Img src="/images/nothing-ai-builder/tooltip.webp" alt="Tooltip explaining an icon button in the editor toolbar" width={2000} height={1130} /></p>
 
         <h2>Fun</h2>
         <p>Some fun widgets made along the way.</p>
