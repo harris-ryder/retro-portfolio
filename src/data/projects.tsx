@@ -113,7 +113,7 @@ export const projects: Project[] = [
           The plugin used the browser&apos;s navigator.clipboard API (since deprecated) to poll the clipboard, watch for a string that looked like a Figma URL, and save it the moment it appeared. One shortcut, no pasting, no menus.
         </p>
         <p>
-          In the demo, <Kbd keys={['shift', 'L']} /> stands in for <Kbd keys={['⌘', 'L']} />, since <Kbd keys={['⌘', 'L']} /> focuses the browser&apos;s address bar. Click the demo, then hold <Kbd keys={['shift', 'L']} />.
+          In the demo, <Kbd keys={['shift', 'L']} /> stands in for <Kbd keys={['⌘', 'L']} />, since <Kbd keys={['⌘', 'L']} /> focuses the browser&apos;s address bar.
         </p>
         <DemoFrame designWidth={712} designHeight={620}>
           <FirstVersionDemo />
@@ -133,7 +133,7 @@ export const projects: Project[] = [
           The fix was to guide the order. The plugin asks the user to hold <Kbd keys={['L']} /> first, which it can see, then press the modifier. That lets it validate each key, confirm the shortcut ran, and know the user is ready for the final <Kbd keys={['⌘', 'V']} />.
         </p>
         <p>
-          In the demo, <Kbd keys={['shift']} /> stands in for <Kbd keys={['⌘']} /> on the middle step, and the final paste is a real <Kbd keys={['⌘', 'V']} />. Click the demo, hold <Kbd keys={['L']} />, press <Kbd keys={['shift']} />, then <Kbd keys={['⌘', 'V']} />.
+          In the demo, <Kbd keys={['shift']} /> stands in for <Kbd keys={['⌘']} /> on the middle step, and the final paste is a real <Kbd keys={['⌘', 'V']} />.
         </p>
         <DemoFrame designWidth={712} designHeight={620}>
           <MainDemo />
