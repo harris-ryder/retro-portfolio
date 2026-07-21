@@ -2,9 +2,14 @@
 /* ------------------------------------------------------------------
    Presents a fixed-size interactive demo like a piece of media: the
    same bordered, shadowed card the article images use, with the demo
-   scaled down to fit the column.
+   scaled to fit the column. The demo nearest the viewport centre is
+   auto-focused (via the coordinator) — when active its border darkens
+   and an "Interactive..." label types itself out.
    ------------------------------------------------------------------ */
 import { useEffect, useRef, useState } from 'react'
+import { registerDemo } from './focusManager'
+
+const LABEL = 'Interactive...'
 
 export function DemoFrame({
   designWidth,
@@ -15,8 +20,11 @@ export function DemoFrame({
   designHeight: number
   children: React.ReactNode
 }) {
+  const figureRef = useRef<HTMLElement>(null)
   const boxRef = useRef<HTMLDivElement>(null)
   const [cw, setCw] = useState(0)
+  const [active, setActive] = useState(false)
+  const [typed, setTyped] = useState(0)
 
   useEffect(() => {
     const el = boxRef.current
@@ -27,12 +35,41 @@ export function DemoFrame({
     return () => ro.disconnect()
   }, [])
 
+  // register the demo's focusable root; the coordinator focuses the
+  // centred demo and flags it active
+  useEffect(() => {
+    const root = figureRef.current?.querySelector<HTMLElement>('[tabindex="0"]')
+    if (!root) return
+    return registerDemo(root, setActive)
+  }, [cw])
+
+  // type the label out while active
+  useEffect(() => {
+    if (!active) {
+      setTyped(0)
+      return
+    }
+    let i = 0
+    setTyped(0)
+    const id = setInterval(() => {
+      i += 1
+      setTyped(i)
+      if (i >= LABEL.length) clearInterval(id)
+    }, 85)
+    return () => clearInterval(id)
+  }, [active])
+
   const scale = cw ? Math.min(1, cw / designWidth) : 0
   const left = cw ? (cw - designWidth * scale) / 2 : 0
 
   return (
-    <figure className="wf-demo my-[54px] overflow-hidden rounded-[12px] border border-[rgba(50,50,50,0.12)] bg-[#fcfcfc] shadow-[var(--shadow-media)] select-none">
-      <div className="p-6">
+    <figure
+      ref={figureRef}
+      className={`wf-demo relative my-[54px] overflow-hidden rounded-[12px] border bg-[#fcfcfc] shadow-[var(--shadow-media)] transition-colors duration-[600ms] select-none ${
+        active ? 'border-[rgba(50,50,50,0.3)]' : 'border-[rgba(50,50,50,0.12)]'
+      }`}
+    >
+      <div className="px-4 pb-6 pt-8">
         <div
           ref={boxRef}
           className="relative w-full"
@@ -59,6 +96,13 @@ export function DemoFrame({
           )}
         </div>
       </div>
+
+      {active && (
+        <span className="pointer-events-none absolute left-4 top-3 text-[11px] leading-none text-neutral-800">
+          {LABEL.slice(0, typed)}
+          <span className="cursor-blink">|</span>
+        </span>
+      )}
     </figure>
   )
 }

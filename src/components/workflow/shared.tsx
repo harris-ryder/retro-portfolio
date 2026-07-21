@@ -60,7 +60,7 @@ export function ReopenButton({ onClick }: { onClick: () => void }) {
 const ROW_H = 52
 const STALE_CLIPS = [
   { text: '#F5F5F5', time: '13:41' },
-  { text: 'hello@nothing.tech', time: '14:18' },
+  { text: 'are you good?', time: '14:18' },
   { text: 'Fix onboarding copy for step 2', time: '14:32' },
 ]
 
