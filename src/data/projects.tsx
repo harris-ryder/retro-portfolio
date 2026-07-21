@@ -1,6 +1,12 @@
 import React from 'react'
 import { Img } from '@/components/Img'
 import { Video } from '@/components/Video'
+import { DemoFrame } from '@/components/workflow/DemoFrame'
+import { CodeBlock } from '@/components/workflow/CodeBlock'
+import { Kbd } from '@/components/workflow/Kbd'
+import { OldPluginDemo } from '@/components/workflow/OldPluginDemo'
+import { FirstVersionDemo } from '@/components/workflow/FirstVersionDemo'
+import { MainDemo } from '@/components/workflow/MainDemo'
 
 export type Project = {
   slug: string
@@ -70,6 +76,68 @@ export const projects: Project[] = [
           <Video src="/videos/nothing-ai-builder/tetris-fun.mp4" width={1080} height={2400} wrapperStyle={inFlex} />
           <Img src="/images/nothing-ai-builder/widgets.webp" alt="Windows 98 themed widgets on device" width={900} height={2000} wrapperStyle={inFlex} />
         </div>
+      </>
+    ),
+  },
+  {
+    slug: 'workflow-figma-plugin',
+    title: 'Workflow Figma Plugin',
+    tagline: 'The Figma plugin that pushed design files into the Workflow app',
+    date: '2025',
+    content: (
+      <>
+        <p>
+          <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer">Workflow</a>{' '}is a web app for reviewing design work. Designers push their Figma files in, and the team leaves feedback, tracks tasks and signs off in one place. I worked on the Figma plugin, which gets a designer&apos;s file out of Figma and into the app.
+        </p>
+        <p>
+          To upload a file the plugin needs the file&apos;s share link, and Figma gives plugins no direct way to read it. Getting that link into the plugin was the hard part. We solved it three ways as Figma changed underneath us. Each demo below is the real plugin UI, running inline.
+        </p>
+
+        <h2>The manual version</h2>
+        <p>
+          The first plugin told the user what to do. A looping walkthrough showed them how to open Figma&apos;s <b>Share</b> menu, copy the file link, and paste it into a field by hand.
+        </p>
+        <p>
+          It worked but was slow and easy to get lost in. This screen was where we lost the most users.
+        </p>
+        <DemoFrame designWidth={712} designHeight={620}>
+          <OldPluginDemo />
+        </DemoFrame>
+
+        <h2>Reading the clipboard automatically</h2>
+        <p>
+          Then we found a shortcut. Figma&apos;s <Kbd keys={['⌘', 'L']} /> copies a link to the current selection straight to your clipboard. So instead of walking the user through the Share menu, we could ask for one keystroke and grab the link ourselves.
+        </p>
+        <CodeBlock />
+        <p>
+          The plugin used the browser&apos;s navigator.clipboard API (since deprecated) to poll the clipboard, watch for a string that looked like a Figma URL, and save it the moment it appeared. One shortcut, no pasting, no menus.
+        </p>
+        <p>
+          In the demo, <Kbd keys={['shift', 'L']} /> stands in for <Kbd keys={['⌘', 'L']} />, since <Kbd keys={['⌘', 'L']} /> focuses the browser&apos;s address bar. Click the demo, then hold <Kbd keys={['shift', 'L']} />.
+        </p>
+        <DemoFrame designWidth={712} designHeight={620}>
+          <FirstVersionDemo />
+        </DemoFrame>
+
+        <h2>Adding a paste step</h2>
+        <p>
+          Then Figma stopped plugins reading the clipboard. The seamless version stopped working, so we added a paste back into the flow. Pressing <Kbd keys={['⌘', 'V']} /> dropped the link into a hidden input the plugin could read.
+        </p>
+        <p>
+          That created a problem. Before, the plugin could confirm the user had run <Kbd keys={['⌘', 'L']} />, because it saw the Figma URL land in the clipboard. Now it was blind to the clipboard, so it had no way to know the link had been copied.
+        </p>
+        <p>
+          There was a second issue. Because of how Figma routes keyboard events, once you hold <Kbd keys={['⌘']} /> the plugin stops receiving the keys pressed after it, including the <Kbd keys={['L']} />. So it couldn&apos;t listen for <Kbd keys={['⌘', 'L']} /> directly.
+        </p>
+        <p>
+          The fix was to guide the order. The plugin asks the user to hold <Kbd keys={['L']} /> first, which it can see, then press the modifier. That lets it validate each key, confirm the shortcut ran, and know the user is ready for the final <Kbd keys={['⌘', 'V']} />.
+        </p>
+        <p>
+          In the demo, <Kbd keys={['shift']} /> stands in for <Kbd keys={['⌘']} /> on the middle step, and the final paste is a real <Kbd keys={['⌘', 'V']} />. Click the demo, hold <Kbd keys={['L']} />, press <Kbd keys={['shift']} />, then <Kbd keys={['⌘', 'V']} />.
+        </p>
+        <DemoFrame designWidth={712} designHeight={620}>
+          <MainDemo />
+        </DemoFrame>
       </>
     ),
   },

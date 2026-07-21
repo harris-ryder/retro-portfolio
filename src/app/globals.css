@@ -1,8 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
     --color-neutral-400: #929292;
     --color-neutral-800: #323232;
+
+    /* ---- Workflow plugin demos (scoped to .wf-demo) ---- */
+    --font-inter: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --color-surface: #ffffff;
+    --color-hairline: #ededed;
+    --color-ink: #1a1a1a;
+    --color-ink-soft: #5e5e5e;
+    --color-ink-muted: #8a8a8a;
+    --color-ink-sub: #757575;
+    --color-logo-bg: #edebe7;
+    --color-gold: #e08a00;
+    --color-green: #33c635;
+    --color-green-soft: #4f8a5b;
+    --color-neutrals-surface: #ffffff;
+    --color-neutrals-border-weak: #e0e0e0;
+    --color-neutrals-text-weak: #b3b3b3;
+
+    --animate-win-in: winIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    --animate-fade-up: fadeUp 0.34s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    --animate-slide-in: slideIn 0.36s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    --animate-label-in: labelIn 0.14s ease both;
+    --animate-card-in: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    --animate-pop: pop 0.3s ease both;
+    --animate-clip-in: clipIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    --animate-fly-paste: flyPaste 0.75s cubic-bezier(0.55, 0.05, 0.35, 1) both;
 }
 
 @font-face {
@@ -24,6 +50,89 @@
 
 .cursor-blink {
     animation: cursor-blink 0.7s step-end infinite;
+}
+
+/* ---- Workflow plugin demos: keyframes + font scope ---- */
+.wf-demo,
+.wf-demo * {
+    font-family: var(--font-inter);
+}
+.wf-demo .font-mono,
+.wf-code,
+.wf-code * {
+    font-family: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', 'Roboto Mono', monospace;
+}
+
+/* Inline keyboard keys (article prose) */
+.wf-kbd {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    margin: 0 0.2em;
+}
+.wf-kbd__k {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 1.55em;
+    height: 1.55em;
+    border: 1px solid #1a1a1a;
+    border-radius: 999px;
+    font-size: 0.8em;
+    line-height: 1;
+    color: #1a1a1a;
+}
+.wf-kbd__k svg {
+    width: 78%;
+    height: 78%;
+    display: block;
+}
+.wf-kbd__t {
+    display: block;
+    line-height: 1;
+    transform: translateY(0.06em);
+}
+.wf-kbd__line {
+    flex: none;
+    width: 0.45em;
+    height: 1px;
+    background: #1a1a1a;
+}
+
+@keyframes winIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.985); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(7px); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(26px); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes labelIn {
+    from { opacity: 0.25; }
+    to   { opacity: 1; }
+}
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.98); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes pop {
+    from { opacity: 0; transform: scale(0.4); }
+    to   { opacity: 1; transform: scale(1); }
+}
+@keyframes clipIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes flyPaste {
+    0%   { opacity: 0; transform: translate(0, 0) scale(1); }
+    15%  { opacity: 1; }
+    70%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(-340px, -90px) scale(0.85); }
 }
 
 @layer base {
