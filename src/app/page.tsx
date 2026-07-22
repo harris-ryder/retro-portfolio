@@ -12,9 +12,21 @@ const browserLinks = [
 ]
 
 export default function Home() {
+  const caseStudies = projects
+    .filter(p => !p.hidden)
+    .map(p => ({ year: p.date, title: p.title, tagline: p.tagline, href: `/work/${p.slug}`, external: false as const }))
+
+  // Show the Workflow case study directly above the Crema entry (both 2025);
+  // the stable year-sort below preserves this relative order.
+  const workflow = caseStudies.find(p => p.href === '/work/workflow-figma-plugin')
+  const browser = browserLinks.flatMap(l => {
+    const item = { year: l.year, title: l.label ?? l.title, tagline: l.tagline, href: l.url, external: true as const }
+    return workflow && l.title === 'Crema' ? [workflow, item] : [item]
+  })
+
   const items = [
-    ...browserLinks.map(l => ({ year: l.year, title: l.label ?? l.title, tagline: l.tagline, href: l.url, external: true as const })),
-    ...projects.filter(p => !p.hidden).map(p => ({ year: p.date, title: p.title, tagline: p.tagline, href: `/work/${p.slug}`, external: false as const })),
+    ...browser,
+    ...caseStudies.filter(p => p !== workflow),
   ].sort((a, b) => Number(b.year) - Number(a.year))
 
   return (

@@ -88,7 +88,7 @@ export const projects: Project[] = [
       <>
         <TryMeCursor />
         <p>
-          <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="!no-underline text-neutral-800">Workflow</a>{' '}is a web app for reviewing design work. Designers push their Figma files in, and the team leaves feedback, tracks tasks and signs off in one place. I worked on the Figma plugin, which gets a designer&apos;s file out of Figma and into the app.
+          <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="!no-underline">Workflow</a>{' '}is a web app for reviewing design work. Designers push their Figma files in, and the team leaves feedback, tracks tasks and signs off in one place. I worked on the Figma plugin, which gets a designer&apos;s file out of Figma and into the app.
         </p>
         <p>
           To upload a file the plugin needs the file&apos;s share link, and Figma gives plugins no direct way to read it. Getting that link into the plugin was the hard part. We solved it three ways as Figma changed underneath us.

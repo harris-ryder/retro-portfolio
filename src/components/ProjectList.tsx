@@ -73,7 +73,7 @@ export function ProjectList({ items }: { items: Item[] }) {
               <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">2023</span>
               <button
                 onClick={() => setOpen(true)}
-                className="no-underline cursor-pointer text-neutral-400 hover:text-neutral-800 transition-colors duration-150 bg-transparent border-none p-0 font-[inherit] text-[inherit]"
+                className="no-underline cursor-pointer text-neutral-800 bg-transparent border-none p-0 [font:inherit]"
               >
                 Older projects
               </button>

@@ -107,7 +107,6 @@ export function ClipboardPanel({
             <ClipboardIcon />
           </span>
           <span className="text-[11px] font-medium text-ink">Clipboard</span>
-          <span className="ml-auto text-[10px] text-ink-muted">history</span>
         </div>
 
         <div className="relative p-2">
@@ -129,14 +128,11 @@ export function ClipboardPanel({
 
             {copied && (
               <div
-                className="relative animate-clip-in overflow-hidden rounded-lg bg-[#f7f7f7] px-2.5 py-2"
+                className="relative animate-clip-in overflow-hidden px-2.5 py-2"
                 style={{ height: ROW_H }}
               >
-                <div className="flex min-w-0 items-center gap-1.5">
-                  <span className="shrink-0 text-[#2b2b2b]">
-                    <LinkIcon />
-                  </span>
-                  <span className="truncate font-mono text-[10.5px] text-ink">
+                <div className="flex min-w-0 items-center">
+                  <span className="truncate font-mono text-[10.5px] text-ink-soft">
                     {FIGMA_URL}
                   </span>
                 </div>

@@ -88,11 +88,11 @@ body.wf-cursor-on * {
     box-sizing: border-box;
     width: 1.55em;
     height: 1.55em;
-    border: 1px solid #929292;
+    border: 1px solid var(--color-neutral-400);
     border-radius: 999px;
     font-size: 0.8em;
     line-height: 1;
-    background: #929292;
+    background: var(--color-neutral-400);
     color: #FCFCFC;
 }
 .wf-kbd__k svg {
@@ -109,7 +109,7 @@ body.wf-cursor-on * {
     flex: none;
     width: 0.45em;
     height: 1px;
-    background: #929292;
+    background: var(--color-neutral-400);
 }
 
 @keyframes winIn {
