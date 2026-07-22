@@ -2,8 +2,8 @@ import React from 'react'
 import { Img } from '@/components/Img'
 import { Video } from '@/components/Video'
 import { DemoFrame } from '@/components/workflow/DemoFrame'
-import { CodeBlock } from '@/components/workflow/CodeBlock'
 import { Kbd } from '@/components/workflow/Kbd'
+import { TryMeCursor } from '@/components/workflow/TryMeCursor'
 import { OldPluginDemo } from '@/components/workflow/OldPluginDemo'
 import { FirstVersionDemo } from '@/components/workflow/FirstVersionDemo'
 import { MainDemo } from '@/components/workflow/MainDemo'
@@ -86,6 +86,7 @@ export const projects: Project[] = [
     date: '2025',
     content: (
       <>
+        <TryMeCursor />
         <p>
           <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="!no-underline text-neutral-800">Workflow</a>{' '}is a web app for reviewing design work. Designers push their Figma files in, and the team leaves feedback, tracks tasks and signs off in one place. I worked on the Figma plugin, which gets a designer&apos;s file out of Figma and into the app.
         </p>
@@ -96,7 +97,7 @@ export const projects: Project[] = [
 
         <h2>The manual version</h2>
         <p>
-          The first plugin told the user what to do. A looping walkthrough showed them how to open Figma&apos;s <b>Share</b> menu, copy the file link, and paste it into a field by hand.
+          The first plugin told the user what to do. A looping walkthrough showed them how to open Figma&apos;s Share menu, copy the file link, and paste it into a field by hand.
         </p>
         <p>
           It worked but was slow and easy to get lost in. This screen was where we lost the most users.
@@ -109,7 +110,6 @@ export const projects: Project[] = [
         <p>
           Then we found a shortcut. Figma&apos;s <Kbd keys={['⌘', 'L']} /> copies a link to the current selection straight to your clipboard. So instead of walking the user through the Share menu, we could ask for one keystroke and grab the link ourselves.
         </p>
-        <CodeBlock />
         <p>
           The plugin used the browser&apos;s navigator.clipboard API (since deprecated) to poll the clipboard, watch for a string that looked like a Figma URL, and save it the moment it appeared. One shortcut, no pasting, no menus.
         </p>

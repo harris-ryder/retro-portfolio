@@ -68,6 +68,12 @@
     cursor: pointer;
 }
 
+/* while the "Try me" arrow stands in for the cursor, hide the native one */
+body.wf-cursor-on,
+body.wf-cursor-on * {
+    cursor: none !important;
+}
+
 /* Inline keyboard keys (article prose) */
 .wf-kbd {
     display: inline-flex;
@@ -82,11 +88,12 @@
     box-sizing: border-box;
     width: 1.55em;
     height: 1.55em;
-    border: 1px solid #1a1a1a;
+    border: 1px solid #929292;
     border-radius: 999px;
     font-size: 0.8em;
     line-height: 1;
-    color: #1a1a1a;
+    background: #929292;
+    color: #FCFCFC;
 }
 .wf-kbd__k svg {
     width: 78%;
@@ -102,7 +109,7 @@
     flex: none;
     width: 0.45em;
     height: 1px;
-    background: #1a1a1a;
+    background: #929292;
 }
 
 @keyframes winIn {
@@ -157,6 +164,21 @@
         @apply underline;
     }
 
+}
+
+/* ABC Diatype ships a single weight, so grayscale font-smoothing is the
+   only "lighter" lever available. Apply it app-wide by text role:
+   secondary (gray) text renders a touch thinner, primary (dark) text
+   keeps its normal (heavier) rendering — even inside a gray container
+   that would otherwise thin it via inheritance. */
+.text-neutral-400,
+.media-loading {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.text-neutral-800 {
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
 }
 
 :root {
