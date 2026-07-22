@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { registerDemo } from './focusManager'
 
-const LABEL = 'Interactive...'
+const LABEL = 'Keyboard interactive...'
 
 export function DemoFrame({
   designWidth,
@@ -65,8 +65,8 @@ export function DemoFrame({
   return (
     <figure
       ref={figureRef}
-      className={`wf-demo relative my-[54px] overflow-hidden rounded-[12px] border bg-[#fcfcfc] shadow-[var(--shadow-media)] transition-colors duration-[600ms] select-none ${
-        active ? 'border-[rgba(50,50,50,0.3)]' : 'border-[rgba(50,50,50,0.12)]'
+      className={`wf-demo relative my-[54px] overflow-hidden rounded-[12px] border border-[rgba(50,50,50,0.12)] shadow-[var(--shadow-media)] transition-colors duration-[600ms] select-none ${
+        active ? 'bg-[#f4f4f2]' : 'bg-transparent'
       }`}
     >
       <div className="px-4 pb-6 pt-8">

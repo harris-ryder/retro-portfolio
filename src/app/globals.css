@@ -63,6 +63,11 @@
     font-family: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', 'Roboto Mono', monospace;
 }
 
+/* clickable elements inside the demos */
+.wf-demo button {
+    cursor: pointer;
+}
+
 /* Inline keyboard keys (article prose) */
 .wf-kbd {
     display: inline-flex;
