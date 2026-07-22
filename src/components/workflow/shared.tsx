@@ -15,6 +15,12 @@ export const SCREEN_BASE = 'absolute inset-0 flex flex-col'
 export const backBtnCls =
   'grid h-7 w-7 place-items-center rounded-[7px] text-ink transition-colors hover:bg-[#f2f2f2] [&>svg]:h-[18px] [&>svg]:w-[18px]'
 
+/* Soft drop shadow for the plugin/clipboard windows — a touch weaker than
+   the article's --shadow-media (lower alpha). Set inline so it doesn't
+   depend on a global CSS var. */
+export const WINDOW_SHADOW =
+  '0 4px 12px -2px #00000009, 0 1px 3px 0 #00000006'
+
 /* ---------- Plugin window chrome ---------- */
 export function PluginWindow({
   onClose,
@@ -24,7 +30,10 @@ export function PluginWindow({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex h-[602px] w-[404px] animate-win-in flex-col overflow-hidden rounded-[13px] border border-black/[0.06] bg-surface shadow-[var(--shadow-media)]">
+    <div
+      className="flex h-[602px] w-[404px] animate-win-in flex-col overflow-hidden rounded-[13px] border border-black/[0.06] bg-surface"
+      style={{ boxShadow: WINDOW_SHADOW }}
+    >
       <header className="flex h-[40px] shrink-0 items-center border-b border-hairline pl-3.5 pr-2">
         <WorkflowLogo />
         <span className="ml-2 text-[11px] font-medium tracking-[-0.1px] text-ink">
@@ -89,7 +98,10 @@ export function ClipboardPanel({
 
   return (
     <div className="relative">
-      <aside className="w-[248px] animate-win-in overflow-hidden rounded-xl border border-black/5 bg-white/95 shadow-[var(--shadow-media)]">
+      <aside
+        className="w-[248px] animate-win-in overflow-hidden rounded-xl border border-black/5 bg-white/95"
+        style={{ boxShadow: WINDOW_SHADOW }}
+      >
         <div className="flex items-center gap-1.5 border-b border-hairline px-3.5 py-2.5">
           <span className="text-[#2b2b2b]">
             <ClipboardIcon />

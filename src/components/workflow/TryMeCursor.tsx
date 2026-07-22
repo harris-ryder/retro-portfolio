@@ -13,6 +13,11 @@ import { subscribeBadge } from './focusManager'
 const BASE_DEG = -116
 /* Aim the tip at the demo (0 = point at it, 180 = point away). */
 const AIM_OFFSET = 0
+/* Orientation the cursor is seeded to the instant it's swapped in —
+   pointing straight up — before it eases round to aim at the demo. */
+const R_UP = -90 - BASE_DEG
+/* Rotation easing (also restored after the no-animation seed). */
+const ARROW_TRANSITION = 'transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1)'
 /* Arrow geometry in viewBox units; the tip is the hotspot pinned to the
    pointer. SCALE trims the rendered size to match the native cursor. */
 const VB_W = 17
@@ -27,6 +32,7 @@ export function TryMeCursor() {
   const mouse = useRef({ x: 0, y: 0, seen: false })
   const target = useRef<HTMLElement | null>(null)
   const rot = useRef(0) // last applied rotation, unwrapped so easing takes the short path
+  const active = useRef(false) // is the cursor currently swapped in?
 
   useEffect(() => {
     const render = () => {
@@ -38,6 +44,7 @@ export function TryMeCursor() {
       if (!el || !mouse.current.seen) {
         root.style.opacity = '0'
         document.body.classList.remove('wf-cursor-on')
+        active.current = false
         return
       }
 
@@ -45,6 +52,17 @@ export function TryMeCursor() {
       root.style.transform = `translate(${x}px, ${y}px)`
       root.style.opacity = '1'
       document.body.classList.add('wf-cursor-on')
+
+      // Just swapped in: seed the orientation to "pointing up" with no
+      // animation, so the ease below runs from there rather than snapping.
+      if (!active.current) {
+        active.current = true
+        rot.current = R_UP
+        arrow.style.transition = 'none'
+        arrow.style.transform = `rotate(${R_UP}deg)`
+        void arrow.getBoundingClientRect() // commit the start orientation
+        arrow.style.transition = ARROW_TRANSITION
+      }
 
       const t = el.getBoundingClientRect()
       const deg =
@@ -101,7 +119,7 @@ export function TryMeCursor() {
           left: -TIP_X * SCALE,
           top: -TIP_Y * SCALE,
           transformOrigin: `${TIP_X * SCALE}px ${TIP_Y * SCALE}px`,
-          transition: 'transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1)',
+          transition: ARROW_TRANSITION,
           filter: 'drop-shadow(0 0.5px 1px rgba(0,0,0,0.28))',
         }}
       >

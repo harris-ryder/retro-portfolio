@@ -18,7 +18,7 @@ export default function Home() {
   ].sort((a, b) => Number(b.year) - Number(a.year))
 
   return (
-    <main className="text-[15px] leading-[1.9]">
+    <main className="text-[15px] leading-[1.6]">
       <div className="px-10 pt-16 pb-8 lg:px-16">
         <header className="mb-2">
           <h1 className="font-normal text-[15px]">Harris Ryder</h1>

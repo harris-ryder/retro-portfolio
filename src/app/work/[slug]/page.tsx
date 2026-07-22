@@ -8,7 +8,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   if (!project) notFound()
 
   return (
-    <main className="min-h-screen px-6 py-16 text-[15px] leading-[1.7] text-neutral-400">
+    <main className="min-h-screen px-6 py-16 text-[15px] leading-[1.6] text-neutral-400">
       <div className="max-w-[640px] mx-auto">
         <Link href="/" className="block mb-16 no-underline text-neutral-800">← Back</Link>
         <h1 className="font-normal text-[15px] text-neutral-800">{project.title}</h1>

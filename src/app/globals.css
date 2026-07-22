@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 @theme {
-    --color-neutral-400: #929292;
+    --color-neutral-400: #626262;
     --color-neutral-800: #323232;
 
     /* ---- Workflow plugin demos (scoped to .wf-demo) ---- */
