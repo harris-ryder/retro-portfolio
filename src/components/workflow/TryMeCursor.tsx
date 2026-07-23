@@ -1,20 +1,20 @@
 'use client'
 /* Stands in for the mouse cursor while a demo is active (on screen). It
-   draws a replica of the system arrow pointer — so it reads as the normal
-   cursor — but rotates around its tip to aim relative to the active demo.
+   draws a replica of the system arrow pointer (so it reads as the normal
+   cursor) but rotates around its tip to aim relative to the active demo.
    The tip is pinned to the real pointer position (its hotspot). Rotation
    eases smoothly (shortest path) rather than snapping. When no demo is
    active, or the pointer leaves the window, the native cursor is restored. */
 import { useEffect, useRef } from 'react'
 import { subscribeBadge } from './focusManager'
 
-/* The arrow art (below) points up-and-left along its spine — the angle,
+/* The arrow art (below) points up-and-left along its spine: the angle,
    in screen coords, from tail to tip. */
 const BASE_DEG = -116
 /* Aim the tip at the demo (0 = point at it, 180 = point away). */
 const AIM_OFFSET = 0
-/* Orientation the cursor is seeded to the instant it's swapped in —
-   pointing straight up — before it eases round to aim at the demo. */
+/* Orientation the cursor is seeded to the instant it's swapped in
+   (pointing straight up) before it eases round to aim at the demo. */
 const R_UP = -90 - BASE_DEG
 /* Rotation easing (also restored after the no-animation seed). */
 const ARROW_TRANSITION = 'transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1)'

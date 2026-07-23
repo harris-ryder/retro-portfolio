@@ -2,7 +2,7 @@
 /* ------------------------------------------------------------------
    Shared UI for the three "Workflow" plugin demos. Ported verbatim
    from the figma-plugin-emulator repo (github.com/harris-ryder/
-   workflow-figma-plugin-emulator) — the presentational pieces are
+   workflow-figma-plugin-emulator). The presentational pieces are
    identical across the old-version / first-version / main branches;
    only the flow logic (in each demo file) differs.
    ------------------------------------------------------------------ */
@@ -15,7 +15,7 @@ export const SCREEN_BASE = 'absolute inset-0 flex flex-col'
 export const backBtnCls =
   'grid h-7 w-7 place-items-center rounded-[7px] text-ink transition-colors hover:bg-[#f2f2f2] [&>svg]:h-[18px] [&>svg]:w-[18px]'
 
-/* Soft drop shadow for the plugin/clipboard windows — a touch weaker than
+/* Soft drop shadow for the plugin/clipboard windows, a touch weaker than
    the article's --shadow-media (lower alpha). Set inline so it doesn't
    depend on a global CSS var. */
 export const WINDOW_SHADOW =

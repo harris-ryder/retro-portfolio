@@ -169,7 +169,7 @@ body.wf-cursor-on * {
 /* ABC Diatype ships a single weight, so grayscale font-smoothing is the
    only "lighter" lever available. Apply it app-wide by text role:
    secondary (gray) text renders a touch thinner, primary (dark) text
-   keeps its normal (heavier) rendering — even inside a gray container
+   keeps its normal (heavier) rendering, even inside a gray container
    that would otherwise thin it via inheritance. */
 .text-neutral-400,
 .media-loading {
@@ -187,7 +187,7 @@ body.wf-cursor-on * {
     --media-margin: 54px;
 }
 
-/* Dots cycle (empty) → . → .. → ... — fixed-width container so "loading" never shifts */
+/* Dots cycle (empty) → . → .. → ..., fixed-width container so "loading" never shifts */
 @keyframes loading-dots {
     0%   { clip-path: inset(0 3ch 0 0); }
     100% { clip-path: inset(0 -1ch 0 0); }
@@ -232,7 +232,7 @@ body.wf-cursor-on * {
     animation: loading-dots 1.6s steps(4, end) infinite;
 }
 
-/* img/video inside the wrapper — decoration lives on the wrapper */
+/* img/video inside the wrapper; decoration lives on the wrapper */
 .media-wrapper > img,
 .media-wrapper > video {
     display: block;

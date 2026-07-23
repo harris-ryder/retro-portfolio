@@ -38,41 +38,44 @@ export const projects: Project[] = [
         <p><Img src="/images/nothing-ai-builder/overview.webp" alt="Overview of the Essential App Builder editor" width={2000} height={1405} /></p>
         <p>The editor is split into a chat panel for prompting the agent, a code view, and a live preview, with a gallery of every widget you have created so far.</p>
 
-        <h2>Gallery</h2>
-        <p>The rewrite fetches only what fits on screen, shows skeleton cards on slow connections, and uses optimistic updates for rename and delete. Fully keyboard-navigable with semantic HTML throughout.</p>
-        <Video src="/videos/nothing-ai-builder/gallery-view.mp4" width={1920} height={1180} />
-
-        <h2>Deploy Flow</h2>
-        <p>Once happy with the preview you can deploy the widget to your phone. The backend compiles the React Native code into a real app that lives in the widget drawer.</p>
-        <p>The new flow hides build logs and starts the build the moment the modal opens, so by the time the user fills in the name and description it is already done.</p>
-        <Video src="/videos/nothing-ai-builder/old-deploy-flow.mp4" width={1920} height={1222} />
-        <Video src="/videos/nothing-ai-builder/new-deploy-flow.mp4" width={1920} height={1440} />
-
-        <h2>Version History</h2>
-        <p>Every prompt produces a new version of the widget, so you can always step back to an earlier one. Restoring never overwrites the timeline — it branches a fresh version from the one you pick, so nothing you have made is lost.</p>
-        <p>The original hung a Restore button off every version card in the chat, so going back meant scrolling the whole conversation to find the right one. The rewrite pulls it into a single dialog that lists every version with the current one marked, so you choose and restore from one place.</p>
-        <Video src="/videos/nothing-ai-builder/old-restore-flow.mp4" width={1920} height={1254} />
-        <Video src="/videos/nothing-ai-builder/new-restore-flow.mp4" width={1920} height={1268} />
-
         <h2>Mobile</h2>
-        <p>Given that Gen UI is ultimately a phone product, mobile parity was a clear priority. The rewrite enforces a token-based system for colour and typography, with Storybook used to catch regressions before they ship.</p>
-        <p>On mobile the editor switches between chat, code, and preview via a tab toggle, the deploy flow becomes a bottom drawer, and navigation collapses into a mobile-specific component.</p>
+        <p>The original had room to improve on mobile, which matters for a widget builder whose whole point is putting widgets on a phone. Getting mobile right was a key focus of the rewrite.</p>
         <div style={sideBySideWrap}>
           <Video src="/videos/nothing-ai-builder/old-mobile-flow.mp4" width={1080} height={2400} wrapperStyle={inFlex} />
           <Video src="/videos/nothing-ai-builder/web-mobile-flow.mp4" width={1080} height={2400} wrapperStyle={inFlex} />
         </div>
+        <p>The old version is on the left, the new one on the right. The rewrite adds a bottom toggle to switch between chat and preview, and improves spacing and contrast throughout so the app stays legible at phone size. It also introduces a top bar that surfaces the information that matters most, such as the current version, alongside a burger menu that holds navigation.</p>
+
+        <h2>Deploy Flow</h2>
+        <p>Once happy with the preview you can deploy the widget to your phone. The backend compiles the React Native code into a real app that lives in the widget drawer.</p>
+        <Video src="/videos/nothing-ai-builder/old-deploy-flow.mp4" width={1920} height={1222} />
+        <p>The original ran everything in sequence: a starting screen, streamed build logs while the server compiled the app, then a form to name the widget, then a completion screen. Four surfaces one after another, and 40 seconds in this video. The logs served no purpose for a non-technical user, since nothing on that screen was theirs to act on, so they only added waiting time and risked confusing them.</p>
+        <Video src="/videos/nothing-ai-builder/new-deploy-flow.mp4" width={1920} height={1440} />
+        <p>The rewrite starts the compile the moment Deploy is clicked and lets it run in the background. To parallelise the work the form is shown straight away, so the build happens while the user fills it in. Once the form is done, a success, failed, or under-review (when publishing) screen appears. That is two surfaces instead of four, and the same process takes 12 seconds in this video.</p>
+
+        <h2>Widget Size</h2>
+        <p>The app offered two sizes, square and landscape, but the choice was hidden in the message input as an ambiguous toggle. User feedback showed people missed it entirely and assumed square, the default, was the only option.</p>
+        <Video src="/videos/nothing-ai-builder/size-prompt.mp4" width={1920} height={1398} />
+        <p>Change the size after the widget exists and the agent re-optimises for the new grid, rewriting the layout rather than squashing the old one into it.</p>
+        <Video src="/videos/nothing-ai-builder/new-resize-flow.mp4" width={1920} height={1270} />
+        <p>The video shows how the rewrite makes it an explicit selection on the first prompt, bringing intentionality to the widget's design from the start.</p>
+
+        <h2>Version History</h2>
+        <p>Every prompt produces a new version of the widget, so the app keeps a full version history. You can restore any earlier one, which clones the version you pick into a fresh version at the top of the history. The version number ticks up and the preview switches to show that new latest version.</p>
+        <Video src="/videos/nothing-ai-builder/old-restore-flow.mp4" width={1920} height={1254} />
+        <p>The problem was that Restore read as Preview. People expected clicking it to simply display that version in the editor, and visually that is what happens. But it also adds a new version: with 14 versions, restoring v2 quietly creates a v15 that clones v2. It was easy to assume you were only previewing and never notice the version number had gone up.</p>
+        <Video src="/videos/nothing-ai-builder/new-restore-flow.mp4" width={1920} height={1268} />
+        <p>The fix puts Preview and Restore in a dropdown as separate choices, so Restore is no longer taken for a preview. That still left what Restore actually does unclear, so a dialog now appears once to explain what happens when you click it.</p>
+
+        <h2>Gallery</h2>
+        <p>The rewrite fetches only what fits on screen, shows skeleton cards on slow connections, and uses optimistic updates for rename and delete. Fully keyboard-navigable with semantic HTML throughout.</p>
+        <Video src="/videos/nothing-ai-builder/gallery-view.mp4" width={1920} height={1180} />
 
         <h2>Preview Architecture</h2>
         <p>The widget preview runs inside an iframe so a broken widget can&apos;t crash the editor. In the original that iframe had its own backend connection and state, which could drift out of sync with the parent silently. The rewrite makes the main app the single owner of state. The iframe&apos;s only job is to receive files via postMessage, bundle them, and report back.</p>
 
         <h2>Engineering</h2>
         <p>The rewrite uses Tailwind exclusively with design tokens for colour and typography. ESLint bans any, so every prop and API response is fully typed. useEffect was replaced almost entirely with TanStack Query, keeping data in the cache rather than spread across component state. Components are organised by feature, so each area of the app owns its own hooks and utils.</p>
-
-        <h2>Widget Size</h2>
-        <p>The agent optimises the widget for a specific size, so the wrong choice produces broken layouts on device. The original surfaced this as a dropdown that was easy to miss. The rewrite surfaces the choice explicitly with a visual of each size, and shows a dialog if you change it after the widget is built — responsive design is not enough, the agent needs to rebuild for the new dimensions.</p>
-        <Video src="/videos/nothing-ai-builder/size-prompt.mp4" width={1920} height={1398} />
-        <p>Change the size after the widget exists and the agent re-optimises for the new grid, rewriting the layout rather than squashing the old one into it.</p>
-        <Video src="/videos/nothing-ai-builder/new-resize-flow.mp4" width={1920} height={1270} />
 
         <h2>Tooltips</h2>
         <p>Icon-only buttons are ambiguous, so every one got a tooltip explaining what it does.</p>

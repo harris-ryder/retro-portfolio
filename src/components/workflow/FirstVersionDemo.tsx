@@ -1,6 +1,6 @@
 'use client'
 /* First version: Shift + L (either order) "copies" the file link; the
-   plugin then polls the clipboard and pulls the link in automatically —
+   plugin then polls the clipboard and pulls the link in automatically,
    no manual paste. (Shift stands in for ⌘, which the browser reserves.) */
 import { useEffect, useRef, useState } from 'react'
 import {

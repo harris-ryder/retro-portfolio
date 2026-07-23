@@ -1,6 +1,6 @@
 /* Coordinates the inline demos as the page scrolls: the demo whose
    centre is closest to the viewport centre (and is meaningfully on
-   screen) becomes active — it gets keyboard focus so you can just start
+   screen) becomes active. It gets keyboard focus so you can just start
    typing, and is broadcast to badge subscribers (the "Try me" pointer)
    every frame so they can aim at it. Focus is only moved between
    registered demos, never stolen from elsewhere. */
