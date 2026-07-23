@@ -45,8 +45,14 @@ export const projects: Project[] = [
         <h2>Deploy Flow</h2>
         <p>Once happy with the preview you can deploy the widget to your phone. The backend compiles the React Native code into a real app that lives in the widget drawer.</p>
         <p>The new flow hides build logs and starts the build the moment the modal opens, so by the time the user fills in the name and description it is already done.</p>
-        <Video src="/videos/nothing-ai-builder/old-deploy-flow.mp4" width={1920} height={1252} />
+        <Video src="/videos/nothing-ai-builder/old-deploy-flow.mp4" width={1920} height={1222} />
         <Video src="/videos/nothing-ai-builder/new-deploy-flow.mp4" width={1920} height={1440} />
+
+        <h2>Version History</h2>
+        <p>Every prompt produces a new version of the widget, so you can always step back to an earlier one. Restoring never overwrites the timeline — it branches a fresh version from the one you pick, so nothing you have made is lost.</p>
+        <p>The original hung a Restore button off every version card in the chat, so going back meant scrolling the whole conversation to find the right one. The rewrite pulls it into a single dialog that lists every version with the current one marked, so you choose and restore from one place.</p>
+        <Video src="/videos/nothing-ai-builder/old-restore-flow.mp4" width={1920} height={1254} />
+        <Video src="/videos/nothing-ai-builder/new-restore-flow.mp4" width={1920} height={1268} />
 
         <h2>Mobile</h2>
         <p>Given that Gen UI is ultimately a phone product, mobile parity was a clear priority. The rewrite enforces a token-based system for colour and typography, with Storybook used to catch regressions before they ship.</p>
@@ -65,6 +71,8 @@ export const projects: Project[] = [
         <h2>Widget Size</h2>
         <p>The agent optimises the widget for a specific size, so the wrong choice produces broken layouts on device. The original surfaced this as a dropdown that was easy to miss. The rewrite surfaces the choice explicitly with a visual of each size, and shows a dialog if you change it after the widget is built — responsive design is not enough, the agent needs to rebuild for the new dimensions.</p>
         <Video src="/videos/nothing-ai-builder/size-prompt.mp4" width={1920} height={1398} />
+        <p>Change the size after the widget exists and the agent re-optimises for the new grid, rewriting the layout rather than squashing the old one into it.</p>
+        <Video src="/videos/nothing-ai-builder/new-resize-flow.mp4" width={1920} height={1270} />
 
         <h2>Tooltips</h2>
         <p>Icon-only buttons are ambiguous, so every one got a tooltip explaining what it does.</p>
