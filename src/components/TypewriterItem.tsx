@@ -30,7 +30,7 @@ export function TypewriterItem({ tagline, children }: TypewriterItemProps) {
     const next = lengthRef.current + 1
     setLen(next)
     if (next < tagline.length) {
-      timerRef.current = setTimeout(stepForward, 38)
+      timerRef.current = setTimeout(stepForward, 24)
     } else {
       timerRef.current = null
       setPhase('idle')
@@ -41,7 +41,7 @@ export function TypewriterItem({ tagline, children }: TypewriterItemProps) {
     const next = lengthRef.current - 1
     setLen(next)
     if (next > 0) {
-      timerRef.current = setTimeout(stepBackward, 38)
+      timerRef.current = setTimeout(stepBackward, 24)
     } else {
       timerRef.current = null
       setPhase('idle')
@@ -55,7 +55,7 @@ export function TypewriterItem({ tagline, children }: TypewriterItemProps) {
       timerRef.current = setTimeout(() => {
         setPhase('forward')
         stepForward()
-      }, 350)
+      }, 220)
     } else if (lengthRef.current < tagline.length) {
       setPhase('forward')
       stepForward()
