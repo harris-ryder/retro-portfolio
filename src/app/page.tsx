@@ -1,5 +1,6 @@
 import { projects } from '@/data/projects'
 import { ProjectList } from '@/components/ProjectList'
+import { BlobField } from '@/components/BlobField'
 
 const browserLinks = [
   { year: '2025', title: 'ModelNote', tagline: 'A review tool I built for 3D model feedback', url: 'https://modelnote.io/' },
@@ -31,6 +32,7 @@ export default function Home() {
 
   return (
     <main className="text-[15px] leading-[1.6]">
+      <BlobField />
       <div className="px-10 pt-16 pb-8 lg:px-16">
         <header className="mb-2">
           <h1 className="font-normal text-[15px]">Harris Ryder</h1>
