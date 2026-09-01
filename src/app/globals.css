@@ -148,6 +148,12 @@ body.wf-cursor-on * {
 }
 
 @layer base {
+    html {
+        /* the goo borders' canvases overhang article media; clip rather
+           than letting them widen the page on small screens */
+        overflow-x: clip;
+    }
+
     body {
         /* soft cream — warm off-white; the goo's difference blend inverts
            this, so blobs pick up a faint cool tint against it */
@@ -193,6 +199,23 @@ body.wf-cursor-on * {
 @keyframes loading-dots {
     0%   { clip-path: inset(0 3ch 0 0); }
     100% { clip-path: inset(0 -1ch 0 0); }
+}
+
+/* Outer shell for article media: hosts the gooey border canvas behind the
+   card, and takes over the card's margins/aspect so the goo can overflow
+   the (overflow-hidden) media-wrapper inside it */
+.goo-media {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin-top: var(--media-margin);
+    margin-bottom: var(--media-margin);
+}
+.goo-media > .media-wrapper {
+    margin: 0;
+    height: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 /* Reserves the correct aspect-ratio space before media loads */
