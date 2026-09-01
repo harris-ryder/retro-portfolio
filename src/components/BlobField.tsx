@@ -12,7 +12,9 @@ import { useEffect, useRef } from 'react'
 // Balls attract each other with gentle short-range gravity, repel when they
 // overlap too far (so a merged mass packs like a liquid instead of collapsing
 // to a point), and feel a very weak pull toward the global centre of mass so
-// separated islands always drift together. Left alone, everything ends as one
+// separated islands always drift together. Balls that actually touch also
+// link up with sticky elastic bonds: pulling bonded goo apart stretches
+// visible strands that thin out and snap. Left alone, everything ends as one
 // large blob; the mouse is the only thing that breaks it apart.
 
 /** Canvas extends past the viewport so the blur never fades at screen edges */
@@ -50,20 +52,57 @@ const WALL = 50
 const REPEL_R = 160
 const REPEL = 3500
 
+/** Sticky elastic bonds — the stringiness. Balls that actually touch link
+ *  up; a stretched link pulls back like a strand of goo and snaps past the
+ *  break length. Stretched links also render as tapering capsules, so
+ *  separating masses stay connected by visible strings that thin out until
+ *  the goo filter erodes them away. */
+const MAX_BONDS = 6
+/** Link forms when a pair gets this close (× contact distance)... */
+const BOND_FORM = 1.1
+/** ...and snaps when stretched past this (× contact distance) */
+const BOND_BREAK = 6
+/** Spring pull of a stretched strand, and its cap */
+const K_BOND = 30
+const BOND_PULL_CAP = 260
+/** Mild velocity matching across links — the syrupy coherence of a liquid */
+const BOND_VISC = 1.5
+/** Strand capsules start drawing at this stretch (× contact distance);
+ *  below it the blur already fuses the pair */
+const NECK_ON = 1.25
+
 /**
- * Specular sheen. A second canvas above the goo, blended with `screen`, only
- * ever lightens dark pixels — so glints appear on the black goop and vanish
- * over the white page. Each ball's summed gravity points into its local mass,
- * so its negation is a free surface normal: rim balls facing the light glow,
- * interior and far-side balls stay dark. Light comes from the top-left, where
- * the mass gravitates.
+ * Oil-slick shine. A second canvas above the goo, blended with `screen`,
+ * only ever lightens dark pixels — highlights appear on the black goop and
+ * vanish over the white page. Rather than stamping per-ball glints (which
+ * reads blotchy), every frame renders the balls and strands into a small
+ * offscreen density field, treats it as a height map — flat plateau inside
+ * the mass, smooth falloff at the silhouette — and shades it per pixel:
+ * the field's gradient is the surface normal, lit with Blinn-Phong plus a
+ * grazing-angle fresnel term. Upscaling that small shaded image gives one
+ * smooth continuous highlight that follows the merged surface, strings and
+ * droplets included. Light comes from the top-left, tilted toward the
+ * viewer, matching where the mass gravitates.
  */
-const LIGHT_X = -0.7071
-const LIGHT_Y = -0.7071
-/** Faint gloss every ball gets, so lone droplets still look wet */
-const SHINE_BASE = 0.06
-/** Extra gloss for lit rim balls */
-const SHINE_RIM = 0.65
+const FIELD_SCALE = 0.25
+/** Field density treated as full height — everything above is flat interior */
+const FIELD_SAT = 0.55
+/** How steeply the height falloff tilts the surface normal */
+const FIELD_STEEP = 3
+/** Blinn-Phong half-vector: normalize(normalize(-0.7, -0.7, 0.55) + (0,0,1)) */
+const HALF_X = -0.3586
+const HALF_Y = -0.3586
+const HALF_Z = 0.8619
+/** Specular exponent and strength — the tight wet band on lit slopes.
+ *  Deliberately overdriven past 1 so the band's core saturates to white
+ *  before the clamp, which is what makes the goo read glossy-wet. */
+const SHINE_P = 32
+const SPEC = 1.6
+/** Broad low-exponent sheen over the whole lit slope — the smooth
+ *  oil-slick gradient the tight band sits inside */
+const BROAD = 0.3
+/** Grazing-angle glow around every silhouette edge */
+const FRESNEL = 0.18
 
 type Ball = {
   x: number
@@ -77,6 +116,16 @@ type Ball = {
   ay: number
 }
 
+/** A stretched bond, recorded during the physics step for the draw pass */
+type Strand = {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  /** Capsule width — tapers toward zero as the strand nears its snap length */
+  w: number
+}
+
 export function BlobField() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const shineRef = useRef<HTMLCanvasElement>(null)
@@ -88,19 +137,33 @@ export function BlobField() {
     const sctx = shine?.getContext('2d')
     if (!canvas || !ctx || !shine || !sctx) return
 
-    // one radial-gradient sprite, stamped per ball with varying alpha —
-    // far cheaper than building 1500 gradients every frame
-    const sprite = document.createElement('canvas')
-    sprite.width = sprite.height = 64
-    const spriteCtx = sprite.getContext('2d')
-    if (spriteCtx) {
-      const g = spriteCtx.createRadialGradient(32, 32, 0, 32, 32, 32)
-      g.addColorStop(0, 'rgba(255,255,255,1)')
-      g.addColorStop(0.55, 'rgba(255,255,255,0.35)')
-      g.addColorStop(1, 'rgba(255,255,255,0)')
-      spriteCtx.fillStyle = g
-      spriteCtx.fillRect(0, 0, 64, 64)
+    // one radial sprite with a smooth gaussian-ish falloff — summed per ball
+    // into the shine's density field, far cheaper than per-frame gradients
+    const fieldSprite = document.createElement('canvas')
+    fieldSprite.width = fieldSprite.height = 64
+    const fsctx = fieldSprite.getContext('2d')
+    if (fsctx) {
+      const g = fsctx.createRadialGradient(32, 32, 0, 32, 32, 32)
+      const stops: readonly (readonly [number, number])[] = [
+        [0, 1],
+        [0.3, 0.8],
+        [0.6, 0.35],
+        [0.85, 0.08],
+        [1, 0],
+      ]
+      for (const [at, a] of stops) g.addColorStop(at, `rgba(255,255,255,${a})`)
+      fsctx.fillStyle = g
+      fsctx.fillRect(0, 0, 64, 64)
     }
+
+    // small offscreen pair for the shine: `field` accumulates the density
+    // map, `fieldBlur` holds its softened copy for readback and receives
+    // the shaded result to upscale onto the shine canvas
+    const field = document.createElement('canvas')
+    const fctx = field.getContext('2d')
+    const fieldBlur = document.createElement('canvas')
+    const fbctx = fieldBlur.getContext('2d', { willReadFrequently: true })
+    if (!fctx || !fbctx) return
 
     let W = 0
     let H = 0
@@ -109,6 +172,16 @@ export function BlobField() {
     let balls: Ball[] = []
     let heads = new Int32Array(0)
     let next = new Int32Array(0)
+    /** Per-ball bond partners, flat n × MAX_BONDS, gated by bondCount */
+    let bondTo = new Int32Array(0)
+    let bondCount = new Uint8Array(0)
+    const strands: Strand[] = []
+
+    /** Shine height-field buffers, allocated per canvas size */
+    let fw = 0
+    let fh = 0
+    let hbuf = new Float32Array(0)
+    let shadeImg: ImageData | null = null
 
     const pointer = { x: -1e4, y: -1e4, active: false }
 
@@ -119,6 +192,19 @@ export function BlobField() {
       canvas.height = H
       shine.width = W
       shine.height = H
+      fw = Math.max(4, Math.ceil(W * FIELD_SCALE))
+      fh = Math.max(4, Math.ceil(H * FIELD_SCALE))
+      field.width = fw
+      field.height = fh
+      fieldBlur.width = fw
+      fieldBlur.height = fh
+      hbuf = new Float32Array(fw * fh)
+      shadeImg = fbctx.createImageData(fw, fh)
+      // shade pass only ever touches alpha; colour stays solid white
+      const od = shadeImg.data
+      for (let i = 0; i < od.length; i += 4) {
+        od[i] = od[i + 1] = od[i + 2] = 255
+      }
     }
 
     const init = () => {
@@ -139,10 +225,26 @@ export function BlobField() {
         }
       })
       next = new Int32Array(count)
+      bondTo = new Int32Array(count * MAX_BONDS)
+      bondCount = new Uint8Array(count)
+      strands.length = 0
+    }
+
+    /** Drop one side of a bond (the caller removes the mirror entry) */
+    const unlink = (i: number, j: number) => {
+      const base = i * MAX_BONDS
+      for (let s = bondCount[i] - 1; s >= 0; s--) {
+        if (bondTo[base + s] === j) {
+          bondTo[base + s] = bondTo[base + --bondCount[i]]
+          return
+        }
+      }
     }
 
     /** Gravity + separation for one pair, each applied once per frame */
-    const pair = (a: Ball, b: Ball, dt: number) => {
+    const pair = (i: number, j: number, dt: number) => {
+      const a = balls[i]
+      const b = balls[j]
       let dx = b.x - a.x
       let dy = b.y - a.y
       const d2 = dx * dx + dy * dy
@@ -167,6 +269,21 @@ export function BlobField() {
         a.ay += dy * fa
         b.ax -= dx * fb
         b.ay -= dy * fb
+      }
+      // touching pairs link up — the sticky bonds that carry the stringiness
+      if (d < contact * BOND_FORM && bondCount[i] < MAX_BONDS && bondCount[j] < MAX_BONDS) {
+        const base = i * MAX_BONDS
+        let known = false
+        for (let s = 0; s < bondCount[i]; s++) {
+          if (bondTo[base + s] === j) {
+            known = true
+            break
+          }
+        }
+        if (!known) {
+          bondTo[base + bondCount[i]++] = j
+          bondTo[j * MAX_BONDS + bondCount[j]++] = i
+        }
       }
     }
 
@@ -198,14 +315,64 @@ export function BlobField() {
       for (let cy = 0; cy < rows; cy++) {
         for (let cx = 0; cx < cols; cx++) {
           for (let i = heads[cy * cols + cx]; i !== -1; i = next[i]) {
-            const a = balls[i]
-            for (let j = next[i]; j !== -1; j = next[j]) pair(a, balls[j], dt)
+            for (let j = next[i]; j !== -1; j = next[j]) pair(i, j, dt)
             for (let k = 0; k < 4; k++) {
               const nx = cx + (k === 1 ? -1 : k === 0 || k === 3 ? 1 : 0)
               const ny = k === 0 ? cy : cy + 1
               if (nx < 0 || nx >= cols || ny >= rows) continue
-              for (let j = heads[ny * cols + nx]; j !== -1; j = next[j]) pair(a, balls[j], dt)
+              for (let j = heads[ny * cols + nx]; j !== -1; j = next[j]) pair(i, j, dt)
             }
+          }
+        }
+      }
+
+      // sticky bonds: stretched links pull back like elastic, badly
+      // stretched links snap, and anything in between is recorded as a
+      // visible strand of goo for the draw pass
+      strands.length = 0
+      for (let i = 0; i < n; i++) {
+        const base = i * MAX_BONDS
+        for (let s = 0; s < bondCount[i]; s++) {
+          const j = bondTo[base + s]
+          if (j < i) continue // each bond handled once, from the lower index
+          const a = balls[i]
+          const b = balls[j]
+          const dx = b.x - a.x
+          const dy = b.y - a.y
+          const d = Math.hypot(dx, dy)
+          const contact = PACK * (a.r + b.r)
+          if (d > contact * BOND_BREAK) {
+            unlink(j, i)
+            bondTo[base + s] = bondTo[base + --bondCount[i]]
+            s--
+            continue
+          }
+          if (d < 0.001) continue
+          const ux = dx / d
+          const uy = dy / d
+          // velocity matching keeps linked goo moving as one syrupy body
+          const kv = Math.min(BOND_VISC * dt, 0.2) * 0.5
+          const mx = (b.vx - a.vx) * kv
+          const my = (b.vy - a.vy) * kv
+          a.vx += mx
+          a.vy += my
+          b.vx -= mx
+          b.vy -= my
+          if (d > contact) {
+            // elastic pull of the stretched strand
+            const f = Math.min(K_BOND * (d - contact), BOND_PULL_CAP) * dt
+            a.vx += ux * f
+            a.vy += uy * f
+            b.vx -= ux * f
+            b.vy -= uy * f
+          }
+          const neck = contact * NECK_ON
+          if (d > neck) {
+            // tapering capsule: full goo width at the neck, hairline near
+            // the snap — the threshold filter erodes it away before it breaks
+            const t = (d - neck) / (contact * BOND_BREAK - neck)
+            const w = 1.8 * Math.min(a.r, b.r) * Math.pow(1 - t, 0.7)
+            if (w > 3) strands.push({ x1: a.x, y1: a.y, x2: b.x, y2: b.y, w })
           }
         }
       }
@@ -280,22 +447,85 @@ export function BlobField() {
       }
       ctx.fill()
 
-      sctx.clearRect(0, 0, W, H)
-      for (const b of balls) {
-        const am = Math.hypot(b.ax, b.ay)
-        let lit = SHINE_BASE
-        if (am > 1) {
-          // outward normal ≈ −(net gravity); shade by how much it faces the
-          // light, cubed to pinch the sheen into a tight specular hotspot
-          const facing = Math.max(0, (-b.ax / am) * LIGHT_X + (-b.ay / am) * LIGHT_Y)
-          lit += SHINE_RIM * facing * facing * facing * Math.min(am / A_MAX, 1)
-        }
-        const hr = b.r * 0.9
-        sctx.globalAlpha = Math.min(lit, 1)
-        // glint sits up-left of centre, toward the light
-        sctx.drawImage(sprite, b.x - 0.3 * b.r - hr, b.y - 0.3 * b.r - hr, hr * 2, hr * 2)
+      // stretched bonds render as strings of goo between separating masses
+      ctx.strokeStyle = '#fff'
+      ctx.lineCap = 'round'
+      for (const st of strands) {
+        ctx.lineWidth = st.w
+        ctx.beginPath()
+        ctx.moveTo(st.x1, st.y1)
+        ctx.lineTo(st.x2, st.y2)
+        ctx.stroke()
       }
-      sctx.globalAlpha = 1
+
+      // ---- shine: shade the goo as a height field --------------------
+      if (!shadeImg) return
+      // 1. accumulate the density map at low resolution — soft sprite per
+      //    ball plus the strand capsules, summed with `lighter`
+      fctx.setTransform(1, 0, 0, 1, 0, 0)
+      fctx.clearRect(0, 0, fw, fh)
+      fctx.globalCompositeOperation = 'lighter'
+      fctx.setTransform(FIELD_SCALE, 0, 0, FIELD_SCALE, 0, 0)
+      for (const b of balls) {
+        const R = b.r * 1.5
+        fctx.drawImage(fieldSprite, b.x - R, b.y - R, R * 2, R * 2)
+      }
+      fctx.strokeStyle = 'rgba(255,255,255,0.65)'
+      fctx.lineCap = 'round'
+      for (const st of strands) {
+        fctx.lineWidth = st.w
+        fctx.beginPath()
+        fctx.moveTo(st.x1, st.y1)
+        fctx.lineTo(st.x2, st.y2)
+        fctx.stroke()
+      }
+      // 2. soften, so the gradient (and therefore the highlight) is smooth
+      fbctx.clearRect(0, 0, fw, fh)
+      fbctx.filter = 'blur(3px)'
+      fbctx.drawImage(field, 0, 0)
+      fbctx.filter = 'none'
+      // 3. shade per pixel: height = clamped density, normal from its
+      //    gradient, Blinn-Phong band plus grazing-angle fresnel
+      const src = fbctx.getImageData(0, 0, fw, fh).data
+      for (let i = 0, m = fw * fh; i < m; i++) {
+        const v = src[i * 4 + 3] / (255 * FIELD_SAT)
+        hbuf[i] = v > 1 ? 1 : v
+      }
+      const od = shadeImg.data
+      for (let y = 1; y < fh - 1; y++) {
+        for (let x = 1; x < fw - 1; x++) {
+          const i = y * fw + x
+          const c = hbuf[i]
+          let alpha = 0
+          if (c > 0.1) {
+            const gx = (hbuf[i + 1] - hbuf[i - 1]) * FIELD_STEEP
+            const gy = (hbuf[i + fw] - hbuf[i - fw]) * FIELD_STEEP
+            const inv = 1 / Math.sqrt(gx * gx + gy * gy + 1)
+            const dotH = (-gx * HALF_X - gy * HALF_Y + HALF_Z) * inv
+            const g = 1 - inv // 0 on the flat top, → 1 on steep rims
+            alpha = g * g * FRESNEL
+            if (dotH > 0) {
+              // tight wet band where the slope mirrors the light...
+              alpha += Math.pow(dotH, SHINE_P) * SPEC
+              // ...inside a broad smooth gradient over the whole lit slope,
+              // gated to slopes so the flat interior stays matte black
+              const d2 = dotH * dotH
+              const gk = g * 3
+              alpha += d2 * d2 * dotH * BROAD * (gk > 1 ? 1 : gk)
+            }
+            if (alpha > 1) alpha = 1
+            // fade in from the silhouette so nothing halos outside the goo
+            const fade = (c - 0.1) / 0.15
+            if (fade < 1) alpha *= fade
+          }
+          od[i * 4 + 3] = alpha * 255
+        }
+      }
+      // 4. upscale the shaded field onto the shine canvas — bilinear
+      //    smoothing turns the small image into one continuous sheen
+      fbctx.putImageData(shadeImg, 0, 0)
+      sctx.clearRect(0, 0, W, H)
+      sctx.drawImage(fieldBlur, 0, 0, fw, fh, 0, 0, fw / FIELD_SCALE, fh / FIELD_SCALE)
     }
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -380,8 +610,9 @@ export function BlobField() {
           ...frame,
           // two goo passes: the first merges balls into masses, the second
           // re-blurs and re-thresholds the silhouette, rounding off the
-          // ball-by-ball scallops on big merged blobs
-          filter: 'blur(6.5px) contrast(30) blur(5px) contrast(25)',
+          // ball-by-ball scallops on big merged blobs; slightly soft
+          // contrast keeps thinning strands alive longer before they snap
+          filter: 'blur(7px) contrast(26) blur(5px) contrast(22)',
           mixBlendMode: 'difference',
         }}
       />
@@ -392,8 +623,8 @@ export function BlobField() {
         style={{
           ...frame,
           // screen-blend: lightens the black goop, invisible on the white
-          // page; the heavy blur fuses per-ball glints into one wet sheen
-          filter: 'blur(10px)',
+          // page; a whisper of blur hides the height-field's upscaling
+          filter: 'blur(1px)',
           mixBlendMode: 'screen',
         }}
       />
