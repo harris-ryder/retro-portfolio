@@ -72,37 +72,57 @@ const BOND_VISC = 1.5
 const NECK_ON = 1.25
 
 /**
- * Oil-slick shine. A second canvas above the goo, blended with `screen`,
- * only ever lightens dark pixels — highlights appear on the black goop and
- * vanish over the white page. Rather than stamping per-ball glints (which
- * reads blotchy), every frame renders the balls and strands into a small
- * offscreen density field, treats it as a height map — flat plateau inside
- * the mass, smooth falloff at the silhouette — and shades it per pixel:
- * the field's gradient is the surface normal, lit with Blinn-Phong plus a
- * grazing-angle fresnel term. Upscaling that small shaded image gives one
- * smooth continuous highlight that follows the merged surface, strings and
- * droplets included. Light comes from the top-left, tilted toward the
- * viewer, matching where the mass gravitates.
+ * Molten-metal shine. A second canvas above the goo, blended with `screen`,
+ * only ever lightens dark pixels — shading appears on the black goop and
+ * vanishes over the white page. Every frame renders the balls and strands
+ * into a small offscreen density field and treats it as a liquid surface:
+ * softly compressed height (so the interior keeps a gentle ripple), with
+ * the gradient as the per-pixel surface normal. Shading is screen-space
+ * chrome: the view ray reflected about the normal samples a two-tone
+ * environment — bright sky above a tight horizon, dark ground below — so
+ * up-tilting surfaces catch broad silvery bands, down-tilting ones fall to
+ * black, and the interior ripple wobbles across the horizon like mercury.
+ * A Blinn-Phong hotspot (light from the top-left) and a grazing-angle
+ * fresnel rim finish the metal.
  */
 const FIELD_SCALE = 0.25
-/** Field density treated as full height — everything above is flat interior */
+/** Density scale before compression — how fast the surface rises */
 const FIELD_SAT = 0.55
-/** How steeply the height falloff tilts the surface normal */
-const FIELD_STEEP = 3
+/** How steeply the height gradient tilts the surface normal */
+const FIELD_STEEP = 3.5
 /** Blinn-Phong half-vector: normalize(normalize(-0.7, -0.7, 0.55) + (0,0,1)) */
 const HALF_X = -0.3586
 const HALF_Y = -0.3586
 const HALF_Z = 0.8619
-/** Specular exponent and strength — the tight wet band on lit slopes.
- *  Deliberately overdriven past 1 so the band's core saturates to white
- *  before the clamp, which is what makes the goo read glossy-wet. */
-const SHINE_P = 32
-const SPEC = 1.6
-/** Broad low-exponent sheen over the whole lit slope — the smooth
- *  oil-slick gradient the tight band sits inside */
-const BROAD = 0.3
-/** Grazing-angle glow around every silhouette edge */
-const FRESNEL = 0.18
+/** Specular exponent and strength — the white-hot key glint, overdriven
+ *  past 1 so its core saturates before the clamp */
+const SHINE_P = 36
+const SPEC = 1.4
+/** Y2K chrome environment. The reflected ray samples a classic airbrush
+ *  chrome gradient: silver sky glowing hottest just above a crisp dark
+ *  horizon, near-black ground right below it that climbs back toward light
+ *  at steep downward tilts. The horizon sits slightly below "flat", so the
+ *  interior reads as bright silver and its ripple drags dark mercury
+ *  streaks across the mirror line. */
+/** Y2K liquid-chrome contour curve — the classic blurred-mask chrome:
+ *  luminance is a folded function of the height itself, giving alternating
+ *  bands that hug the silhouette: a white rim, a dark mirror band just
+ *  inside it, then a bright silver core. As blobs merge and stretch, the
+ *  bands flow with the contours like mercury. */
+const CHROME_RIM = 0.98
+const CHROME_DARK = 0.05
+const CHROME_CORE = 0.9
+const CHROME_SETTLE = 0.62
+/** Contour coordinate: where the curve starts (compressed height at the
+ *  visible silhouette) and how much height it spans to reach the core */
+const CHROME_X0 = 0.28
+const CHROME_XW = 0.4
+/** Sky/ground tilt on top of the bands: undersides fall to this floor of
+ *  their band luminance, up-facing surfaces keep it in full */
+const TILT_FLOOR = 0.38
+const TILT_W = 0.5
+/** Grazing-angle white edge — the chrome rim line */
+const FRESNEL = 0.25
 
 type Ball = {
   x: number
@@ -484,12 +504,15 @@ export function BlobField() {
       fbctx.filter = 'blur(3px)'
       fbctx.drawImage(field, 0, 0)
       fbctx.filter = 'none'
-      // 3. shade per pixel: height = clamped density, normal from its
-      //    gradient, Blinn-Phong band plus grazing-angle fresnel
+      // 3. shade per pixel: softly compressed height keeps interior ripple
+      //    alive; its gradient is the normal for the chrome shading
       const src = fbctx.getImageData(0, 0, fw, fh).data
       for (let i = 0, m = fw * fh; i < m; i++) {
         const v = src[i * 4 + 3] / (255 * FIELD_SAT)
-        hbuf[i] = v > 1 ? 1 : v
+        // slow saturation keeps the surface doming all the way into the
+        // interior — chrome needs normals that vary across the whole body
+        // so the horizon line sweeps through it, not just along the rims
+        hbuf[i] = v / (1.4 + v)
       }
       const od = shadeImg.data
       for (let y = 1; y < fh - 1; y++) {
@@ -497,25 +520,49 @@ export function BlobField() {
           const i = y * fw + x
           const c = hbuf[i]
           let alpha = 0
-          if (c > 0.1) {
+          if (c > 0.15) {
             const gx = (hbuf[i + 1] - hbuf[i - 1]) * FIELD_STEEP
             const gy = (hbuf[i + fw] - hbuf[i - fw]) * FIELD_STEEP
             const inv = 1 / Math.sqrt(gx * gx + gy * gy + 1)
-            const dotH = (-gx * HALF_X - gy * HALF_Y + HALF_Z) * inv
-            const g = 1 - inv // 0 on the flat top, → 1 on steep rims
-            alpha = g * g * FRESNEL
-            if (dotH > 0) {
-              // tight wet band where the slope mirrors the light...
-              alpha += Math.pow(dotH, SHINE_P) * SPEC
-              // ...inside a broad smooth gradient over the whole lit slope,
-              // gated to slopes so the flat interior stays matte black
-              const d2 = dotH * dotH
-              const gk = g * 3
-              alpha += d2 * d2 * dotH * BROAD * (gk > 1 ? 1 : gk)
+            const ny = -gy * inv
+            const nz = inv
+            // chrome contour bands: fold the height through an M-curve —
+            // white rim at the silhouette, dark mirror band inside it,
+            // bright silver core
+            const x = (c - CHROME_X0) / CHROME_XW
+            let band
+            if (x < 0.14) {
+              let t = x < 0 ? 0 : x / 0.14
+              t = t * t * (3 - 2 * t)
+              band = CHROME_RIM - (CHROME_RIM - CHROME_DARK) * t
+            } else if (x < 0.5) {
+              let t = (x - 0.14) / 0.36
+              t = t * t * (3 - 2 * t)
+              band = CHROME_DARK + (CHROME_CORE - CHROME_DARK) * t
+            } else {
+              let t = (x - 0.5) / 0.5
+              if (t > 1) t = 1
+              t = t * t * (3 - 2 * t)
+              band = CHROME_CORE - (CHROME_CORE - CHROME_SETTLE) * t
             }
+            // sky/ground tilt: the view ray reflected about the normal has
+            // vertical component 2·nz·ny — undersides fall toward the
+            // shadow floor, up-facing surfaces keep their band in full
+            const s = -2 * nz * ny
+            let tilt = (s + 0.25) / TILT_W
+            if (tilt < 0) tilt = 0
+            else if (tilt > 1) tilt = 1
+            tilt = tilt * tilt * (3 - 2 * tilt)
+            alpha = band * (TILT_FLOOR + (1 - TILT_FLOOR) * tilt)
+            // white-hot key glint from the top-left
+            const dotH = (-gx * HALF_X - gy * HALF_Y + HALF_Z) * inv
+            if (dotH > 0) alpha += Math.pow(dotH, SHINE_P) * SPEC
+            // metallic edge glow at grazing angles
+            const g = 1 - nz
+            alpha += g * g * FRESNEL
             if (alpha > 1) alpha = 1
             // fade in from the silhouette so nothing halos outside the goo
-            const fade = (c - 0.1) / 0.15
+            const fade = (c - 0.15) / 0.15
             if (fade < 1) alpha *= fade
           }
           od[i * 4 + 3] = alpha * 255
