@@ -155,9 +155,9 @@ body.wf-cursor-on * {
     }
 
     body {
-        /* soft cream — warm off-white; the goo's difference blend inverts
-           this, so blobs pick up a faint cool tint against it */
-        background-color: #F6F4ED;
+        /* whitish with a tiny Y2K blue tint; the goo's difference blend
+           inverts this, so blobs pick up a faint warm tint against it */
+        background-color: var(--page-bg);
         color: #323232;
     }
 
@@ -190,6 +190,9 @@ body.wf-cursor-on * {
 }
 
 :root {
+    /* the page background — whitish with a tiny Y2K blue tint; surfaces
+       that should sit flush with the page (e.g. demo cards) reuse it */
+    --page-bg: #F4F7FA;
     --shadow-media: 0 4px 12px -2px #0000000d, 0 1px 3px 0 #00000008;
     --squircle-radius: 12px;
     --media-margin: 54px;

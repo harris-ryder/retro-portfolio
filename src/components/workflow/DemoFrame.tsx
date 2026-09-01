@@ -7,6 +7,7 @@
    ------------------------------------------------------------------ */
 import { useEffect, useRef, useState } from 'react'
 import { registerDemo } from './focusManager'
+import { GooBorder } from '@/components/GooBorder'
 
 export function DemoFrame({
   designWidth,
@@ -40,10 +41,14 @@ export function DemoFrame({
   const left = cw ? (cw - designWidth * scale) / 2 : 0
 
   return (
-    <figure
-      ref={figureRef}
-      className="wf-demo relative my-[54px] overflow-hidden rounded-[12px] border border-[rgba(50,50,50,0.12)] bg-transparent shadow-[var(--shadow-media)] select-none"
-    >
+    // the goo-media shell hosts the liquid-chrome border canvas behind the
+    // demo card and takes over its vertical margins, exactly like Img/Video
+    <div className="goo-media">
+      <GooBorder />
+      <figure
+        ref={figureRef}
+        className="wf-demo relative z-[1] overflow-hidden rounded-[12px] border border-[rgba(50,50,50,0.12)] bg-[var(--page-bg)] shadow-[var(--shadow-media)] select-none"
+      >
       <div className="px-4 pb-6 pt-6">
         <div
           ref={boxRef}
@@ -71,6 +76,7 @@ export function DemoFrame({
           )}
         </div>
       </div>
-    </figure>
+      </figure>
+    </div>
   )
 }

@@ -55,8 +55,16 @@ const TILT_W = 0.5
 const FRESNEL = 0.18
 
 type BorderBall = { ax: number; ay: number; x: number; y: number; vx: number; vy: number; r: number }
+type Rect = { x: number; y: number; w: number; h: number }
 
-export function GooBorder() {
+/**
+ * `targets`: optional CSS selector for the cards to border, measured within
+ * the host. Without it the host's own box is the single card. With it (e.g.
+ * a side-by-side row targeting its `.media-wrapper`s) every card renders
+ * into ONE shared field, so the facing rims of adjacent cards fuse into a
+ * single liquid seam.
+ */
+export function GooBorder({ targets }: { targets?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -75,6 +83,7 @@ export function GooBorder() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
 
     let balls: BorderBall[] = []
+    let rects: Rect[] = []
     let W = 0
     let H = 0
     let fw = 0
@@ -82,9 +91,19 @@ export function GooBorder() {
     let hbuf = new Float32Array(0)
     let shadeImg: ImageData | null = null
 
+    const measure = (): Rect[] => {
+      if (!targets) return [{ x: 0, y: 0, w: host.clientWidth, h: host.clientHeight }]
+      const hb = host.getBoundingClientRect()
+      return Array.from(host.querySelectorAll(targets)).map(el => {
+        const b = (el as HTMLElement).getBoundingClientRect()
+        return { x: b.left - hb.left, y: b.top - hb.top, w: b.width, h: b.height }
+      })
+    }
+
     const build = () => {
       W = host.clientWidth
       H = host.clientHeight
+      rects = measure()
       const cw = W + 2 * M
       const ch = H + 2 * M
       canvas.width = cw * dpr
@@ -97,22 +116,24 @@ export function GooBorder() {
       fieldBlur.height = fh
       hbuf = new Float32Array(fw * fh)
       shadeImg = fbctx.createImageData(fw, fh)
-      // anchors along the media's perimeter, right on its edge
+      // anchors along each card's perimeter, right on its edge
       balls = []
       const seed = (i: number) => (((i + 1) * 2654435761) >>> 16) % 1000 / 1000
       const add = (x: number, y: number) => {
         const i = balls.length
         balls.push({ ax: x, ay: y, x, y, vx: 0, vy: 0, r: R_MIN + R_VAR * seed(i) })
       }
-      const nx = Math.max(2, Math.round(W / SPACING))
-      const ny = Math.max(2, Math.round(H / SPACING))
-      for (let i = 0; i <= nx; i++) {
-        add((W * i) / nx, 0)
-        add((W * i) / nx, H)
-      }
-      for (let i = 1; i < ny; i++) {
-        add(0, (H * i) / ny)
-        add(W, (H * i) / ny)
+      for (const r of rects) {
+        const nx = Math.max(2, Math.round(r.w / SPACING))
+        const ny = Math.max(2, Math.round(r.h / SPACING))
+        for (let i = 0; i <= nx; i++) {
+          add(r.x + (r.w * i) / nx, r.y)
+          add(r.x + (r.w * i) / nx, r.y + r.h)
+        }
+        for (let i = 1; i < ny; i++) {
+          add(r.x, r.y + (r.h * i) / ny)
+          add(r.x + r.w, r.y + (r.h * i) / ny)
+        }
       }
       draw()
     }
@@ -125,7 +146,23 @@ export function GooBorder() {
       fctx.clearRect(0, 0, fw / dpr, fh / dpr)
       fctx.fillStyle = '#fff'
       fctx.beginPath()
-      fctx.roundRect(M - RIM, M - RIM, W + 2 * RIM, H + 2 * RIM, 16)
+      for (const r of rects) {
+        fctx.roundRect(M + r.x - RIM, M + r.y - RIM, r.w + 2 * RIM, r.h + 2 * RIM, 16)
+      }
+      // bridge narrow gaps between neighbouring cards so the shared seam
+      // reads as one solid strip of goo, not two rims with pockets between
+      for (let a = 0; a < rects.length; a++) {
+        for (let b2 = a + 1; b2 < rects.length; b2++) {
+          const A = rects[a].x <= rects[b2].x ? rects[a] : rects[b2]
+          const B = rects[a].x <= rects[b2].x ? rects[b2] : rects[a]
+          const gap = B.x - (A.x + A.w)
+          const y0 = Math.max(A.y, B.y)
+          const y1 = Math.min(A.y + A.h, B.y + B.h)
+          if (gap > 0 && gap < 30 && y1 > y0) {
+            fctx.rect(M + A.x + A.w - 4, M + y0 + 2, gap + 8, y1 - y0 - 4)
+          }
+        }
+      }
       for (const b of balls) {
         fctx.moveTo(M + b.x + b.r, M + b.y)
         fctx.arc(M + b.x, M + b.y, b.r, 0, Math.PI * 2)
@@ -136,11 +173,13 @@ export function GooBorder() {
       fbctx.drawImage(field, 0, 0)
       fbctx.filter = 'none'
       // 2. shade as a height field with the home goo's chrome model,
-      //    skipping the region hidden under the media card
-      const ix0 = (M + 12) * dpr
-      const ix1 = (M + W - 12) * dpr
-      const iy0 = (M + 12) * dpr
-      const iy1 = (M + H - 12) * dpr
+      //    skipping the regions hidden under the media cards
+      const skips = rects.map(r => ({
+        x0: (M + r.x + 12) * dpr,
+        x1: (M + r.x + r.w - 12) * dpr,
+        y0: (M + r.y + 12) * dpr,
+        y1: (M + r.y + r.h - 12) * dpr,
+      }))
       const src = fbctx.getImageData(0, 0, fw, fh).data
       for (let i = 0, m = fw * fh; i < m; i++) {
         const v = src[i * 4 + 3] / (255 * FIELD_SAT)
@@ -149,10 +188,16 @@ export function GooBorder() {
       const od = shadeImg.data
       for (let y = 1; y < fh - 1; y++) {
         for (let x = 1; x < fw - 1; x++) {
-          if (x > ix0 && x < ix1 && y > iy0 && y < iy1) {
-            x = Math.floor(ix1) // fast-forward across the hidden interior
-            continue
+          let hidden = false
+          for (let k = 0; k < skips.length; k++) {
+            const s = skips[k]
+            if (x > s.x0 && x < s.x1 && y > s.y0 && y < s.y1) {
+              x = Math.floor(s.x1) // fast-forward across the hidden interior
+              hidden = true
+              break
+            }
           }
+          if (hidden) continue
           const i = y * fw + x
           const c = hbuf[i]
           let lum = 0
@@ -290,7 +335,7 @@ export function GooBorder() {
       host.removeEventListener('pointermove', onMove)
       host.removeEventListener('pointerleave', onLeave)
     }
-  }, [])
+  }, [targets])
 
   return (
     <>

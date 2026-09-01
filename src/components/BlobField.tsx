@@ -565,8 +565,10 @@ export function BlobField() {
             const g = 1 - nz
             alpha += g * g * FRESNEL
             if (alpha > SHINE_MAX) alpha = SHINE_MAX
-            // fade in from the silhouette so nothing halos outside the goo
-            const fade = (c - 0.15) / 0.15
+            // fade in from just INSIDE the visible silhouette (c ≈ 0.28) —
+            // additive blending clamps even faint spill over the page to
+            // pure white, so any shine outside the goo reads as a halo
+            const fade = (c - 0.3) / 0.12
             if (fade < 1) alpha *= fade
           }
           od[i * 4 + 3] = alpha * 255
@@ -673,10 +675,12 @@ export function BlobField() {
         className="pointer-events-none fixed z-30"
         style={{
           ...frame,
-          // screen-blend: lightens the black goop, invisible on the white
-          // page; a whisper of blur hides the height-field's upscaling
+          // additive blend: over the near-black goop it matches `screen`,
+          // but text inverted by the goo below SATURATES to pure white
+          // instead of compressing to murky gray, so overlapped text pops;
+          // a whisper of blur hides the height-field's upscaling
           filter: 'blur(1px)',
-          mixBlendMode: 'screen',
+          mixBlendMode: 'plus-lighter',
         }}
       />
     </>

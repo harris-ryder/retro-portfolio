@@ -7,13 +7,15 @@ type Props = {
   width: number
   height: number
   wrapperStyle?: React.CSSProperties
+  /** false when a parent (e.g. GooRow) draws a shared goo border instead */
+  goo?: boolean
 }
 
-export function Video({ src, width, height, wrapperStyle }: Props) {
+export function Video({ src, width, height, wrapperStyle, goo = true }: Props) {
   const [ready, setReady] = useState(false)
   return (
     <span className="goo-media" style={{ aspectRatio: `${width} / ${height}`, ...wrapperStyle }}>
-      <GooBorder />
+      {goo && <GooBorder />}
       <span className={`media-wrapper${ready ? '' : ' media-skeleton'}`}>
         {!ready && (
           <span className="media-loading" aria-hidden="true">
