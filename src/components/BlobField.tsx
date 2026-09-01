@@ -109,10 +109,14 @@ const SPEC = 1.4
  *  bands that hug the silhouette: a white rim, a dark mirror band just
  *  inside it, then a bright silver core. As blobs merge and stretch, the
  *  bands flow with the contours like mercury. */
-const CHROME_RIM = 0.98
+const CHROME_RIM = 0.87
 const CHROME_DARK = 0.05
-const CHROME_CORE = 0.9
-const CHROME_SETTLE = 0.62
+const CHROME_CORE = 0.84
+const CHROME_SETTLE = 0.6
+/** Hard ceiling on the metal's luminance — kept below the page background
+ *  so the silhouette never dissolves into it, even where the specular
+ *  hotspot and fresnel stack on a bright band */
+const SHINE_MAX = 0.9
 /** Contour coordinate: where the curve starts (compressed height at the
  *  visible silhouette) and how much height it spans to reach the core */
 const CHROME_X0 = 0.28
@@ -122,7 +126,7 @@ const CHROME_XW = 0.4
 const TILT_FLOOR = 0.38
 const TILT_W = 0.5
 /** Grazing-angle white edge — the chrome rim line */
-const FRESNEL = 0.25
+const FRESNEL = 0.18
 
 type Ball = {
   x: number
@@ -560,7 +564,7 @@ export function BlobField() {
             // metallic edge glow at grazing angles
             const g = 1 - nz
             alpha += g * g * FRESNEL
-            if (alpha > 1) alpha = 1
+            if (alpha > SHINE_MAX) alpha = SHINE_MAX
             // fade in from the silhouette so nothing halos outside the goo
             const fade = (c - 0.15) / 0.15
             if (fade < 1) alpha *= fade

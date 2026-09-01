@@ -149,7 +149,9 @@ body.wf-cursor-on * {
 
 @layer base {
     body {
-        background-color: #FCFCFC;
+        /* soft cream — warm off-white; the goo's difference blend inverts
+           this, so blobs pick up a faint cool tint against it */
+        background-color: #F6F4ED;
         color: #323232;
     }
 
