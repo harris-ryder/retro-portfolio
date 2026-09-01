@@ -36,8 +36,12 @@ const A_MAX = 200
  *  deeper overlap packs the surface denser, so merged masses read smooth */
 const PACK = 0.8
 const K_SEP = 90
-/** Weak global pull toward the centre of mass — how lone islands find the rest */
-const COM_PULL = 30
+/** Weak global pull toward the home point in the top-left of the page —
+ *  how lone islands find the rest, and where the mass finally settles */
+const HOME_PULL = 30
+/** Home point as a fraction of the visible viewport */
+const HOME_X = 0.24
+const HOME_Y = 0.26
 const DAMP = 2.2
 const V_MAX = 400
 /** Stiff walls at the visible screen edges — blobs squish against them */
@@ -45,6 +49,21 @@ const WALL = 50
 
 const REPEL_R = 160
 const REPEL = 3500
+
+/**
+ * Specular sheen. A second canvas above the goo, blended with `screen`, only
+ * ever lightens dark pixels — so glints appear on the black goop and vanish
+ * over the white page. Each ball's summed gravity points into its local mass,
+ * so its negation is a free surface normal: rim balls facing the light glow,
+ * interior and far-side balls stay dark. Light comes from the top-left, where
+ * the mass gravitates.
+ */
+const LIGHT_X = -0.7071
+const LIGHT_Y = -0.7071
+/** Faint gloss every ball gets, so lone droplets still look wet */
+const SHINE_BASE = 0.06
+/** Extra gloss for lit rim balls */
+const SHINE_RIM = 0.65
 
 type Ball = {
   x: number
@@ -60,11 +79,28 @@ type Ball = {
 
 export function BlobField() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const shineRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!canvas || !ctx) return
+    const shine = shineRef.current
+    const sctx = shine?.getContext('2d')
+    if (!canvas || !ctx || !shine || !sctx) return
+
+    // one radial-gradient sprite, stamped per ball with varying alpha —
+    // far cheaper than building 1500 gradients every frame
+    const sprite = document.createElement('canvas')
+    sprite.width = sprite.height = 64
+    const spriteCtx = sprite.getContext('2d')
+    if (spriteCtx) {
+      const g = spriteCtx.createRadialGradient(32, 32, 0, 32, 32, 32)
+      g.addColorStop(0, 'rgba(255,255,255,1)')
+      g.addColorStop(0.55, 'rgba(255,255,255,0.35)')
+      g.addColorStop(1, 'rgba(255,255,255,0)')
+      spriteCtx.fillStyle = g
+      spriteCtx.fillRect(0, 0, 64, 64)
+    }
 
     let W = 0
     let H = 0
@@ -81,6 +117,8 @@ export function BlobField() {
       H = canvas.clientHeight
       canvas.width = W
       canvas.height = H
+      shine.width = W
+      shine.height = H
     }
 
     const init = () => {
@@ -135,19 +173,12 @@ export function BlobField() {
     const step = (dt: number) => {
       const n = balls.length
 
-      // centre of mass
-      let comX = 0
-      let comY = 0
-      let mass = 0
+      const homeX = BLEED + (W - 2 * BLEED) * HOME_X
+      const homeY = BLEED + (H - 2 * BLEED) * HOME_Y
       for (const b of balls) {
-        comX += b.x * b.m
-        comY += b.y * b.m
-        mass += b.m
         b.ax = 0
         b.ay = 0
       }
-      comX /= mass
-      comY /= mass
 
       // bin into a uniform grid so gravity only scans neighbouring cells
       const cols = Math.max(1, Math.ceil(W / GRAV_R))
@@ -189,12 +220,13 @@ export function BlobField() {
           b.vy += b.ay * k * dt
         }
 
-        // faint drift toward everyone else, so far-flung islands still converge
-        const gx = comX - b.x
-        const gy = comY - b.y
+        // faint drift toward home in the top-left, so far-flung islands
+        // still converge and the settled mass sits up there
+        const gx = homeX - b.x
+        const gy = homeY - b.y
         const gd = Math.hypot(gx, gy)
         if (gd > 1) {
-          const f = (COM_PULL * Math.min(gd / 300, 1) * dt) / gd
+          const f = (HOME_PULL * Math.min(gd / 300, 1) * dt) / gd
           b.vx += gx * f
           b.vy += gy * f
         }
@@ -247,6 +279,23 @@ export function BlobField() {
         ctx.arc(b.x, b.y, r, 0, Math.PI * 2)
       }
       ctx.fill()
+
+      sctx.clearRect(0, 0, W, H)
+      for (const b of balls) {
+        const am = Math.hypot(b.ax, b.ay)
+        let lit = SHINE_BASE
+        if (am > 1) {
+          // outward normal ≈ −(net gravity); shade by how much it faces the
+          // light, cubed to pinch the sheen into a tight specular hotspot
+          const facing = Math.max(0, (-b.ax / am) * LIGHT_X + (-b.ay / am) * LIGHT_Y)
+          lit += SHINE_RIM * facing * facing * facing * Math.min(am / A_MAX, 1)
+        }
+        const hr = b.r * 0.9
+        sctx.globalAlpha = Math.min(lit, 1)
+        // glint sits up-left of centre, toward the light
+        sctx.drawImage(sprite, b.x - 0.3 * b.r - hr, b.y - 0.3 * b.r - hr, hr * 2, hr * 2)
+      }
+      sctx.globalAlpha = 1
     }
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -314,22 +363,40 @@ export function BlobField() {
     }
   }, [])
 
+  const frame: React.CSSProperties = {
+    top: -BLEED,
+    left: -BLEED,
+    width: `calc(100vw + ${BLEED * 2}px)`,
+    height: `calc(100lvh + ${BLEED * 2}px)`,
+  }
+
   return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
-      className="pointer-events-none fixed z-30"
-      style={{
-        top: -BLEED,
-        left: -BLEED,
-        width: `calc(100vw + ${BLEED * 2}px)`,
-        height: `calc(100lvh + ${BLEED * 2}px)`,
-        // two goo passes: the first merges balls into masses, the second
-        // re-blurs and re-thresholds the silhouette, rounding off the
-        // ball-by-ball scallops on big merged blobs
-        filter: 'blur(6.5px) contrast(30) blur(5px) contrast(25)',
-        mixBlendMode: 'difference',
-      }}
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed z-30"
+        style={{
+          ...frame,
+          // two goo passes: the first merges balls into masses, the second
+          // re-blurs and re-thresholds the silhouette, rounding off the
+          // ball-by-ball scallops on big merged blobs
+          filter: 'blur(6.5px) contrast(30) blur(5px) contrast(25)',
+          mixBlendMode: 'difference',
+        }}
+      />
+      <canvas
+        ref={shineRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed z-30"
+        style={{
+          ...frame,
+          // screen-blend: lightens the black goop, invisible on the white
+          // page; the heavy blur fuses per-ball glints into one wet sheen
+          filter: 'blur(10px)',
+          mixBlendMode: 'screen',
+        }}
+      />
+    </>
   )
 }
