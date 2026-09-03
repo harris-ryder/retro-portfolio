@@ -233,13 +233,19 @@ export function BlobField() {
 
     const init = () => {
       size()
-      const count = Math.round(Math.min(Math.max((W * H) / 1000, 800), 2600))
+      // a single small blob: a few dozen balls spawned as one loose cluster
+      // around the home point, so the page loads with one settled mass
+      const count = 70
+      const cx = BLEED + (W - 2 * BLEED) * HOME_X
+      const cy = BLEED + (H - 2 * BLEED) * HOME_Y
       balls = Array.from({ length: count }, () => {
         let r = MIN_R + Math.pow(Math.random(), 2) * 7.5
         if (Math.random() < 0.08) r *= 1.25
+        const a = rand(0, Math.PI * 2)
+        const d = Math.sqrt(Math.random()) * 100
         return {
-          x: rand(BLEED, W - BLEED),
-          y: rand(BLEED, H - BLEED),
+          x: cx + Math.cos(a) * d,
+          y: cy + Math.sin(a) * d,
           vx: 0,
           vy: 0,
           r,
@@ -585,22 +591,15 @@ export function BlobField() {
     init()
 
     if (reduced) {
-      // No animation: paint a still frame of loosely gathered groups
-      const centers = Array.from({ length: 12 }, () => ({
-        x: rand(BLEED + 80, W - BLEED - 80),
-        y: rand(BLEED + 80, H - BLEED - 80),
-      }))
+      // No animation: paint a still frame of the single blob, packed tight
+      // at the home point
+      const cx = BLEED + (W - 2 * BLEED) * HOME_X
+      const cy = BLEED + (H - 2 * BLEED) * HOME_Y
       for (const b of balls) {
-        let c = centers[0]
-        let best = Infinity
-        for (const o of centers) {
-          const d = (o.x - b.x) ** 2 + (o.y - b.y) ** 2
-          if (d < best) { best = d; c = o }
-        }
         const a = rand(0, Math.PI * 2)
-        const d = Math.sqrt(Math.random()) * 60
-        b.x = c.x + Math.cos(a) * d
-        b.y = c.y + Math.sin(a) * d
+        const d = Math.sqrt(Math.random()) * 65
+        b.x = cx + Math.cos(a) * d
+        b.y = cy + Math.sin(a) * d
       }
       draw()
       window.addEventListener('resize', size)
