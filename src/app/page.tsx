@@ -39,7 +39,7 @@ export default function Home() {
         </header>
 
         <p className="mb-16 [&_a]:no-underline">
-          Software Engineer at{' '}
+          Design Engineer at{' '}
           <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer">Nothing</a>
           {' · prev '}
           <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer">Workflow</a>
