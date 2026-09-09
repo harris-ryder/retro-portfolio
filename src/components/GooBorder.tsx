@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { shadeChrome, toHeights } from '@/lib/goo'
 
 // Gooey liquid-chrome border for article media. A canvas sits behind the
 // media card; ink balls anchored along its edges merge with a base rim into
@@ -31,28 +32,6 @@ const RANGE = 130
 const ATTRACT = 1500
 const MAX_STRETCH = 34
 
-/** Shading constants — these mirror the chrome model in BlobField. The
- *  field runs at device resolution, 1:1 with the canvas backing store, so
- *  nothing is ever upscaled; the shade loop skips the region hidden under
- *  the media card, so only the thin border band pays for it. */
-const FIELD_SAT = 0.55
-/** Steeper than BlobField's because gradients here are per device pixel */
-const FIELD_STEEP = 9
-const HALF_X = -0.3586
-const HALF_Y = -0.3586
-const HALF_Z = 0.8619
-const SHINE_P = 36
-const SPEC = 1.4
-const CHROME_RIM = 0.87
-const CHROME_DARK = 0.05
-const CHROME_CORE = 0.84
-const CHROME_SETTLE = 0.6
-const SHINE_MAX = 0.9
-const CHROME_X0 = 0.28
-const CHROME_XW = 0.4
-const TILT_FLOOR = 0.38
-const TILT_W = 0.5
-const FRESNEL = 0.18
 
 type BorderBall = { ax: number; ay: number; x: number; y: number; vx: number; vy: number; r: number }
 type Rect = { x: number; y: number; w: number; h: number }
@@ -181,72 +160,8 @@ export function GooBorder({ targets }: { targets?: string }) {
         y1: (M + r.y + r.h - 12) * dpr,
       }))
       const src = fbctx.getImageData(0, 0, fw, fh).data
-      for (let i = 0, m = fw * fh; i < m; i++) {
-        const v = src[i * 4 + 3] / (255 * FIELD_SAT)
-        hbuf[i] = v / (1.4 + v)
-      }
-      const od = shadeImg.data
-      for (let y = 1; y < fh - 1; y++) {
-        for (let x = 1; x < fw - 1; x++) {
-          let hidden = false
-          for (let k = 0; k < skips.length; k++) {
-            const s = skips[k]
-            if (x > s.x0 && x < s.x1 && y > s.y0 && y < s.y1) {
-              x = Math.floor(s.x1) // fast-forward across the hidden interior
-              hidden = true
-              break
-            }
-          }
-          if (hidden) continue
-          const i = y * fw + x
-          const c = hbuf[i]
-          let lum = 0
-          let mask = 0
-          if (c > 0.15) {
-            const gx = (hbuf[i + 1] - hbuf[i - 1]) * FIELD_STEEP
-            const gy = (hbuf[i + fw] - hbuf[i - fw]) * FIELD_STEEP
-            const inv = 1 / Math.sqrt(gx * gx + gy * gy + 1)
-            const ny2 = -gy * inv
-            const nz = inv
-            const cx = (c - CHROME_X0) / CHROME_XW
-            let band
-            if (cx < 0.14) {
-              let t = cx < 0 ? 0 : cx / 0.14
-              t = t * t * (3 - 2 * t)
-              band = CHROME_RIM - (CHROME_RIM - CHROME_DARK) * t
-            } else if (cx < 0.5) {
-              let t = (cx - 0.14) / 0.36
-              t = t * t * (3 - 2 * t)
-              band = CHROME_DARK + (CHROME_CORE - CHROME_DARK) * t
-            } else {
-              let t = (cx - 0.5) / 0.5
-              if (t > 1) t = 1
-              t = t * t * (3 - 2 * t)
-              band = CHROME_CORE - (CHROME_CORE - CHROME_SETTLE) * t
-            }
-            const s = -2 * nz * ny2
-            let tilt = (s + 0.25) / TILT_W
-            if (tilt < 0) tilt = 0
-            else if (tilt > 1) tilt = 1
-            tilt = tilt * tilt * (3 - 2 * tilt)
-            lum = band * (TILT_FLOOR + (1 - TILT_FLOOR) * tilt)
-            const dotH = (-gx * HALF_X - gy * HALF_Y + HALF_Z) * inv
-            if (dotH > 0) lum += Math.pow(dotH, SHINE_P) * SPEC
-            const g = 1 - nz
-            lum += g * g * FRESNEL
-            if (lum > SHINE_MAX) lum = SHINE_MAX
-            mask = (c - 0.26) / 0.04
-            if (mask < 0) mask = 0
-            else if (mask > 1) mask = 1
-            mask = mask * mask * (3 - 2 * mask)
-          }
-          const l = lum * 255
-          od[i * 4] = l
-          od[i * 4 + 1] = l
-          od[i * 4 + 2] = l
-          od[i * 4 + 3] = mask * 255
-        }
-      }
+      toHeights(src, hbuf)
+      shadeChrome(hbuf, shadeImg.data, fw, fh, skips)
       fbctx.putImageData(shadeImg, 0, 0)
       // 3. upscale onto the visible canvas
       ctx.setTransform(1, 0, 0, 1, 0, 0)

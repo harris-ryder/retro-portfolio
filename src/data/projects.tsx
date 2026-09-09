@@ -8,6 +8,7 @@ import { TryMeCursor } from '@/components/workflow/TryMeCursor'
 import { OldPluginDemo } from '@/components/workflow/OldPluginDemo'
 import { FirstVersionDemo } from '@/components/workflow/FirstVersionDemo'
 import { MainDemo } from '@/components/workflow/MainDemo'
+import { promptLego } from '@/data/prompt-lego'
 
 export type Project = {
   slug: string
@@ -84,6 +85,7 @@ export const projects: Project[] = [
       </>
     ),
   },
+  promptLego,
   {
     slug: 'workflow-figma-plugin',
     title: 'Workflow Figma Plugin',
