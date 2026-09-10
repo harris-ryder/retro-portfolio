@@ -1,5 +1,5 @@
-// The Y2K liquid-chrome shading shared by the goo pieces: the border around
-// article media (GooBorder) and the slime buttons (GooBlob). A density field
+// The Y2K liquid-chrome shading used by the goo border around article media
+// (GooBorder), matching the home-page goo. A density field
 // of white shapes is blurred and read as a height map; each pixel is then
 // shaded from the height and its gradient with the same model as the
 // home-page goo — a white rim at the silhouette, a dark mirror band just

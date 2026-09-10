@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { GooBlob } from '@/components/GooBlob'
 
 // A filmstrip for article media. The strip breaks out of the text column to
 // the full viewport width; cards sit side by side and the one nearest the
@@ -33,6 +32,9 @@ type Props = {
   items: ReelItem[]
   /** card height in px; cards shrink on narrow viewports (see --w in CSS) */
   height?: number
+  /** card WIDTH in px instead: every card renders this wide and its height
+   *  follows its aspect, which suits a set of same-width design frames */
+  width?: number
   /** index of the card centred on first paint */
   initial?: number
   /** show the media bare, without the card's background, border and shadow */
@@ -117,7 +119,7 @@ function register(h: Handle) {
 
 /* ---- the reel ---- */
 
-export function Reel({ items, height = 560, initial = 0, raw = false, label = 'Image reel' }: Props) {
+export function Reel({ items, height = 560, width, initial = 0, raw = false, label = 'Image reel' }: Props) {
   const rootRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   /** nearest card to the centre, updated live while scrolling */
@@ -246,7 +248,8 @@ export function Reel({ items, height = 560, initial = 0, raw = false, label = 'I
       className="reel"
       data-armed={isArmed}
       data-raw={raw}
-      style={{ '--reel-h': `${height}px` } as React.CSSProperties}
+      data-fixed-width={width !== undefined}
+      style={{ '--reel-h': `${height}px`, '--reel-w': width !== undefined ? `${width}px` : undefined } as React.CSSProperties}
       onPointerEnter={armSelf}
     >
       <div className="reel-strip">
@@ -288,7 +291,6 @@ export function Reel({ items, height = 560, initial = 0, raw = false, label = 'I
           disabled={active === 0}
           onClick={() => scrollToIndex(active - 1)}
         >
-          <GooBlob />
           <Chevron dir={-1} />
         </button>
         <button
@@ -298,7 +300,6 @@ export function Reel({ items, height = 560, initial = 0, raw = false, label = 'I
           disabled={active === n - 1}
           onClick={() => scrollToIndex(active + 1)}
         >
-          <GooBlob />
           <Chevron dir={1} />
         </button>
       </div>
@@ -308,7 +309,7 @@ export function Reel({ items, height = 560, initial = 0, raw = false, label = 'I
 
 function Chevron({ dir }: { dir: 1 | -1 }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {dir < 0 ? <path d="M15 6l-6 6 6 6" /> : <path d="M9 6l6 6-6 6" />}
     </svg>
   )

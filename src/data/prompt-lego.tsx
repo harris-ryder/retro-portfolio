@@ -57,19 +57,13 @@ const incrementalPhones: ReelItem[] = [
   { src: `${P}/incremental-phone-stack.webp`, width: 828, height: 1452, alt: 'Phone screen: the answers stacked as interlocking bricks under a yellow Workout App brick' },
 ]
 
-const sprintTwo: ReelItem[] = [
-  part('sprint2-composer', 780, 780, 'The composer as a wizard: one question at a time, Back and Next.'),
-  part('sprint2-pills', 780, 600, 'Multiple choice as pills, with a plus to add your own.'),
-  part('sprint2-pills-2', 780, 516, 'Single choice uses the same pills.'),
-  part('sprint2-dial', 780, 1064, 'A dial for one-of-many. Fun, and dropped.'),
-  part('sprint2-counter', 780, 492, 'A counter for how many days a week.'),
-  part('sprint2-rank', 780, 720, 'Ranking what earns space on a small widget.'),
-  part('sprint2-size', 780, 813, 'Widget size on a mock homescreen, with a recommendation.'),
-  part('sprint2-homescreen', 780, 780, 'The homescreen mock behind the size step.'),
-  figma('sprint2-grid-phone-1', 'Size in situ on a full homescreen.'),
-  figma('sprint2-grid-phone-2', 'The homescreen reduced to a dashed grid.'),
-  part('sprint2-size-grid', 780, 1018, 'Later: size chosen by stretching the widget across the grid.'),
-  part('sprint2-style', 780, 480, 'Visual style, picked from reference widgets.'),
+const wizardCards: ReelItem[] = [
+  { src: `${P}/wizard-pills.webp`, width: 780, height: 600, alt: 'Wizard card, question 1 of 5: the widget’s function as choice pills, with a plus to add your own' },
+  { src: `${P}/wizard-sport.webp`, width: 780, height: 1064, alt: 'Wizard card: a dial of sports, cycling picked at its centre' },
+  { src: `${P}/wizard-size.webp`, width: 780, height: 813, alt: 'Wizard card: widget size on a tilted homescreen, 4x4 flagged as recommended' },
+  { src: `${P}/wizard-rank.webp`, width: 780, height: 720, alt: 'Wizard card: ranking what earns space on the widget, four rows with drag handles' },
+  { src: `${P}/wizard-counter.webp`, width: 780, height: 492, alt: 'Wizard card: how many days a week you train, as a counter set to five' },
+  { src: `${P}/wizard-style.webp`, width: 780, height: 480, alt: 'Wizard card: visual style picked from three reference widgets' },
 ]
 
 const versionTwo: ReelItem[] = [
@@ -121,7 +115,7 @@ export const promptLego: Project = {
 
       <h2>Asking instead</h2>
       <p>The second round of Figma work was about the questions themselves. Each one needs an interaction that suits its answer, so the composer became a card that asks one thing at a time and swaps its body per question: pills for multiple choice, a counter for numbers, a drag list for ranking, a homescreen for widget size, and a gallery of reference widgets for visual style.</p>
-      <Reel items={sprintTwo} height={500} label="Second sprint components" />
+      <Reel items={wizardCards} width={390} raw label="Second sprint components" />
 
       <h2>The interview prototype</h2>
       <p>Send a prompt and the agent answers with &ldquo;let me ask a few questions to get this right&rdquo;. After a beat the composer morphs into the wizard. The questions come from a model in two rounds: two or three discovery questions about what the widget is for, then follow-ups written with those answers in hand, closed by size and style. The size step goes up while the follow-ups load, so there is never a dead wait. As each question is revealed the agent&apos;s turn mirrors it into a live checklist, and when the last one is answered the answers are read back into the thread as bullets before the build runs.</p>

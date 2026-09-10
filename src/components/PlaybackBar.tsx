@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { GooBlob } from '@/components/GooBlob'
 
 // Play/pause and a scrub track for a <video>, as a white pill under the
 // media card. The knob is a tall oval that spins as it travels the rail, and
@@ -79,7 +78,6 @@ export function PlaybackBar({ video }: Props) {
 
   return (
     <div className="pb">
-      <GooBlob />
       <button type="button" className="pb-toggle" onClick={toggle} aria-label={playing ? 'Pause' : 'Play'}>
         <span className="pb-icon" data-show={!playing}>
           <PlayIcon />

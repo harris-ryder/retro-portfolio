@@ -334,6 +334,12 @@ body.wf-cursor-on * {
     --w: min(calc(var(--reel-h) * var(--ar)), 86vw, calc(78vh * var(--ar)));
     flex: none;
 }
+/* fixed-width mode: one width for every card, heights following the aspect —
+   for a set of design frames all drawn at the same size */
+.reel[data-fixed-width='true'] .reel-spacer,
+.reel[data-fixed-width='true'] .reel-card {
+    --w: min(var(--reel-w), 86vw, calc(78vh * var(--ar)));
+}
 /* the spacers are what let the first and last cards reach the centre */
 .reel-spacer {
     width: calc(50% - var(--w) / 2);
@@ -344,12 +350,9 @@ body.wf-cursor-on * {
     aspect-ratio: var(--ar);
     margin: 0;
     scroll-snap-align: center;
-    opacity: 0.7;
+    opacity: 0.2;
     transition: opacity 0.35s;
     cursor: pointer;
-}
-.reel-card:hover {
-    opacity: 0.85;
 }
 .reel-card[data-active='true'] {
     opacity: 1;
@@ -396,26 +399,27 @@ body.wf-cursor-on * {
 .cv-toggle:hover {
     scale: 1.06;
 }
+/* no browser-blue ring: a click leaves nothing behind, and keyboard focus
+   gets a dark ring in the page's own palette instead */
+.reel-chev:focus,
+.cv-toggle:focus {
+    outline: none;
+}
+.reel-chev:focus-visible,
+.cv-toggle:focus-visible {
+    box-shadow: var(--shadow-media), 0 0 0 2px rgba(50, 50, 50, 0.4);
+}
 .reel-chev {
     top: 50%;
     translate: 0 -50%;
     opacity: 0.35;
 }
+/* pulled in toward the column rather than pinned to the screen edges */
 .reel-chev-l {
-    left: 20px;
+    left: max(12px, calc(50% - 400px));
 }
 .reel-chev-r {
-    right: 20px;
-}
-.reel-chev {
-    /* the goo canvas is the button's surface; the glyph sits above it */
-    border: 0;
-    background: none;
-    box-shadow: none;
-}
-.reel-chev > svg {
-    position: relative;
-    z-index: 1;
+    right: max(12px, calc(50% - 400px));
 }
 .reel[data-armed='true'] .reel-chev {
     opacity: 1;
@@ -432,12 +436,6 @@ body.wf-cursor-on * {
         width: 34px;
         height: 34px;
     }
-    .reel-chev-l {
-        left: 10px;
-    }
-    .reel-chev-r {
-        right: 10px;
-    }
 }
 
 /* ---- Playback bar: play/pause and a scrub rail under a video ---- */
@@ -446,7 +444,6 @@ body.wf-cursor-on * {
     margin-bottom: var(--media-margin);
 }
 .pb {
-    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -454,14 +451,13 @@ body.wf-cursor-on * {
     max-width: 100%;
     margin: 16px auto 0;
     padding: 10px 22px 10px 14px;
+    border: 1px solid rgba(50, 50, 50, 0.12);
     border-radius: 999px;
+    background: #FCFCFC;
+    box-shadow: var(--shadow-media);
     color: #1a1a1a;
     -webkit-user-select: none;
     user-select: none;
-}
-.pb > *:not(canvas) {
-    position: relative;
-    z-index: 1;
 }
 .pb-toggle {
     position: relative;
@@ -509,7 +505,7 @@ body.wf-cursor-on * {
 }
 .pb-rail {
     right: 0;
-    background: rgba(0, 0, 0, 0.28);
+    background: rgba(0, 0, 0, 0.15);
 }
 .pb-fill {
     background: #1a1a1a;
