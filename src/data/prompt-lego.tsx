@@ -66,21 +66,6 @@ const wizardCards: ReelItem[] = [
   { src: `${P}/wizard-style.webp`, width: 780, height: 480, alt: 'Wizard card: visual style picked from three reference widgets' },
 ]
 
-const versionTwo: ReelItem[] = [
-  proto('v2-wizard', 'The composer becomes the first question. The thread starts its checklist.'),
-  proto('v2-size', 'Widget size, grown by its handles on a homescreen grid.'),
-  proto('v2-style', 'Visual style, from a gallery drawn per size.'),
-  proto('v2-built', 'The answers read back as bullets, then the build.'),
-]
-
-const versionThree: ReelItem[] = [
-  proto('v3-wizard', 'A greeting opens the thread. The ring replaces the counter, and Skip joins Next.'),
-  proto('v3-size', 'The size step, unchanged from V2.'),
-  proto('v3-rank', 'Ranking with the two-bar drag handle.'),
-  proto('v3-style', 'The style gallery, three across for a square widget.'),
-  proto('v3-built', 'The widget on the canvas, with the interview folded away as two lines.'),
-]
-
 /** the phone videos sit centred at phone width rather than filling the column */
 const phoneVideo: React.CSSProperties = { width: 'min(100%, 380px)', marginLeft: 'auto', marginRight: 'auto' }
 
@@ -120,12 +105,10 @@ export const promptLego: Project = {
       <h2>The interview prototype</h2>
       <p>Send a prompt and the agent answers with &ldquo;let me ask a few questions to get this right&rdquo;. After a beat the composer morphs into the wizard. The questions come from a model in two rounds: two or three discovery questions about what the widget is for, then follow-ups written with those answers in hand, closed by size and style. The size step goes up while the follow-ups load, so there is never a dead wait. As each question is revealed the agent&apos;s turn mirrors it into a live checklist, and when the last one is answered the answers are read back into the thread as bullets before the build runs.</p>
       <Video src="/videos/prompt-lego/v2-interview.mp4" width={828} height={1840} controls goo={false} maxHeight={680} wrapperStyle={phoneVideo} />
-      <Reel items={versionTwo} height={640} label="V2 prototype" />
 
       <h2>Refining the interview</h2>
       <p>V3 is V2 with the feedback folded in. The thread opens on a greeting instead of an empty sheet. The 1/5 counter became a progress ring, because the interview has no fixed length and a denominator that keeps changing reads as a bug. Skip joined Next. The live checklist became a record of activity: &ldquo;Asking questions&rdquo; runs behind a loader and folds the questions out on demand once they are answered, then &ldquo;Forming prompt&rdquo; does the same for the prompt the answers amount to, written as one paragraph addressed to the builder rather than a list of bullets. The style gallery was redrawn per size so every tile fills its slot, selection reads by contrast instead of a badge, and the built widget lands on the canvas above in the chosen style, so &ldquo;it&apos;s on the canvas above&rdquo; is true the moment it is said.</p>
       <Video src="/videos/prompt-lego/v3-interview.mp4" width={828} height={1840} controls goo={false} maxHeight={680} wrapperStyle={phoneVideo} />
-      <Reel items={versionThree} height={640} label="V3 prototype" />
 
       <h2>Engineering</h2>
       <p>The prototype is a Next.js app. Each version lives side by side in its own tree, so V3 could be iterated without disturbing V2. The interview questions, the follow-ups and the written prompt come from a live model behind an API route, with deterministic fallbacks so the flow never dead-ends without a key. The phone frame lays out at its Figma size and scales down to fit the viewport, so every measurement taken from the design stays literal.</p>
