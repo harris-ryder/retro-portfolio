@@ -155,8 +155,7 @@ body.wf-cursor-on * {
     }
 
     body {
-        /* whitish with a tiny Y2K blue tint; the goo's difference blend
-           inverts this, so blobs pick up a faint warm tint against it */
+        /* whitish with a tiny Y2K blue tint */
         background-color: var(--page-bg);
         color: #323232;
     }

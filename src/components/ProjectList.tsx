@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { TypewriterItem } from '@/components/TypewriterItem'
 
-type Item = {
+export type Item = {
   year: string
   title: string
-  tagline: string
+  /** shown on hover; rows without one just link */
+  tagline?: string
   href: string
   external: boolean
 }
@@ -49,39 +50,15 @@ function Row({ item, index, typeIn }: { item: Item; index: number; typeIn?: bool
       <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">
         {typeIn ? item.year.slice(0, yearCount) : item.year}
       </span>
-      <TypewriterItem tagline={item.tagline}>
-        {titleNode}
-      </TypewriterItem>
+      {item.tagline ? <TypewriterItem tagline={item.tagline}>{titleNode}</TypewriterItem> : titleNode}
     </li>
   )
 }
 
-export function ProjectList({ items }: { items: Item[] }) {
-  const [open, setOpen] = useState(false)
-
-  const recent = items.filter(i => Number(i.year) >= 2024)
-  const older = items.filter(i => Number(i.year) <= 2023)
-
+export function ProjectList({ items, typeIn }: { items: Item[]; typeIn?: boolean }) {
   return (
     <ul className="list-none pl-0 [&>li]:mb-2">
-      {recent.map((item, i) => <Row key={item.href} item={item} index={i} />)}
-
-      {older.length > 0 && (
-        <>
-          {!open && (
-            <li className="flex gap-[2ch]">
-              <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">2023</span>
-              <button
-                onClick={() => setOpen(true)}
-                className="no-underline cursor-pointer text-neutral-800 bg-transparent border-none p-0 [font:inherit]"
-              >
-                Older projects
-              </button>
-            </li>
-          )}
-          {open && older.map((item, i) => <Row key={item.href} item={item} index={i} typeIn />)}
-        </>
-      )}
+      {items.map((item, i) => <Row key={item.href} item={item} index={i} typeIn={typeIn} />)}
     </ul>
   )
 }

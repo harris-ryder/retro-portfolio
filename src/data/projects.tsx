@@ -23,7 +23,7 @@ const inFlex: React.CSSProperties = { marginTop: 0, marginBottom: 0, flex: 1, mi
 export const projects: Project[] = [
   {
     slug: 'nothing-ai-builder',
-    title: 'Nothing Gen UI',
+    title: 'Essential Builder',
     tagline: 'A ground-up rewrite of the Gen UI product at Nothing',
     date: '2026',
     content: (
@@ -152,6 +152,7 @@ export const projects: Project[] = [
     title: 'Automated Paintball Gun',
     tagline: 'I built a motorised turret that paints with a paintball gun',
     date: '2023',
+    hidden: true,
     content: (
       <>
         <p>I wanted to know if a machine could make decent paintball art. So I bought a cheap gun, built a turret out of spare parts and stepper motors, and tried to make it accurate enough to find out.</p>
@@ -198,6 +199,7 @@ export const projects: Project[] = [
     title: 'Infinity Ring',
     tagline: 'A company I founded making gymnastic rings with built-in strap storage',
     date: '2022',
+    hidden: true,
     content: (
       <>
         <p>Founded and run the company Infinity Ring. Based off my personal experience using gymnastic rings, I found a solution to the problem of storing the rope between work out sessions.</p>
@@ -220,6 +222,7 @@ export const projects: Project[] = [
     title: 'Building a Campervan',
     tagline: 'I converted a Toyota Hiace into a campervan from scratch',
     date: '2021',
+    hidden: true,
     content: (
       <>
         <p>I bought an old work van and converted it from scratch. Solar electrics, cabinets, bed and a desk. The build took a month. Hardest parts were keeping the carpentry clean on a tight budget and planning the layout before committing to any cuts.</p>
@@ -249,6 +252,7 @@ export const projects: Project[] = [
     title: 'Doge Rocket App',
     tagline: 'A Flappy Bird clone I built with SpaceX rocket physics',
     date: '2022',
+    hidden: true,
     content: (
       <>
         <p>Doge Rocket is a game similar to Flappy Bird. Inspired by SpaceX rocket physics, I simulated a rocket using the same basic mechanics and built it into a game where you fly to the moon while avoiding clouds.</p>
@@ -263,6 +267,7 @@ export const projects: Project[] = [
     title: 'Making Masks for the NHS',
     tagline: 'I 3D printed face shields for NHS staff during Covid',
     date: '2020',
+    hidden: true,
     content: (
       <>
         <p>At the start of Covid-19, PPE shortages left hospital staff without basic protection. I proposed a solution to the head of my company: a small investment to procure 3D printers, adapt an existing face mask design, and run a production line.</p>
@@ -285,6 +290,7 @@ export const projects: Project[] = [
     title: 'Hawksley Centrifuge Design',
     tagline: 'I designed a lab centrifuge from brief to certified prototype',
     date: '2019',
+    hidden: true,
     content: (
       <>
         <p>First project after university. The brief was to analyse the centrifuge market in the small labs sector, identify key design opportunities and deliver a product.</p>
@@ -307,6 +313,7 @@ export const projects: Project[] = [
     title: 'Automated Mural Painter',
     tagline: 'My final year project, a robot that paints murals on walls',
     date: '2019',
+    hidden: true,
     content: (
       <>
         <p>Final Year Project brief: design a product that automates a task, then produce a business plan and Kickstarter video.</p>
@@ -337,6 +344,7 @@ export const projects: Project[] = [
     title: 'Panl, the Frustrating Puzzle App',
     tagline: 'I taught myself Swift to build this sliding-tile puzzle app',
     date: '2019',
+    hidden: true,
     content: (
       <>
         <p>Inspired by a fun board game, I taught myself Swift and the Xcode environment. I created my own version of the game with added complexity.</p>
@@ -351,6 +359,7 @@ export const projects: Project[] = [
     title: 'Designing a Roomba-like Vacuum',
     tagline: 'I redesigned a Roomba in a completely different brand\'s style',
     date: '2018',
+    hidden: true,
     content: (
       <>
         <p>Analyse an existing vacuum, select a brand, and redesign it in that brand&apos;s style. Easier and cheaper to manufacture, with improved functionality where possible.</p>
