@@ -14,6 +14,9 @@ export type Item = {
 }
 
 const itemLink = 'no-underline cursor-pointer'
+// kept as a plain string: Tailwind's build scan only extracts classes it
+// can see whole, not ones glued to a template expression
+const row = 'flex gap-[2ch]'
 
 function useTypeIn(text: string, active: boolean, startDelay: number) {
   const [count, setCount] = useState(active ? 0 : text.length)
@@ -46,7 +49,7 @@ function Row({ item, index, typeIn }: { item: Item; index: number; typeIn?: bool
     : <span>{item.title.slice(0, titleCount)}<span className="opacity-50">|</span></span>
 
   return (
-    <li className={`flex gap-[2ch]${typeIn && !titleDone ? ' pointer-events-none' : ''}`}>
+    <li className={typeIn && !titleDone ? `${row} pointer-events-none` : row}>
       <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">
         {typeIn ? item.year.slice(0, yearCount) : item.year}
       </span>
