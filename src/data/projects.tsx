@@ -1,7 +1,7 @@
 import React from 'react'
 import { Img } from '@/components/Img'
 import { Video } from '@/components/Video'
-import { GooRow } from '@/components/GooRow'
+import { MediaRow } from '@/components/MediaRow'
 import { DemoFrame } from '@/components/workflow/DemoFrame'
 import { Kbd } from '@/components/workflow/Kbd'
 import { TryMeCursor } from '@/components/workflow/TryMeCursor'
@@ -34,10 +34,10 @@ export const projects: Project[] = [
 
         <h2>Mobile</h2>
         <p>The original had room to improve on mobile, which matters for a widget builder whose whole point is putting widgets on a phone. Getting mobile right was a key focus of the rewrite.</p>
-        <GooRow>
-          <Video src="/videos/nothing-ai-builder/old-mobile-flow.mp4" width={1080} height={2400} wrapperStyle={inFlex} goo={false} />
-          <Video src="/videos/nothing-ai-builder/web-mobile-flow.mp4" width={1080} height={2400} wrapperStyle={inFlex} goo={false} />
-        </GooRow>
+        <MediaRow>
+          <Video src="/videos/nothing-ai-builder/old-mobile-flow.mp4" width={1080} height={2400} wrapperStyle={inFlex} />
+          <Video src="/videos/nothing-ai-builder/web-mobile-flow.mp4" width={1080} height={2400} wrapperStyle={inFlex} />
+        </MediaRow>
         <p>The old version is on the left, the new one on the right. The rewrite adds a bottom toggle to switch between chat and preview, and improves spacing and contrast throughout so the app stays legible at phone size. It also introduces a top bar that surfaces the information that matters most, such as the current version, alongside a burger menu that holds navigation.</p>
 
         <h2>Deploy Flow</h2>
@@ -77,10 +77,10 @@ export const projects: Project[] = [
 
         <h2>Fun</h2>
         <p>Some fun widgets made along the way.</p>
-        <GooRow>
-          <Video src="/videos/nothing-ai-builder/tetris-fun.mp4" width={1080} height={2400} wrapperStyle={inFlex} goo={false} />
-          <Img src="/images/nothing-ai-builder/widgets.webp" alt="Windows 98 themed widgets on device" width={900} height={2000} wrapperStyle={inFlex} goo={false} />
-        </GooRow>
+        <MediaRow>
+          <Video src="/videos/nothing-ai-builder/tetris-fun.mp4" width={1080} height={2400} wrapperStyle={inFlex} />
+          <Img src="/images/nothing-ai-builder/widgets.webp" alt="Windows 98 themed widgets on device" width={900} height={2000} wrapperStyle={inFlex} />
+        </MediaRow>
       </>
     ),
   },
