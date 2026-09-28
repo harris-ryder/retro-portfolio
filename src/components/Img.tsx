@@ -14,7 +14,7 @@ export function Img({ src, alt, width, height, wrapperStyle }: Props) {
   return (
     <span
       className={`media-wrapper${loaded ? '' : ' media-skeleton'}`}
-      style={{ aspectRatio: `${width} / ${height}`, ...wrapperStyle }}
+      style={{ aspectRatio: `${width} / ${height}`, '--ar': width / height, ...wrapperStyle } as React.CSSProperties}
     >
       {!loaded && (
         <span className="media-loading" aria-hidden="true">

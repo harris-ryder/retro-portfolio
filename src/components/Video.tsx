@@ -13,7 +13,7 @@ export function Video({ src, width, height, wrapperStyle }: Props) {
   return (
     <span
       className={`media-wrapper${ready ? '' : ' media-skeleton'}`}
-      style={{ aspectRatio: `${width} / ${height}`, ...wrapperStyle }}
+      style={{ aspectRatio: `${width} / ${height}`, '--ar': width / height, ...wrapperStyle } as React.CSSProperties}
     >
       {!ready && (
         <span className="media-loading" aria-hidden="true">

@@ -60,6 +60,8 @@ export function registerDemo(el: HTMLElement) {
   schedule()
   return () => {
     els.delete(el)
+    // re-pick so a demo that just left the page stops being the target
+    schedule()
   }
 }
 
