@@ -31,6 +31,18 @@
     --animate-fly-paste: flyPaste 0.75s cubic-bezier(0.55, 0.05, 0.35, 1) both;
 }
 
+/* The site's type: one size everywhere. type-body is the running text
+   (home page and articles alike); type-tight is the same size set solid,
+   for the index rows. Colour comes from the neutral tokens above. */
+@utility type-body {
+    font-size: 15px;
+    line-height: 1.6;
+}
+@utility type-tight {
+    font-size: 15px;
+    line-height: 1;
+}
+
 @font-face {
     font-family: 'ABCDiatype';
     src: url('/fonts/ABCDiatypeSemiMono-Regular.otf') format('opentype');
@@ -287,9 +299,9 @@ body.wf-cursor-on * {
 
 /* ---- Sectioned article (one section on screen at a time) ---- */
 .sectioned-article {
-    /* media is at most 500px tall, less on a short window so it never
-       pushes Back / Next below the fold */
-    --section-media-h: min(500px, max(240px, calc(100dvh - 420px)));
+    /* media is at most 800px tall, less on a short window so it never
+       pushes Next below the fold */
+    --section-media-h: min(800px, max(240px, calc(100dvh - 420px)));
     /* media may run wider than the 629px text column; on desktop it
        stops short of the index on the left (mirrored on the right) */
     --media-max: 100%;
@@ -297,6 +309,12 @@ body.wf-cursor-on * {
 @media (min-width: 1024px) {
     .sectioned-article {
         --media-max: max(629px, min(1000px, 100vw - 500px));
+    }
+    /* centred on the page (unless it flows below long text), so it must
+       clear the header row (--top-block, where it ends) and the same
+       distance at the bottom, with room for a pair's captions */
+    .sectioned-article:not(.media-flows) {
+        --section-media-h: min(800px, max(240px, calc(100dvh - 2 * (var(--top-block, 82px) + 24px) - 40px)));
     }
 }
 
@@ -317,7 +335,28 @@ body.wf-cursor-on * {
     border-radius: 0;
     box-shadow: none;
 }
-/* each screen is a container, so pairs react to the width they get */
+/* each screen is only as wide as its media (--natural; the 629px text
+   column when there is none) and sits centred in the column. It is a
+   container, so pairs react to the width they get. */
+.sectioned-article .section-screen {
+    width: min(100%, var(--natural, 629px));
+    margin-inline: auto;
+}
+
+/* Back / Next: always there on narrow screens; on desktop a hint that
+   fades in when the arrow keys are used (--hint) and fades away again
+   more slowly (--hint-ms), or shows while pointed at */
+@media (min-width: 1024px) {
+    .section-hint {
+        opacity: var(--hint, 0);
+        transition: opacity var(--hint-ms, 1200ms) ease;
+    }
+    .section-hint:hover,
+    .section-hint:focus-within {
+        opacity: 1;
+        transition-duration: 200ms;
+    }
+}
 .sectioned-article .section-screen {
     container-type: inline-size;
 }
@@ -340,23 +379,27 @@ body.wf-cursor-on * {
     .sectioned-article .media-row--stack > .media-cell {
         flex: none;
         width: 100%;
+        margin-inline: auto;
+    }
+    /* centred on the page, a stacked pair shares the height budget */
+    @media (min-width: 1024px) {
+        .sectioned-article:not(.media-flows) .media-row--stack > .media-cell {
+            max-width: calc(var(--section-media-h) / 2 * var(--ar, 1));
+        }
     }
 }
-/* text shares its column with a pair's first asset: the width the row
-   gives that cell (--ar1 its aspect ratio, --share its part of the row),
-   or its full width once the pair stacks */
-.section-pair .section-body {
-    max-width: none;
-    width: min(calc(var(--section-media-h) * var(--ar1)), calc((100% - 1rem) * var(--share)));
-}
-@container (max-width: 899px) {
-    .section-pair--stack .section-body {
-        width: min(100%, calc(var(--section-media-h) * var(--ar1)));
+@media (min-width: 1024px) {
+    /* top right, on the same 57px margin as the breadcrumb and the index,
+       and never under the breadcrumb on its left */
+    .sectioned-article .section-text {
+        width: min(629px, 100% - 357px);
+        margin-left: auto;
+        margin-right: 57px;
     }
 }
-
 .section-body {
-    margin-top: 22px;
+    /* no single-word last lines, and steadier line breaks */
+    text-wrap: pretty;
 }
 .section-body > * + * {
     margin-top: 1em;
@@ -373,13 +416,14 @@ body.wf-cursor-on * {
    would outgrow the space between header and footer, then tightens
    (--n = section count) */
 .section-index {
-    gap: clamp(6px, calc((100dvh - 360px) / var(--n) - 1em), 16px);
+    gap: clamp(6px, calc((100dvh - 360px) / var(--n) - 1em), 17px);
 }
 
 /* the interactive demos sit flat like the other media and follow the
    same height budget */
 .sectioned-article .wf-demo {
-    width: min(100%, calc(var(--section-media-h) * var(--ar)));
+    /* the screen block is already the demo's design width (see --natural) */
+    width: 100%;
     margin: 0;
     border: none;
     border-radius: 0;

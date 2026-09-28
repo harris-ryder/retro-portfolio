@@ -37,10 +37,10 @@ export default function Home() {
     .sort(byYear)
 
   return (
-    <main className="flex min-h-dvh flex-col text-[15px] leading-[1.6]">
+    <main className="type-body flex min-h-dvh flex-col">
       <div className="px-10 pt-16 pb-16 lg:px-16">
         <header className="mb-2">
-          <h1 className="font-normal text-[15px]">Harris Ryder</h1>
+          <h1 className="font-normal">Harris Ryder</h1>
         </header>
 
         <p className="mb-16 [&_a]:no-underline">
