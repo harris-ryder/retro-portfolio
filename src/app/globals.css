@@ -314,7 +314,7 @@ body.wf-cursor-on * {
        clear the header row (--top-block, where it ends) and the same
        distance at the bottom, with room for a pair's captions */
     .sectioned-article:not(.media-flows) {
-        --section-media-h: min(800px, max(240px, calc(100dvh - 2 * (var(--top-block, 82px) + 24px) - 40px)));
+        --section-media-h: min(800px, max(240px, calc(100dvh - 2 * (var(--top-block, 240px) + 24px) - 40px)));
     }
 }
 
