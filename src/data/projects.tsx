@@ -44,18 +44,20 @@ export const projects: Project[] = [
     sections: [
       {
         title: 'Overview',
-        media: <Img src="/images/nothing-ai-builder/overview.webp" alt="Overview of the Essential App Builder editor" width={2000} height={1405} />,
+        // shown well under its pixel size, which keeps a soft capture looking crisp
+        media: <Img src="/images/nothing-ai-builder/overview.webp" alt="Overview of the Essential App Builder editor" width={1932} height={1336} maxWidth={760} />,
         body: <>
           <p>Nothing&apos;s Gen UI lets non-technical users create and deploy AI-powered phone widgets. My team was tasked with rebuilding the entire app in a single sprint to raise the bar across the board. I had sole responsibility for the frontend.</p>
           <p>The editor is split into a chat panel for prompting the agent, a code view, and a live preview, with a gallery of every widget you have created so far.</p>
+          <p>Under the hood: Tailwind on design tokens, strict TypeScript with no any, TanStack Query in place of useEffect, and components organised by feature.</p>
         </>,
       },
       {
         title: 'Mobile',
         media: (
           <MediaRow labels={['Before', 'After']}>
-            <Video src="/videos/nothing-ai-builder/old-mobile-flow.mp4" width={1080} height={2400} />
-            <Video src="/videos/nothing-ai-builder/web-mobile-flow.mp4" width={1080} height={2400} />
+            <Video src="/videos/nothing-ai-builder/old-mobile-flow.mp4" width={1080} height={2114} />
+            <Video src="/videos/nothing-ai-builder/web-mobile-flow.mp4" width={1080} height={2114} />
           </MediaRow>
         ),
         body: <>
@@ -79,7 +81,7 @@ export const projects: Project[] = [
       },
       {
         title: 'Widget size',
-        media: <Video src="/videos/nothing-ai-builder/size-prompt.mp4" width={1920} height={1398} />,
+        media: <Video src="/videos/nothing-ai-builder/size-prompt.mp4" width={1882} height={1358} />,
         body: <>
           <p>The app offered two sizes, square and landscape, but the choice was hidden in the message input as an ambiguous toggle. User feedback showed people missed it entirely and assumed square, the default, was the only option.</p>
           <p>The rewrite makes it an explicit selection on the first prompt, bringing intentionality to the widget&apos;s design from the start.</p>
@@ -106,21 +108,12 @@ export const projects: Project[] = [
       },
       {
         title: 'Gallery',
-        media: <Video src="/videos/nothing-ai-builder/gallery-view.mp4" width={1920} height={1180} />,
+        media: <Video src="/videos/nothing-ai-builder/gallery-view.mp4" width={1888} height={1152} />,
         body: <p>The rewrite fetches only what fits on screen, shows skeleton cards on slow connections, and uses optimistic updates for rename and delete. Fully keyboard-navigable with semantic HTML throughout.</p>,
       },
       {
         title: 'Preview architecture',
         body: <p>The widget preview runs inside an iframe so a broken widget can&apos;t crash the editor. In the original that iframe had its own backend connection and state, which could drift out of sync with the parent silently. The rewrite makes the main app the single owner of state. The iframe&apos;s only job is to receive files via postMessage, bundle them, and report back.</p>,
-      },
-      {
-        title: 'Engineering',
-        body: <p>The rewrite uses Tailwind exclusively with design tokens for colour and typography. ESLint bans any, so every prop and API response is fully typed. useEffect was replaced almost entirely with TanStack Query, keeping data in the cache rather than spread across component state. Components are organised by feature, so each area of the app owns its own hooks and utils.</p>,
-      },
-      {
-        title: 'Tooltips',
-        media: <Img src="/images/nothing-ai-builder/tooltip.webp" alt="Tooltip explaining an icon button in the editor toolbar" width={2000} height={1130} />,
-        body: <p>Icon-only buttons are ambiguous, so every one got a tooltip explaining what it does.</p>,
       },
       {
         title: 'Fun',

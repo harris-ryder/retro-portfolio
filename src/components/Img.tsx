@@ -6,15 +6,17 @@ type Props = {
   alt: string
   width: number
   height: number
+  // display no wider than this (CSS px), e.g. to keep a soft capture crisp
+  maxWidth?: number
   wrapperStyle?: React.CSSProperties
 }
 
-export function Img({ src, alt, width, height, wrapperStyle }: Props) {
+export function Img({ src, alt, width, height, maxWidth, wrapperStyle }: Props) {
   const [loaded, setLoaded] = useState(false)
   return (
     <span
       className={`media-wrapper${loaded ? '' : ' media-skeleton'}`}
-      style={{ aspectRatio: `${width} / ${height}`, '--ar': width / height, ...wrapperStyle } as React.CSSProperties}
+      style={{ aspectRatio: `${width} / ${height}`, '--ar': width / height, maxWidth, ...wrapperStyle } as React.CSSProperties}
     >
       {!loaded && (
         <span className="media-loading" aria-hidden="true">
