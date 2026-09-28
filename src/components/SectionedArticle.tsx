@@ -11,8 +11,9 @@ type Props = {
   title: string
   // pair: measured on the server for sections whose media is a MediaRow;
   // natural: the media's width when the height budget is the limit;
-  // fixed: a demo's height, which doesn't scale to the budget
-  sections: (Section & { pair?: PairColumn | null; natural?: string; fixed?: number })[]
+  // fixed: a demo's height, which doesn't scale to the budget;
+  // wide: a grid, which may run right up to the index rather than 1000px
+  sections: (Section & { pair?: PairColumn | null; natural?: string; fixed?: number; wide?: boolean })[]
   // rendered once, outside the sections (e.g. the Try-me cursor overlay)
   extras?: React.ReactNode
 }
@@ -73,8 +74,8 @@ export function SectionedArticle({ title, sections, extras }: Props) {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return
       // leave the arrows alone inside text inputs (the demos take focus
-      // but don't use them)
-      if ((e.target as HTMLElement | null)?.closest('input, textarea, [contenteditable]')) return
+      // but don't use them) and on a video's scrub bar, which seeks with them
+      if ((e.target as HTMLElement | null)?.closest('input, textarea, [contenteditable], [role="slider"]')) return
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(index + 1)
       else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go(index - 1)
       else return
@@ -170,7 +171,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
       {section.media && (
         <div
           key={ids[index]}
-          className={`section-in mx-auto w-full max-w-[calc(var(--media-max)_+_2rem)] px-4 pt-8 ${flows ? '' : 'lg:absolute lg:inset-x-0 lg:top-1/2 lg:-translate-y-1/2 lg:pt-0'}`}
+          className={`section-in mx-auto w-full max-w-[calc(var(--media-max)_+_2rem)] px-4 pt-8 ${section.wide ? 'media-wide' : ''} ${flows ? '' : 'lg:absolute lg:inset-x-0 lg:top-1/2 lg:-translate-y-1/2 lg:pt-0'}`}
         >
           <div className="section-screen" style={natural}>
             <div className="section-media">{section.media}</div>

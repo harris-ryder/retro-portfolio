@@ -310,6 +310,11 @@ body.wf-cursor-on * {
     .sectioned-article {
         --media-max: max(629px, min(1000px, 100vw - 500px));
     }
+    /* a grid of several images may run right up to the index instead,
+       so a row of five stays legible */
+    .sectioned-article .media-wide {
+        --media-max: max(629px, 100vw - 500px);
+    }
     /* centred on the page (unless it flows below long text), so it must
        clear the header row (--top-block, where it ends) and the same
        distance at the bottom, with room for a pair's captions */
@@ -381,10 +386,15 @@ body.wf-cursor-on * {
         width: 100%;
         margin-inline: auto;
     }
-    /* centred on the page, a stacked pair shares the height budget */
+    /* centred on the page, a stacked pair shares the height budget; a
+       video's cell also gives up its scrub bar's 40px, since two bars
+       won't both fit in the caption allowance */
     @media (min-width: 1024px) {
         .sectioned-article:not(.media-flows) .media-row--stack > .media-cell {
             max-width: calc(var(--section-media-h) / 2 * var(--ar, 1));
+        }
+        .sectioned-article:not(.media-flows) .media-row--stack > .media-cell:has(.video-block) {
+            max-width: calc((var(--section-media-h) / 2 - 40px) * var(--ar, 1));
         }
     }
 }
@@ -433,4 +443,121 @@ body.wf-cursor-on * {
     border: none;
     border-radius: 0;
     box-shadow: none;
+}
+
+/* ---- Media grid: rows of media sharing one width (see MediaGrid) ---- */
+.media-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+.media-grid > .media-row {
+    margin: 0;
+}
+/* the grid's screen is already sized so its rows add up to the height
+   budget (see gridWidth), so each row simply fills it */
+.sectioned-article .media-grid .media-cell {
+    max-width: none;
+}
+.sectioned-article .media-grid .media-wrapper,
+.sectioned-article .media-grid .video-block {
+    width: 100%;
+}
+/* narrow screens: the rows dissolve into one two-column grid, rather
+   than strips squeezed to the phone's width */
+@media (max-width: 1023px) {
+    .media-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+    .media-grid > .media-row {
+        display: contents;
+    }
+}
+
+/* ---- Playback bar: play/pause and a scrub rail under a video ---- */
+/* the block takes the video's width (its --ar), so the bar spans the
+   video exactly; the bar's 40px sit in the budget's caption allowance */
+.video-block {
+    width: 100%;
+}
+.sectioned-article .video-block {
+    width: min(100%, calc(var(--section-media-h) * var(--ar)));
+}
+.sectioned-article .video-block > .media-wrapper {
+    width: 100%;
+}
+.pb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    margin-top: 8px;
+    color: var(--color-neutral-800);
+    -webkit-user-select: none;
+    user-select: none;
+}
+.pb-toggle {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+}
+.pb-icon {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    transform: scale(0.4);
+    filter: blur(3px);
+    transition: opacity 0.22s, transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.22s;
+}
+.pb-icon[data-show='true'] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+}
+.pb-track {
+    position: relative;
+    flex: 1;
+    height: 28px;
+    cursor: pointer;
+    touch-action: none;
+    outline: none;
+}
+.pb-rail,
+.pb-fill {
+    position: absolute;
+    top: calc(50% - 1.5px);
+    left: 0;
+    height: 3px;
+    border-radius: 2px;
+    pointer-events: none;
+}
+.pb-rail {
+    right: 0;
+    background: rgba(50, 50, 50, 0.15);
+}
+.pb-fill {
+    background: var(--color-neutral-800);
+}
+.pb-knob {
+    position: absolute;
+    top: 2px;
+    width: 24px;
+    height: 24px;
+    color: var(--color-neutral-800);
+    pointer-events: none;
+}
+.pb-track:focus-visible .pb-knob {
+    color: var(--color-neutral-400);
 }
