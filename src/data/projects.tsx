@@ -139,15 +139,15 @@ export const projects: Project[] = [
         media: <Video src="/videos/workflow/figma-flow.mp4" width={1280} height={800} />,
         body: <>
           <p>
-            <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="!no-underline">Workflow</a>{' '}is a web app for reviewing design work. Designers push their Figma files in, and the team leaves feedback, tracks tasks and signs off in one place. I worked on the Figma plugin, which gets a designer&apos;s file out of Figma and into the app.
+            <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="!no-underline">Workflow</a>{' '}is an app for managing creative assets, including Figma files. Its Figma plugin lets users select work and upload it to the main app.
           </p>
           <p>
-            To upload a file the plugin needs the file&apos;s share link, and Figma gives plugins no direct way to read it. Getting that link into the plugin was the hard part.
+            For the plugin to send a Figma file anywhere, the user has to give it the file&apos;s link themselves. My job was to make that painless.
           </p>
         </>,
       },
       {
-        title: 'The manual version',
+        title: 'The original version',
         media: (
           <DemoFrame designWidth={712} designHeight={620}>
             <OldPluginDemo />
@@ -155,15 +155,15 @@ export const projects: Project[] = [
         ),
         body: <>
           <p>
-            The first plugin told the user what to do. A looping walkthrough showed them how to open Figma&apos;s Share menu, copy the file link, and paste it into a field by hand.
+            The initial version asked for the link outright. A looping walkthrough gif showed how to open Figma&apos;s Share menu, copy the file link and paste it into a field.
           </p>
           <p>
-            It worked but was slow and easy to get lost in. This screen was where we lost the most users.
+            This step created real friction, and it was where we lost the most users.
           </p>
         </>,
       },
       {
-        title: 'Reading the clipboard automatically',
+        title: 'The first solution',
         media: (
           <DemoFrame designWidth={712} designHeight={620}>
             <FirstVersionDemo />
@@ -171,18 +171,15 @@ export const projects: Project[] = [
         ),
         body: <>
           <p>
-            Then we found a shortcut. Figma&apos;s <Kbd keys={['⌘', 'L']} /> copies a link to the current selection straight to your clipboard. So instead of walking the user through the Share menu, we could ask for one keystroke and grab the link ourselves.
+            Then we discovered <Kbd keys={['⌘', 'L']} />, which copies the file&apos;s link to the user&apos;s clipboard. That meant we could drop the Share menu walkthrough and ask for a single keystroke instead.
           </p>
           <p>
-            The plugin used the browser&apos;s navigator.clipboard API (since deprecated) to poll the clipboard, watch for a string that looked like a Figma URL, and save it the moment it appeared. One shortcut, no pasting, no menus.
-          </p>
-          <p>
-            In the demo, <Kbd keys={['shift', 'L']} /> stands in for <Kbd keys={['⌘', 'L']} />, since <Kbd keys={['⌘', 'L']} /> focuses the browser&apos;s address bar.
+            The plugin watched the clipboard through the browser&apos;s clipboard API and saved the link the moment a Figma URL appeared. One keystroke, no menus, no pasting.
           </p>
         </>,
       },
       {
-        title: 'Adding a paste step',
+        title: 'The second solution',
         media: (
           <DemoFrame designWidth={712} designHeight={620}>
             <MainDemo />
@@ -190,19 +187,16 @@ export const projects: Project[] = [
         ),
         body: <>
           <p>
-            Then Figma stopped plugins reading the clipboard. The seamless version stopped working, so we added a paste back into the flow. Pressing <Kbd keys={['⌘', 'V']} /> dropped the link into a hidden input the plugin could read.
+            Then Figma blocked plugins from reading the clipboard, and the seamless version stopped working. So we brought a paste back into the flow. Pressing <Kbd keys={['⌘', 'V']} /> dropped the link into a hidden input the plugin could read.
           </p>
           <p>
-            That created a problem. Before, the plugin could confirm the user had run <Kbd keys={['⌘', 'L']} />, because it saw the Figma URL land in the clipboard. Now it was blind to the clipboard, so it had no way to know the link had been copied.
+            That raised a problem. Before, the plugin knew the user had pressed <Kbd keys={['⌘', 'L']} /> because it saw the link land in the clipboard. Now it was blind, with no way to tell whether a link had been copied at all.
           </p>
           <p>
-            There was a second issue. Because of how Figma routes keyboard events, once you hold <Kbd keys={['⌘']} /> the plugin stops receiving the keys pressed after it, including the <Kbd keys={['L']} />. So it couldn&apos;t listen for <Kbd keys={['⌘', 'L']} /> directly.
+            It couldn&apos;t simply listen for <Kbd keys={['⌘', 'L']} /> either. Once <Kbd keys={['⌘']} /> is held, Figma stops passing keystrokes to the plugin, so it never sees the <Kbd keys={['L']} />.
           </p>
           <p>
-            The fix was to guide the order. The plugin asks the user to hold <Kbd keys={['L']} /> first, which it can see, then press the modifier. That lets it validate each key, confirm the shortcut ran, and know the user is ready for the final <Kbd keys={['⌘', 'V']} />.
-          </p>
-          <p>
-            In the demo, <Kbd keys={['shift']} /> stands in for <Kbd keys={['⌘']} /> on the middle step, and the final paste is a real <Kbd keys={['⌘', 'V']} />.
+            The fix was to flip the order. The plugin asks the user to hold <Kbd keys={['L']} /> first, which it can see, then press <Kbd keys={['⌘']} />. That lets it check each key as it lands, confirm the shortcut ran, and know the user is ready for the final <Kbd keys={['⌘', 'V']} />.
           </p>
         </>,
       },

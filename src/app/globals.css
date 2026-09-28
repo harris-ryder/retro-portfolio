@@ -396,6 +396,11 @@ body.wf-cursor-on * {
         margin-left: auto;
         margin-right: 57px;
     }
+    /* right-aligned text shows every ragged left edge, so even the lines
+       out (paragraphs here stay under Chrome's six-line cap for balance) */
+    .sectioned-article .section-body p {
+        text-wrap: balance;
+    }
 }
 .section-body {
     /* no single-word last lines, and steadier line breaks */
