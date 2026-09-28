@@ -317,8 +317,8 @@ body.wf-cursor-on * {
     border-radius: 0;
     box-shadow: none;
 }
-/* media, text and Back / Next all hang from the area's left edge */
-.sectioned-article .section-media {
+/* each screen is a container, so pairs react to the width they get */
+.sectioned-article .section-screen {
     container-type: inline-size;
 }
 /* a pair shares one height: cells grow in proportion to their aspect
@@ -340,6 +340,18 @@ body.wf-cursor-on * {
     .sectioned-article .media-row--stack > .media-cell {
         flex: none;
         width: 100%;
+    }
+}
+/* text shares its column with a pair's first asset: the width the row
+   gives that cell (--ar1 its aspect ratio, --share its part of the row),
+   or its full width once the pair stacks */
+.section-pair .section-body {
+    max-width: none;
+    width: min(calc(var(--section-media-h) * var(--ar1)), calc((100% - 1rem) * var(--share)));
+}
+@container (max-width: 899px) {
+    .section-pair--stack .section-body {
+        width: min(100%, calc(var(--section-media-h) * var(--ar1)));
     }
 }
 
