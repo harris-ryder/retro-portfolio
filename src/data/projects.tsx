@@ -16,7 +16,10 @@ export type Project = {
   title: string
   tagline: string
   date: string
+  // not listed on the home page (the article is still reachable by URL)
   hidden?: boolean
+  // written but not published: not listed, and its URL is a 404
+  draft?: boolean
   // the article, one section per screen
   sections: Section[]
   // rendered once alongside the sections, e.g. the Try-me cursor overlay

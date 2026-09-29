@@ -20,6 +20,8 @@ export const promptLego: Project = {
   title: 'Prompt Lego',
   tagline: 'A prototype that turns vague widget prompts into specific ones',
   date: '2026',
+  // not published yet: neither listed nor reachable (see Project.draft)
+  draft: true,
   sections: [
     {
       title: 'Overview',

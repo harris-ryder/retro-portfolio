@@ -28,7 +28,7 @@ export default function Home() {
   const work = [
     ...workLinks.map(l => ({ year: l.year, title: l.title, href: l.url, external: true })),
     ...projects
-      .filter(p => !p.hidden)
+      .filter(p => !p.hidden && !p.draft)
       .map(p => ({ year: p.date, title: p.title, href: `/work/${p.slug}`, external: false })),
   ].sort(byYear)
 
