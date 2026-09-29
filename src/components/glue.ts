@@ -1,7 +1,7 @@
-import { Children, cloneElement, createElement, isValidElement, type ReactNode } from 'react'
+import { Children, cloneElement, isValidElement, type ReactNode } from 'react'
 
 // A one-letter word ("a", "I") never ends a line: it stays with the word
-// after it. text-wrap: balance evens the lines out but can't promise this.
+// after it. text-wrap: pretty evens the lines out but can't promise this.
 // Run on the server, while the body is still a plain element: once it has
 // been streamed to a client component, later sections arrive as lazy
 // references that this can't see into.
@@ -12,17 +12,4 @@ export function glue(node: ReactNode): ReactNode {
     return cloneElement(node, undefined, glue(node.props.children))
   }
   return node
-}
-
-// Each paragraph's (and list item's) text is wrapped in a span, so a
-// backing can follow the ragged shape of its lines (see .text-run in
-// globals.css) rather than the paragraph's box. Runs on the server like
-// glue, for the same reason.
-export function runs(node: ReactNode): ReactNode {
-  if (Array.isArray(node)) return Children.map(node, runs)
-  if (!isValidElement<{ children?: ReactNode }>(node)) return node
-  if (node.type === 'p' || node.type === 'li') {
-    return cloneElement(node, undefined, createElement('span', { className: 'text-run' }, ...Children.toArray(node.props.children)))
-  }
-  return node.props.children !== undefined ? cloneElement(node, undefined, runs(node.props.children)) : node
 }

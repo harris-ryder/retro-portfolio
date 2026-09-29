@@ -305,19 +305,24 @@ body.wf-cursor-on * {
     /* media may run wider than the 629px text column; on desktop it
        stops short of the index on the left (mirrored on the right) */
     --media-max: 100%;
-    /* desktop: how many lines of text show before the rest is clipped */
-    --text-lines: 4;
 }
 @media (min-width: 1024px) {
     .sectioned-article {
         --media-max: max(629px, min(1000px, 100vw - 500px));
-        /* the media is centred on the page in a band whose margins are
-           fixed: the breadcrumb row (26px down), the clipped text
-           (--text-lines of 24px) and a 16px gap, mirrored at the bottom,
-           less room for a caption or scrub bar under the media. Where the
-           media sits never depends on how much text a section has. */
-        --band: calc(26px + var(--text-lines) * 24px + 16px);
-        --section-media-h: min(800px, max(240px, calc(100dvh - 2 * var(--band) - 48px)));
+        /* the band under the header: from where the text ends
+           (--top-block, measured) plus a gap, down to a fixed margin at
+           the foot. The media and the index are centred in it, and the
+           media's height budget is what's left, less room for a caption
+           or scrub bar under it. */
+        --band-top: calc(var(--top-block, 170px) + 24px);
+        --band-bottom: 64px;
+        --band-centre: calc(var(--band-top) + (100dvh - var(--band-top) - var(--band-bottom)) / 2);
+        --section-media-h: min(800px, max(240px, calc(100dvh - var(--band-top) - var(--band-bottom) - 48px)));
+    }
+    .sectioned-article .section-stage,
+    .sectioned-article .section-nav {
+        top: var(--band-centre);
+        transform: translateY(-50%);
     }
     /* a grid of several images may run right up to the index instead,
        so a row of five stays legible */
@@ -349,6 +354,7 @@ body.wf-cursor-on * {
 .sectioned-article .section-screen {
     width: min(100%, var(--natural, 629px));
     margin-inline: auto;
+    container-type: inline-size;
 }
 
 /* Back / Next: always there on narrow screens; on desktop a hint that
@@ -364,9 +370,6 @@ body.wf-cursor-on * {
         opacity: 1;
         transition-duration: 200ms;
     }
-}
-.sectioned-article .section-screen {
-    container-type: inline-size;
 }
 /* a pair shares one height: cells grow in proportion to their aspect
    ratio, and both reach the height budget together */
@@ -389,7 +392,7 @@ body.wf-cursor-on * {
         width: 100%;
         margin-inline: auto;
     }
-    /* centred on the page, a stacked pair shares the height budget; a
+    /* centred in the band, a stacked pair shares the height budget; a
        video's cell also gives up its scrub bar's 48px, since two bars
        won't both fit in the caption allowance */
     @media (min-width: 1024px) {
@@ -399,71 +402,6 @@ body.wf-cursor-on * {
         .sectioned-article .media-row--stack > .media-cell:has(.video-block) {
             max-width: calc((var(--section-media-h) / 2 - 48px) * var(--ar, 1));
         }
-    }
-}
-@media (min-width: 1024px) {
-    /* top right, on the same 57px margin as the breadcrumb and the index,
-       and never under the breadcrumb on its left */
-    .sectioned-article .section-text {
-        width: min(629px, 100% - 357px);
-        margin-left: auto;
-        margin-right: 57px;
-    }
-    /* right-aligned text shows every ragged left edge, so even the lines
-       out (paragraphs here stay under Chrome's six-line cap for balance) */
-    .sectioned-article .section-body p {
-        text-wrap: balance;
-    }
-    /* the text is cut off on a line boundary within --text-lines lines
-       (--cut, measured; the plain line count until then); pointed at, it
-       expands to its full height (--full, measured) over the media, which
-       stays where it is */
-    .variant-clip .section-body {
-        max-height: var(--cut, calc(var(--text-lines) * 1.6em));
-        overflow: hidden;
-        transition: max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1), color 0.4s ease;
-    }
-    /* expanded, the text inverts: black backing, page-white text */
-    .variant-clip .section-text:hover .section-body,
-    .variant-clip .section-text:focus-within .section-body {
-        max-height: var(--full, 80vh);
-        color: var(--page-bg);
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-    /* what it expands onto: each line of text carries its own black
-       backing (a span per paragraph, drawn per line and padded to the
-       line pitch so the lines join), and the gap above a paragraph is
-       backed to the width of its first line (--first-line, measured), so
-       the backing follows the ragged edge of the text rather than boxing
-       it. All of it fades in while the text is expanded, as the text
-       itself fades to white. */
-    .variant-clip .section-body .text-run {
-        -webkit-box-decoration-break: clone;
-        box-decoration-break: clone;
-        padding: 0.2em 0.35em;
-        background: rgba(255, 255, 255, 0);
-        transition: background 0.4s ease;
-    }
-    .variant-clip .section-body > * {
-        position: relative;
-    }
-    .variant-clip .section-body > * + *::before {
-        content: '';
-        position: absolute;
-        top: -1em;
-        right: 0;
-        width: var(--first-line, 0px);
-        height: 1em;
-        background: rgba(255, 255, 255, 0);
-        transition: background 0.4s ease;
-        pointer-events: none;
-    }
-    .variant-clip .section-text:hover .text-run,
-    .variant-clip .section-text:hover .section-body > * + *::before,
-    .variant-clip .section-text:focus-within .text-run,
-    .variant-clip .section-text:focus-within .section-body > * + *::before {
-        background: #000;
     }
 }
 .section-body {
@@ -482,10 +420,9 @@ body.wf-cursor-on * {
 }
 
 /* the index steps at the home page's row pitch (32px) until the list
-   would outgrow the space between header and footer, then tightens
-   (--n = section count) */
+   would outgrow the band, then tightens (--n = section count) */
 .section-index {
-    gap: clamp(6px, calc((100dvh - 360px) / var(--n) - 1em), 17px);
+    gap: clamp(6px, calc((100dvh - var(--band-top, 170px) - var(--band-bottom, 64px) - 24px) / var(--n) - 1em), 17px);
 }
 
 /* the interactive demos sit flat like the other media and follow the
@@ -498,7 +435,6 @@ body.wf-cursor-on * {
     border-radius: 0;
     box-shadow: none;
 }
-
 /* ---- Media grid: rows of media sharing one width (see MediaGrid) ---- */
 .media-grid {
     display: flex;
@@ -655,50 +591,3 @@ body.wf-cursor-on * {
     text-align: right;
 }
 
-/* ---- Text layout variants, tried at /1, /2 and /3 (see prepare.tsx) ---- */
-/* /3: the text in Read mode, set in a centred column in place of the media */
-.read-text {
-    max-width: 629px;
-    margin: 2rem auto 0;
-    padding: 0 1rem;
-}
-.read-text > * + * {
-    margin-top: 1em;
-}
-@media (min-width: 1024px) {
-    /* /2: the text in a column at the right, vertically centred and shown
-       in full; the media centres in the space between the index and it,
-       and its band only has to clear the breadcrumb row */
-    .variant-column {
-        --column: min(360px, 28vw);
-        --band: calc(26px + 24px + 24px);
-        --media-max: max(320px, 100vw - var(--column) - 57px - 48px - 250px);
-    }
-    .variant-column header {
-        position: static;
-    }
-    .variant-column .section-text {
-        position: absolute;
-        top: 50%;
-        right: 57px;
-        z-index: 10;
-        width: var(--column);
-        margin: 0;
-        transform: translateY(-50%);
-    }
-    .variant-column .section-stage {
-        left: 250px;
-        right: calc(var(--column) + 57px + 48px);
-    }
-    /* /3: Look shows the media alone; Read swaps it for the text */
-    .variant-read .read-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: min(629px, 100% - 500px);
-        margin: 0;
-        padding: 0;
-        text-align: left;
-        transform: translate(-50%, -50%);
-    }
-}
