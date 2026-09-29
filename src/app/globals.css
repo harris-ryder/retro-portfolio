@@ -322,6 +322,11 @@ body.wf-cursor-on * {
     .sectioned-article .media-wide {
         --media-max: max(629px, 100vw - 500px);
     }
+    /* the media itself sits on the centre line: a scrub bar under it
+       (48px with its gap) hangs below, so the stage shifts down by half */
+    .sectioned-article .section-stage:has(.video-block) {
+        translate: 0 calc(-50% + 24px);
+    }
 }
 
 @keyframes section-in {
@@ -543,6 +548,8 @@ body.wf-cursor-on * {
 }
 .flip-item {
     grid-area: 1 / 1;
+    /* a shorter asset sits centred in the slot, not at its top */
+    align-self: center;
     opacity: 0;
     transition: opacity 0.35s ease;
     pointer-events: none;
