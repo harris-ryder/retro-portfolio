@@ -7,9 +7,12 @@ import { createContext, useContext, useMemo, useRef, type ReactNode } from 'reac
 // one plays at a time, so playing one by hand pauses the rest, and the
 // round carries on from whichever ends. A row with a single video simply
 // starts it again.
-type Sequence = { register: (video: HTMLVideoElement) => () => void }
+export type Sequence = { register: (video: HTMLVideoElement) => () => void }
 
-const SequenceContext = createContext<Sequence | null>(null)
+// A Video inside a provider of this context neither autoplays nor loops:
+// the provider decides what plays (see also Flip, which shows one of a
+// labelled pair at a time).
+export const SequenceContext = createContext<Sequence | null>(null)
 
 export const useVideoSequence = () => useContext(SequenceContext)
 

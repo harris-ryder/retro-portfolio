@@ -31,9 +31,15 @@ function gridRows(media: React.ReactNode): number[][] | null {
   return rows.length > 0 && rows.every(Boolean) ? (rows as number[][]) : null
 }
 
+// A labelled MediaRow is a Before / After: one slot that flips between
+// its assets rather than a row of them.
+function isFlip(media: React.ReactNode): boolean {
+  return isValidElement<{ labels?: string[] }>(media) && Array.isArray(media.props.labels)
+}
+
 export function pairColumn(media: React.ReactNode): PairColumn | null {
   const row = rowRatios(media)
-  if (!row) return null
+  if (!row || isFlip(media)) return null
   const stack = isValidElement<{ stack?: boolean }>(media) && !!media.props.stack
   return { ar1: row[0], share: row[0] / (row[0] + row[1]), stack }
 }
@@ -45,6 +51,8 @@ export function pairColumn(media: React.ReactNode): PairColumn | null {
 // text-only section, which takes the text column's width.
 export function naturalWidth(media: React.ReactNode): string | undefined {
   const row = rowRatios(media)
+  // a flip's slot is as wide as its widest asset at the height budget
+  if (row && isFlip(media)) return `calc(var(--section-media-h) * ${Math.max(...row).toFixed(4)})`
   if (row) return gridWidth([row])
   const rows = gridRows(media)
   if (rows) return gridWidth(rows)
