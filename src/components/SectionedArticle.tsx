@@ -140,6 +140,8 @@ export function SectionedArticle({ title, sections, extras }: Props) {
             <div className="section-body section-full" aria-hidden="true">
               {section.body}
             </div>
+            {/* on the row below the cut, where the hidden text will appear */}
+            {full > cut + 1 && <span className="read-more text-neutral-400">Read more</span>}
           </div>
         )}
       </header>

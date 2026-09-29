@@ -368,9 +368,22 @@ body.wf-cursor-on * {
     .sectioned-article:has(.section-text:hover) {
         --reveal: calc(var(--full, 0px) - var(--cut, 0px));
     }
+    /* a greyed Read more on the row below the cut, where the hidden text
+       will appear; it gives way as the text fades in */
+    .sectioned-article .read-more {
+        display: block;
+        position: absolute;
+        top: var(--cut, calc(var(--text-lines) * 1.6em));
+        left: 0;
+        transition: opacity 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .sectioned-article .section-text:hover .read-more {
+        opacity: 0;
+    }
 }
 /* narrow screens show the one copy in full */
-.section-full {
+.section-full,
+.read-more {
     display: none;
 }
 
