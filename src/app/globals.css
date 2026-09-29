@@ -427,33 +427,23 @@ body.wf-cursor-on * {
     .sectioned-article .section-text:focus-within .section-body {
         max-height: var(--full, 80vh);
     }
-    /* what it expands onto: a frosted pane that fades in behind the text
-       and its Back / Next line, so whatever it drops over shows through,
-       softened */
-    .sectioned-article .section-text {
-        position: relative;
-        isolation: isolate;
+    /* what it expands onto: each line of text carries its own translucent,
+       blurred backing (a span per paragraph, cloned per line), so the
+       frosting follows the ragged edge of the text rather than boxing it,
+       and whatever the text drops over shows through, softened */
+    .sectioned-article .section-body .text-run {
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+        padding: 0.2em 0.35em;
+        border-radius: 0.45em;
+        background: rgba(255, 255, 255, 0);
+        -webkit-backdrop-filter: blur(16px) saturate(1.4);
+        backdrop-filter: blur(16px) saturate(1.4);
+        transition: background 0.4s ease;
     }
-    .sectioned-article .section-text::before {
-        content: '';
-        position: absolute;
-        inset: -20px -24px;
-        z-index: -1;
-        border-radius: 20px;
+    .sectioned-article .section-text:hover .text-run,
+    .sectioned-article .section-text:focus-within .text-run {
         background: rgba(255, 255, 255, 0.6);
-        -webkit-backdrop-filter: blur(24px) saturate(1.5);
-        backdrop-filter: blur(24px) saturate(1.5);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.9),
-            0 0 0 1px rgba(50, 50, 50, 0.05),
-            0 24px 64px -24px rgba(50, 50, 50, 0.22);
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        pointer-events: none;
-    }
-    .sectioned-article .section-text:hover::before,
-    .sectioned-article .section-text:focus-within::before {
-        opacity: 1;
     }
 }
 .section-body {

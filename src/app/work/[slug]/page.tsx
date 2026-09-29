@@ -2,7 +2,7 @@ import { projectsBySlug } from '@/data/projects'
 import { notFound } from 'next/navigation'
 import { SectionedArticle } from '@/components/SectionedArticle'
 import { pairColumn, naturalWidth, wideMedia } from '@/components/pairColumn'
-import { glue } from '@/components/glue'
+import { glue, runs } from '@/components/glue'
 
 export default async function WorkPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -12,7 +12,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   // media is measured and text glued here, while they are still plain elements
   const sections = project.sections.map(s => {
     const pair = pairColumn(s.media)
-    return { ...s, body: glue(s.body), pair, natural: naturalWidth(s.media), wide: wideMedia(s.media) }
+    return { ...s, body: runs(glue(s.body)), pair, natural: naturalWidth(s.media), wide: wideMedia(s.media) }
   })
 
   return <SectionedArticle title={project.title} sections={sections} extras={project.extras} />
