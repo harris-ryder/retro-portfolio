@@ -337,19 +337,35 @@ body.wf-cursor-on * {
         --bar-shift: 24px;
     }
     /* the text is cut off on a line boundary within --text-lines lines
-       (--cut, measured; the plain line count until then); pointed at, it
-       expands to its full height (--full, measured) */
+       (--cut, measured; the plain line count until then). A second copy
+       of it in full lies over the cut one, invisible; pointed at, that
+       copy fades in, so the rest of the text appears in place while the
+       media moves down by its height (--full - --cut) on the same curve */
     .sectioned-article .section-body {
         max-height: var(--cut, calc(var(--text-lines) * 1.6em));
         overflow: hidden;
-        transition: max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1);
     }
-    .sectioned-article .section-body:hover {
-        max-height: var(--full, 100vh);
+    .sectioned-article .section-full {
+        display: block;
+        position: absolute;
+        inset: 0 0 auto 0;
+        max-height: none;
+        overflow: visible;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s cubic-bezier(0.32, 0.72, 0, 1);
     }
-    .sectioned-article:has(.section-body:hover) {
+    .sectioned-article .section-text:hover .section-full {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .sectioned-article:has(.section-text:hover) {
         --reveal: calc(var(--full, 0px) - var(--cut, 0px));
     }
+}
+/* narrow screens show the one copy in full */
+.section-full {
+    display: none;
 }
 
 @keyframes section-in {

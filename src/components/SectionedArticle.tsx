@@ -24,8 +24,8 @@ type Props = {
 // are dark, the rest grey, so it doubles as a progress rail). The
 // media's size comes from the window alone, in a band with fixed
 // margins. Text past --text-lines lines is cut off on a line boundary;
-// pointing at it reveals the rest, and the media moves down by the same
-// distance as it does (see --reveal in globals.css). The arrow keys and
+// pointing at it fades the rest in, and the media moves down by the
+// same distance as it does (see --reveal in globals.css). The arrow keys and
 // the URL hash step through sections too. On narrow screens everything
 // simply flows top to bottom, with Back / Next in the footer in place
 // of the index.
@@ -131,8 +131,15 @@ export function SectionedArticle({ title, sections, extras }: Props) {
           {title}
         </p>
         {section.body && (
-          <div key={ids[index]} ref={bodyRef} className="section-body section-in mt-6 max-w-[1000px]">
-            {section.body}
+          <div key={ids[index]} className="section-text section-in relative mt-6 max-w-[1000px]">
+            <div ref={bodyRef} className="section-body">
+              {section.body}
+            </div>
+            {/* the same text in full, laid over the cut one and invisible
+                until pointed at, so the rest fades in rather than unrolls */}
+            <div className="section-body section-full" aria-hidden="true">
+              {section.body}
+            </div>
           </div>
         )}
       </header>
