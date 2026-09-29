@@ -305,6 +305,8 @@ body.wf-cursor-on * {
     /* media may run wider than the text column; on desktop it
        stops short of the index on the left (mirrored on the right) */
     --media-max: 100%;
+    /* desktop: how many lines of text show before the rest is cut off */
+    --text-lines: 3;
 }
 @media (min-width: 1024px) {
     .sectioned-article {
@@ -323,9 +325,29 @@ body.wf-cursor-on * {
         --media-max: max(629px, 100vw - 500px);
     }
     /* the media itself sits on the centre line: a scrub bar under it
-       (48px with its gap) hangs below, so the stage shifts down by half */
+       (48px with its gap) hangs below, so the stage shifts down by half.
+       While the text is revealed the media moves down by as much
+       (--reveal), in step with it. */
+    .sectioned-article .section-stage {
+        translate: 0 calc(-50% + var(--bar-shift, 0px) + var(--reveal, 0px));
+        transition: translate 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    }
     .sectioned-article .section-stage:has(.video-block) {
-        translate: 0 calc(-50% + 24px);
+        --bar-shift: 24px;
+    }
+    /* the text is cut off on a line boundary within --text-lines lines
+       (--cut, measured; the plain line count until then); pointed at, it
+       expands to its full height (--full, measured) */
+    .sectioned-article .section-body {
+        max-height: var(--cut, calc(var(--text-lines) * 1.6em));
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .sectioned-article .section-body:hover {
+        max-height: var(--full, 100vh);
+    }
+    .sectioned-article:has(.section-body:hover) {
+        --reveal: calc(var(--full, 0px) - var(--cut, 0px));
     }
 }
 

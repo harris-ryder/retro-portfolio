@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import type { Section } from '@/data/projects'
 import type { PairColumn } from '@/components/pairColumn'
@@ -23,7 +23,9 @@ type Props = {
 // line, picks the section (numbers up to and including the current one
 // are dark, the rest grey, so it doubles as a progress rail). The
 // media's size comes from the window alone, in a band with fixed
-// margins, so the text above it has no say in it. The arrow keys and
+// margins. Text past --text-lines lines is cut off on a line boundary;
+// pointing at it reveals the rest, and the media moves down by the same
+// distance as it does (see --reveal in globals.css). The arrow keys and
 // the URL hash step through sections too. On narrow screens everything
 // simply flows top to bottom, with Back / Next in the footer in place
 // of the index.
@@ -73,20 +75,63 @@ export function SectionedArticle({ title, sections, extras }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [go, index])
 
+  // where the text is cut (--cut: the last line ending within --text-lines
+  // lines, over every paragraph, so a line is never split) and how tall it
+  // is in full (--full); both go on <main>, where the media reads them too
+  const bodyRef = useRef<HTMLDivElement>(null)
+  const [cut, setCut] = useState(0)
+  const [full, setFull] = useState(0)
+  useLayoutEffect(() => {
+    const body = bodyRef.current
+    if (!body) {
+      setCut(0)
+      return
+    }
+    const measure = () => {
+      setFull(body.scrollHeight)
+      const style = getComputedStyle(body)
+      const lineHeight = parseFloat(style.lineHeight) || 24
+      const limit = (parseFloat(style.getPropertyValue('--text-lines')) || 3) * lineHeight
+      const top = body.getBoundingClientRect().top
+      let last = 0
+      for (const block of Array.from(body.children)) {
+        const rect = block.getBoundingClientRect()
+        const lh = parseFloat(getComputedStyle(block).lineHeight) || lineHeight
+        const lines = Math.max(1, Math.round(rect.height / lh))
+        for (let n = 1; n <= lines; n++) {
+          const bottom = rect.top - top + n * lh
+          if (bottom <= limit + 0.5) last = bottom
+        }
+      }
+      setCut(last || limit)
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(body)
+    window.addEventListener('resize', measure)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', measure)
+    }
+  }, [index])
+
   const section = sections[index]
   const natural = { '--natural': section.natural } as React.CSSProperties
+  const text = cut ? ({ '--cut': `${cut}px`, '--full': `${full}px` } as React.CSSProperties) : undefined
 
   return (
-    <main className="sectioned-article type-body relative flex min-h-dvh flex-col">
-      {/* the breadcrumb, and the section's text under it on the same margin */}
-      <header className="relative flex-none px-4 pt-[26px] lg:px-[57px]">
+    <main className="sectioned-article type-body relative flex min-h-dvh flex-col" style={text}>
+      {/* the breadcrumb, and the section's text under it on the same margin;
+          above the media, so the text can be read and pointed at where
+          the two meet */}
+      <header className="relative z-10 flex-none px-4 pt-[26px] lg:px-[57px]">
         <p>
           <Link href="/" className="text-neutral-400 no-underline transition-colors hover:text-neutral-800">Work</Link>
           <span className="text-neutral-400"> / </span>
           {title}
         </p>
         {section.body && (
-          <div key={ids[index]} className="section-body section-in mt-6 max-w-[1000px]">
+          <div key={ids[index]} ref={bodyRef} className="section-body section-in mt-6 max-w-[1000px]">
             {section.body}
           </div>
         )}
