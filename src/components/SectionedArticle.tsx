@@ -18,11 +18,11 @@ type Props = {
 }
 
 // One section at a time. The section's text sits under the breadcrumb,
-// left-aligned on the same margin, in full. Below it is the band: the
-// media centred in it on the page's centre line, and a numbered index on
-// the left, centred on the same line, which picks the section (numbers
-// up to and including the current one are dark, the rest grey, so it
-// doubles as a progress rail). The band starts where the text ends
+// left-aligned on the same margin, in full, and a numbered index in the
+// top right corner picks the section (numbers up to and including the
+// current one are dark, the rest grey, so it doubles as a progress
+// rail). Below the text is the band, with the media centred in it on
+// the page's centre line. The band starts where the text ends
 // (--top-block, published from here), so the media scales to the room
 // the text leaves. The arrow keys and the URL hash step through
 // sections too, and Next sits in the footer band. On narrow screens
@@ -113,7 +113,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
   return (
     <main ref={mainRef} className="sectioned-article type-body relative flex min-h-dvh flex-col">
       {/* the breadcrumb, and the section's text under it on the same margin */}
-      <header ref={headerRef} className="relative z-10 flex-none px-4 pt-[26px] lg:px-[57px]">
+      <header ref={headerRef} className="relative flex-none px-4 pt-[26px] lg:px-[57px]">
         <p>
           <Link href="/" className="text-neutral-400 no-underline transition-colors hover:text-neutral-800">Work</Link>
           <span className="text-neutral-400"> / </span>
@@ -137,9 +137,10 @@ export function SectionedArticle({ title, sections, extras }: Props) {
         </div>
       </header>
 
-      {/* desktop: vertical index on the left edge, centred in the band */}
-      <nav aria-label="Sections" className="section-nav absolute left-[57px] hidden lg:block">
-        <ol className="section-index type-tight flex flex-col" style={{ '--n': sections.length } as React.CSSProperties}>
+      {/* desktop: vertical index in the top right corner, on the
+          breadcrumb's line; titles read leftwards from the numbers */}
+      <nav aria-label="Sections" className="absolute top-[26px] right-[57px] hidden lg:block">
+        <ol className="section-index type-tight flex flex-col items-end" style={{ '--n': sections.length } as React.CSSProperties}>
           {sections.map((s, i) => (
             <li key={ids[i]}>
               <button
@@ -148,7 +149,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
                 // once the arrow keys put the browser in keyboard mode
                 onClick={e => { e.currentTarget.blur(); go(i) }}
                 aria-current={i === index ? 'step' : undefined}
-                className={`group flex h-[1em] cursor-pointer items-baseline gap-[10px] text-left outline-none ${i > index ? 'text-neutral-400' : ''}`}
+                className={`group flex h-[1em] cursor-pointer flex-row-reverse items-baseline gap-[10px] text-right outline-none ${i > index ? 'text-neutral-400' : ''}`}
               >
                 <span aria-hidden="true">{number(i)}</span>
                 {/* a hovered title appears at once and lingers on the way out */}

@@ -311,16 +311,14 @@ body.wf-cursor-on * {
         --media-max: max(629px, min(1000px, 100vw - 500px));
         /* the band under the header: from where the text ends
            (--top-block, measured) plus a gap, down to a fixed margin at
-           the foot. The media and the index are centred in it, and the
-           media's height budget is what's left, less room for a caption
-           or scrub bar under it. */
+           the foot. The media is centred in it, and its height budget is
+           what's left, less room for a caption or scrub bar under it. */
         --band-top: calc(var(--top-block, 170px) + 24px);
         --band-bottom: 64px;
         --band-centre: calc(var(--band-top) + (100dvh - var(--band-top) - var(--band-bottom)) / 2);
         --section-media-h: min(800px, max(240px, calc(100dvh - var(--band-top) - var(--band-bottom) - 48px)));
     }
-    .sectioned-article .section-stage,
-    .sectioned-article .section-nav {
+    .sectioned-article .section-stage {
         top: var(--band-centre);
         transform: translateY(-50%);
     }
@@ -420,9 +418,9 @@ body.wf-cursor-on * {
 }
 
 /* the index steps at the home page's row pitch (32px) until the list
-   would outgrow the band, then tightens (--n = section count) */
+   would outgrow the window, then tightens (--n = section count) */
 .section-index {
-    gap: clamp(6px, calc((100dvh - var(--band-top, 170px) - var(--band-bottom, 64px) - 24px) / var(--n) - 1em), 17px);
+    gap: clamp(6px, calc((100dvh - 120px) / var(--n) - 1em), 17px);
 }
 
 /* the interactive demos sit flat like the other media and follow the
