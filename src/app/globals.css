@@ -309,12 +309,13 @@ body.wf-cursor-on * {
 @media (min-width: 1024px) {
     .sectioned-article {
         --media-max: max(629px, min(1000px, 100vw - 500px));
-        /* the media is centred on the page, both ways, so its height
-           budget is the window less the header (where the text ends:
-           --top-block, measured) and a gap, mirrored at the bottom, and
-           less room for a caption or scrub bar under it. Long text means
-           smaller media; the remedy is shorter text. */
-        --section-media-h: min(800px, max(240px, calc(100dvh - 2 * (var(--top-block, 170px) + 24px) - 48px)));
+        /* the media is centred on the page, both ways, in a band with a
+           fixed margin top and bottom that clears the breadcrumb row; the
+           text above has no say in its size, so long text runs over it.
+           The budget also keeps room for a caption or scrub bar under
+           the media. */
+        --band-margin: 74px;
+        --section-media-h: min(800px, max(240px, calc(100dvh - 2 * var(--band-margin) - 48px)));
     }
     /* a grid of several images may run right up to the index instead,
        so a row of five stays legible */

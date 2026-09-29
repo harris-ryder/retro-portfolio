@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import type { Section } from '@/data/projects'
 import type { PairColumn } from '@/components/pairColumn'
@@ -22,14 +22,13 @@ type Props = {
 // page, both ways, and a numbered index on the left, centred on the same
 // line, picks the section (numbers up to and including the current one
 // are dark, the rest grey, so it doubles as a progress rail). The
-// media's height budget clears the text (--top-block, published from
-// here) and as much again at the foot, so long text means smaller media. The arrow keys and the URL hash step through
-// sections too. On narrow screens everything simply flows top to
-// bottom, with Back / Next in the footer in place of the index.
+// media's size comes from the window alone, in a band with fixed
+// margins, so the text above it has no say in it. The arrow keys and
+// the URL hash step through sections too. On narrow screens everything
+// simply flows top to bottom, with Back / Next in the footer in place
+// of the index.
 export function SectionedArticle({ title, sections, extras }: Props) {
   const [index, setIndex] = useState(0)
-  const mainRef = useRef<HTMLElement>(null)
-  const headerRef = useRef<HTMLElement>(null)
 
   // hash ids; repeated titles (a run of design boards) get a suffix
   const ids = useMemo(() => {
@@ -74,33 +73,13 @@ export function SectionedArticle({ title, sections, extras }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [go, index])
 
-  // the band starts where the header (breadcrumb and text) ends: publish
-  // that, and again whenever the text or the window changes
-  useLayoutEffect(() => {
-    const header = headerRef.current
-    const main = mainRef.current
-    if (!header || !main) return
-    const publish = () => {
-      const bottom = header.getBoundingClientRect().bottom - main.getBoundingClientRect().top
-      main.style.setProperty('--top-block', `${Math.round(bottom)}px`)
-    }
-    publish()
-    const observer = new ResizeObserver(publish)
-    observer.observe(header)
-    window.addEventListener('resize', publish)
-    return () => {
-      observer.disconnect()
-      window.removeEventListener('resize', publish)
-    }
-  }, [index])
-
   const section = sections[index]
   const natural = { '--natural': section.natural } as React.CSSProperties
 
   return (
-    <main ref={mainRef} className="sectioned-article type-body relative flex min-h-dvh flex-col">
+    <main className="sectioned-article type-body relative flex min-h-dvh flex-col">
       {/* the breadcrumb, and the section's text under it on the same margin */}
-      <header ref={headerRef} className="relative flex-none px-4 pt-[26px] lg:px-[57px]">
+      <header className="relative flex-none px-4 pt-[26px] lg:px-[57px]">
         <p>
           <Link href="/" className="text-neutral-400 no-underline transition-colors hover:text-neutral-800">Work</Link>
           <span className="text-neutral-400"> / </span>
