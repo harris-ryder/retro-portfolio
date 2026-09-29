@@ -418,14 +418,14 @@ body.wf-cursor-on * {
        (--cut, measured; the plain line count until then); pointed at, it
        expands to its full height (--full, measured) over the media, which
        stays where it is */
-    .sectioned-article .section-body {
+    .variant-clip .section-body {
         max-height: var(--cut, calc(var(--text-lines) * 1.6em));
         overflow: hidden;
         transition: max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1), color 0.4s ease;
     }
     /* expanded, the text inverts: black backing, page-white text */
-    .sectioned-article .section-text:hover .section-body,
-    .sectioned-article .section-text:focus-within .section-body {
+    .variant-clip .section-text:hover .section-body,
+    .variant-clip .section-text:focus-within .section-body {
         max-height: var(--full, 80vh);
         color: var(--page-bg);
         -webkit-font-smoothing: antialiased;
@@ -438,17 +438,17 @@ body.wf-cursor-on * {
        the backing follows the ragged edge of the text rather than boxing
        it. All of it fades in while the text is expanded, as the text
        itself fades to white. */
-    .sectioned-article .section-body .text-run {
+    .variant-clip .section-body .text-run {
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
         padding: 0.2em 0.35em;
         background: rgba(255, 255, 255, 0);
         transition: background 0.4s ease;
     }
-    .sectioned-article .section-body > * {
+    .variant-clip .section-body > * {
         position: relative;
     }
-    .sectioned-article .section-body > * + *::before {
+    .variant-clip .section-body > * + *::before {
         content: '';
         position: absolute;
         top: -1em;
@@ -459,10 +459,10 @@ body.wf-cursor-on * {
         transition: background 0.4s ease;
         pointer-events: none;
     }
-    .sectioned-article .section-text:hover .text-run,
-    .sectioned-article .section-text:hover .section-body > * + *::before,
-    .sectioned-article .section-text:focus-within .text-run,
-    .sectioned-article .section-text:focus-within .section-body > * + *::before {
+    .variant-clip .section-text:hover .text-run,
+    .variant-clip .section-text:hover .section-body > * + *::before,
+    .variant-clip .section-text:focus-within .text-run,
+    .variant-clip .section-text:focus-within .section-body > * + *::before {
         background: #000;
     }
 }
@@ -653,4 +653,52 @@ body.wf-cursor-on * {
 .flip-switch-row {
     margin-top: 8px;
     text-align: right;
+}
+
+/* ---- Text layout variants, tried at /1, /2 and /3 (see prepare.tsx) ---- */
+/* /3: the text in Read mode, set in a centred column in place of the media */
+.read-text {
+    max-width: 629px;
+    margin: 2rem auto 0;
+    padding: 0 1rem;
+}
+.read-text > * + * {
+    margin-top: 1em;
+}
+@media (min-width: 1024px) {
+    /* /2: the text in a column at the right, vertically centred and shown
+       in full; the media centres in the space between the index and it,
+       and its band only has to clear the breadcrumb row */
+    .variant-column {
+        --column: min(360px, 28vw);
+        --band: calc(26px + 24px + 24px);
+        --media-max: max(320px, 100vw - var(--column) - 57px - 48px - 250px);
+    }
+    .variant-column header {
+        position: static;
+    }
+    .variant-column .section-text {
+        position: absolute;
+        top: 50%;
+        right: 57px;
+        z-index: 10;
+        width: var(--column);
+        margin: 0;
+        transform: translateY(-50%);
+    }
+    .variant-column .section-stage {
+        left: 250px;
+        right: calc(var(--column) + 57px + 48px);
+    }
+    /* /3: Look shows the media alone; Read swaps it for the text */
+    .variant-read .read-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: min(629px, 100% - 500px);
+        margin: 0;
+        padding: 0;
+        text-align: left;
+        transform: translate(-50%, -50%);
+    }
 }

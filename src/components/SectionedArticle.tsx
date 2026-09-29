@@ -7,6 +7,12 @@ import type { PairColumn } from '@/components/pairColumn'
 const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 const number = (i: number) => String(i + 1).padStart(2, '0')
 
+// How the text is shown on desktop: clipped top right and expanded on
+// hover (the default); in full top right (fit, with long text moved to
+// its own screens by prepare's fit); in full in a column at the right; or
+// behind a Look / Read toggle that swaps the media for the text.
+export type Variant = 'clip' | 'fit' | 'column' | 'read'
+
 type Props = {
   title: string
   // pair: measured on the server for sections whose media is a MediaRow;
@@ -15,6 +21,7 @@ type Props = {
   sections: (Section & { pair?: PairColumn | null; natural?: string; wide?: boolean })[]
   // rendered once, outside the sections (e.g. the Try-me cursor overlay)
   extras?: React.ReactNode
+  variant?: Variant
 }
 
 // One section at a time. The section's media is centred on the page,
@@ -27,8 +34,10 @@ type Props = {
 // progress rail. The arrow keys and the URL hash step through sections
 // too, and Next sits in the footer band. On narrow screens everything
 // simply flows top to bottom, the text in full.
-export function SectionedArticle({ title, sections, extras }: Props) {
+export function SectionedArticle({ title, sections, extras, variant = 'clip' }: Props) {
   const [index, setIndex] = useState(0)
+  // the read variant's toggle
+  const [mode, setMode] = useState<'look' | 'read'>('look')
 
   // hash ids; repeated titles (a run of design boards) get a suffix
   const ids = useMemo(() => {
@@ -129,9 +138,14 @@ export function SectionedArticle({ title, sections, extras }: Props) {
 
   const section = sections[index]
   const natural = { '--natural': section.natural } as React.CSSProperties
+  // the read variant shows the text in place of the media (always, for a
+  // text-only section); the others show it in the header
+  const reading = variant === 'read' && (mode === 'read' || !section.media)
+  const headerText = variant !== 'read' && section.body
+  const toggle = 'cursor-pointer outline-none transition-colors'
 
   return (
-    <main className="sectioned-article type-body relative flex min-h-dvh flex-col">
+    <main className={`sectioned-article variant-${variant} type-body relative flex min-h-dvh flex-col`}>
       {/* breadcrumb on the index's left edge; the section's text beside
           it, centred on the page and top-aligned with it. The header sits
           above the media so the expanded text can cover it. */}
@@ -142,7 +156,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
           {title}
         </p>
         <div className="section-text mt-6 max-w-[629px] lg:mt-0 lg:text-right">
-          {section.body && (
+          {headerText && (
             <div
               key={ids[index]}
               ref={bodyRef}
@@ -152,9 +166,16 @@ export function SectionedArticle({ title, sections, extras }: Props) {
               {section.body}
             </div>
           )}
+          {variant === 'read' && section.media && (
+            <p>
+              <button type="button" onClick={() => setMode('look')} aria-pressed={mode === 'look'} className={`${toggle} ${mode === 'look' ? '' : 'text-neutral-400 hover:text-neutral-800'}`}>Look</button>
+              <span className="text-neutral-400"> / </span>
+              <button type="button" onClick={() => setMode('read')} aria-pressed={mode === 'read'} className={`${toggle} ${mode === 'read' ? '' : 'text-neutral-400 hover:text-neutral-800'}`}>Read</button>
+            </p>
+          )}
           {/* Back / Next, in the voice of the home page's Work / Playground */}
           <p
-            className={`section-hint hidden [&_button]:cursor-pointer [&_button]:outline-none [&_button:disabled]:cursor-default [&_button:disabled]:text-neutral-400 lg:block ${section.body ? 'mt-6' : ''}`}
+            className={`section-hint hidden [&_button]:cursor-pointer [&_button]:outline-none [&_button:disabled]:cursor-default [&_button:disabled]:text-neutral-400 lg:block ${headerText || (variant === 'read' && section.media) ? 'mt-6' : ''}`}
             style={{ '--hint': hint ? 1 : 0, '--hint-ms': hint ? '200ms' : '1200ms' } as React.CSSProperties}
           >
             <button type="button" onClick={() => go(index - 1)} disabled={index === 0}>Back</button>
@@ -189,11 +210,13 @@ export function SectionedArticle({ title, sections, extras }: Props) {
       </nav>
 
       {/* the media, centred on the page; in flow below the text on narrow
-          screens */}
-      {section.media && (
+          screens. In the read variant, Read puts the text there instead. */}
+      {reading ? (
+        <div key={ids[index]} className="read-text section-in">{section.body}</div>
+      ) : section.media && (
         <div
           key={ids[index]}
-          className={`section-in mx-auto w-full max-w-[calc(var(--media-max)_+_2rem)] px-4 pt-8 lg:absolute lg:inset-x-0 lg:top-1/2 lg:-translate-y-1/2 lg:pt-0 ${section.wide ? 'media-wide' : ''}`}
+          className={`section-stage section-in mx-auto w-full max-w-[calc(var(--media-max)_+_2rem)] px-4 pt-8 lg:absolute lg:inset-x-0 lg:top-1/2 lg:-translate-y-1/2 lg:pt-0 ${section.wide ? 'media-wide' : ''}`}
         >
           <div className="section-screen" style={natural}>
             <div className="section-media">{section.media}</div>
