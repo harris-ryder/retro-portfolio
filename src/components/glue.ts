@@ -14,15 +14,18 @@ export function glue(node: ReactNode): ReactNode {
   return node
 }
 
-// Each paragraph's (and list item's) text is wrapped in a span, so a
-// backing can follow the ragged shape of its lines (see .text-run in
-// globals.css) rather than the paragraph's box. Runs on the server like
-// glue, for the same reason.
+// Each paragraph's (and list item's) text is wrapped in two spans, so a
+// backing can follow the ragged shape of its lines rather than the
+// paragraph's box: the inner one is drawn per line, the outer one adds
+// the gap above the paragraph to its first line (see .text-run and
+// .text-line in globals.css). Runs on the server like glue, for the
+// same reason.
 export function runs(node: ReactNode): ReactNode {
   if (Array.isArray(node)) return Children.map(node, runs)
   if (!isValidElement<{ children?: ReactNode }>(node)) return node
   if (node.type === 'p' || node.type === 'li') {
-    return cloneElement(node, undefined, createElement('span', { className: 'text-run' }, ...Children.toArray(node.props.children)))
+    const line = createElement('span', { className: 'text-line' }, ...Children.toArray(node.props.children))
+    return cloneElement(node, undefined, createElement('span', { className: 'text-run' }, line))
   }
   return node.props.children !== undefined ? cloneElement(node, undefined, runs(node.props.children)) : node
 }

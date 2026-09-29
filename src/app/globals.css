@@ -427,23 +427,33 @@ body.wf-cursor-on * {
     .sectioned-article .section-text:focus-within .section-body {
         max-height: var(--full, 80vh);
     }
-    /* what it expands onto: each line of text carries its own translucent,
-       blurred backing (a span per paragraph, cloned per line), so the
-       frosting follows the ragged edge of the text rather than boxing it,
-       and whatever the text drops over shows through, softened */
-    .sectioned-article .section-body .text-run {
+    /* what it expands onto: each line of text carries its own white,
+       blurred backing, so the backing follows the ragged edge of the text
+       rather than boxing it. The inner span (.text-line) is drawn per
+       line, padded to the line pitch so the lines join; the outer span
+       (.text-run) is drawn as one sliced box, so its top padding falls on
+       the first line only and fills the gap above the paragraph to that
+       line's width. Both fade in while the text is expanded. */
+    .sectioned-article .section-body .text-run,
+    .sectioned-article .section-body .text-line {
+        background: rgba(255, 255, 255, 0);
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+        transition: background 0.4s ease;
+    }
+    .sectioned-article .section-body .text-line {
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
         padding: 0.2em 0.35em;
-        border-radius: 0.45em;
-        background: rgba(255, 255, 255, 0);
-        -webkit-backdrop-filter: blur(16px) saturate(1.4);
-        backdrop-filter: blur(16px) saturate(1.4);
-        transition: background 0.4s ease;
+    }
+    .sectioned-article .section-body > * + * > .text-run {
+        padding-top: 1.2em;
     }
     .sectioned-article .section-text:hover .text-run,
-    .sectioned-article .section-text:focus-within .text-run {
-        background: rgba(255, 255, 255, 0.6);
+    .sectioned-article .section-text:hover .text-line,
+    .sectioned-article .section-text:focus-within .text-run,
+    .sectioned-article .section-text:focus-within .text-line {
+        background: rgba(255, 255, 255, 0.92);
     }
 }
 .section-body {
