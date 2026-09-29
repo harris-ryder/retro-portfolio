@@ -344,6 +344,12 @@ body.wf-cursor-on * {
     .sectioned-article .section-body {
         max-height: var(--cut, calc(var(--text-lines) * 1.6em));
         overflow: hidden;
+        transition: opacity 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    /* the cut copy gives way as the full one arrives, so the lines they
+       share aren't drawn twice over */
+    .sectioned-article .section-text:hover .section-body {
+        opacity: 0;
     }
     .sectioned-article .section-full {
         display: block;
