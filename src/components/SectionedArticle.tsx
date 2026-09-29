@@ -11,24 +11,24 @@ type Props = {
   title: string
   // pair: measured on the server for sections whose media is a MediaRow;
   // natural: the media's width when the height budget is the limit;
-  // fixed: a demo's height, which doesn't scale to the budget;
   // wide: a grid, which may run right up to the index rather than 1000px
-  sections: (Section & { pair?: PairColumn | null; natural?: string; fixed?: number; wide?: boolean })[]
+  sections: (Section & { pair?: PairColumn | null; natural?: string; wide?: boolean })[]
   // rendered once, outside the sections (e.g. the Try-me cursor overlay)
   extras?: React.ReactNode
 }
 
-// One section at a time. The section's text sits in the header row beside
-// the breadcrumb, its media is centred on the page, and a numbered index
-// on the left (also centred) picks the section: numbers up to and
+// One section at a time. The section's media is centred on the page,
+// both ways, in a band with fixed margins (see --band in globals.css),
+// so where it sits never depends on the text. The text sits top right
+// beside the breadcrumb, clipped to a few lines with a fade; pointing at
+// it expands it over the media rather than moving anything. A numbered
+// index on the left (also centred) picks the section: numbers up to and
 // including the current one are dark, the rest grey, so it doubles as a
 // progress rail. The arrow keys and the URL hash step through sections
 // too, and Next sits in the footer band. On narrow screens everything
-// simply flows top to bottom.
+// simply flows top to bottom, the text in full.
 export function SectionedArticle({ title, sections, extras }: Props) {
   const [index, setIndex] = useState(0)
-  const mainRef = useRef<HTMLElement>(null)
-  const headerRef = useRef<HTMLElement>(null)
 
   // hash ids; repeated titles (a run of design boards) get a suffix
   const ids = useMemo(() => {
@@ -85,40 +85,37 @@ export function SectionedArticle({ title, sections, extras }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [go, index])
 
-  // the media's height budget keeps clear of the header row (breadcrumb
-  // and text), whose height depends on the section: publish where it ends.
-  // When the centred band that leaves would be under 240px (long text on
-  // a short window), or too short for a fixed-size demo, the media flows
-  // below the text instead.
-  const [flows, setFlows] = useState(false)
+  // the text is clipped on desktop: note whether it really overflows (for
+  // the fade) and how tall it is in full (for the hover expansion)
+  const bodyRef = useRef<HTMLDivElement>(null)
+  const [clipped, setClipped] = useState(false)
+  const [full, setFull] = useState(0)
   useLayoutEffect(() => {
-    const header = headerRef.current
-    const main = mainRef.current
-    if (!header || !main) return
-    const publish = () => {
-      const bottom = header.getBoundingClientRect().bottom - main.getBoundingClientRect().top
-      main.style.setProperty('--top-block', `${Math.round(bottom)}px`)
-      const available = window.innerHeight - 2 * (bottom + 24) - 40
-      setFlows(available < Math.max(240, sections[index].fixed ?? 0))
+    const body = bodyRef.current
+    if (!body) return
+    const measure = () => {
+      setFull(body.scrollHeight)
+      setClipped(body.scrollHeight > body.clientHeight + 1)
     }
-    publish()
-    const observer = new ResizeObserver(publish)
-    observer.observe(header)
-    window.addEventListener('resize', publish)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(body)
+    window.addEventListener('resize', measure)
     return () => {
       observer.disconnect()
-      window.removeEventListener('resize', publish)
+      window.removeEventListener('resize', measure)
     }
-  }, [index, sections])
+  }, [index])
 
   const section = sections[index]
   const natural = { '--natural': section.natural } as React.CSSProperties
 
   return (
-    <main ref={mainRef} className={`sectioned-article type-body relative flex min-h-dvh flex-col ${flows ? 'media-flows' : ''}`}>
+    <main className="sectioned-article type-body relative flex min-h-dvh flex-col">
       {/* breadcrumb on the index's left edge; the section's text beside
-          it, centred on the page and top-aligned with it */}
-      <header ref={headerRef} className="relative flex-none px-4 pt-[26px] lg:px-0">
+          it, centred on the page and top-aligned with it. The header sits
+          above the media so the expanded text can cover it. */}
+      <header className="relative z-10 flex-none px-4 pt-[26px] lg:px-0">
         <p className="lg:absolute lg:top-[26px] lg:left-[57px]">
           <Link href="/" className="text-neutral-400 no-underline transition-colors hover:text-neutral-800">Work</Link>
           <span className="text-neutral-400"> / </span>
@@ -126,7 +123,13 @@ export function SectionedArticle({ title, sections, extras }: Props) {
         </p>
         <div className="section-text mt-6 max-w-[629px] lg:mt-0 lg:text-right">
           {section.body && (
-            <div key={ids[index]} className="section-body section-in">
+            <div
+              key={ids[index]}
+              ref={bodyRef}
+              className="section-body section-in"
+              data-clipped={clipped}
+              style={{ '--full': `${full}px` } as React.CSSProperties}
+            >
               {section.body}
             </div>
           )}
@@ -167,11 +170,11 @@ export function SectionedArticle({ title, sections, extras }: Props) {
       </nav>
 
       {/* the media, centred on the page; in flow below the text on narrow
-          screens, or when there's no room to centre it */}
+          screens */}
       {section.media && (
         <div
           key={ids[index]}
-          className={`section-in mx-auto w-full max-w-[calc(var(--media-max)_+_2rem)] px-4 pt-8 ${section.wide ? 'media-wide' : ''} ${flows ? '' : 'lg:absolute lg:inset-x-0 lg:top-1/2 lg:-translate-y-1/2 lg:pt-0'}`}
+          className={`section-in mx-auto w-full max-w-[calc(var(--media-max)_+_2rem)] px-4 pt-8 lg:absolute lg:inset-x-0 lg:top-1/2 lg:-translate-y-1/2 lg:pt-0 ${section.wide ? 'media-wide' : ''}`}
         >
           <div className="section-screen" style={natural}>
             <div className="section-media">{section.media}</div>

@@ -299,27 +299,30 @@ body.wf-cursor-on * {
 
 /* ---- Sectioned article (one section on screen at a time) ---- */
 .sectioned-article {
-    /* media is at most 800px tall, less on a short window so it never
-       pushes Next below the fold */
+    /* narrow screens: media is at most 800px tall, less on a short window
+       so it never pushes Next below the fold */
     --section-media-h: min(800px, max(240px, calc(100dvh - 420px)));
     /* media may run wider than the 629px text column; on desktop it
        stops short of the index on the left (mirrored on the right) */
     --media-max: 100%;
+    /* desktop: how many lines of text show before the rest is clipped */
+    --text-lines: 4;
 }
 @media (min-width: 1024px) {
     .sectioned-article {
         --media-max: max(629px, min(1000px, 100vw - 500px));
+        /* the media is centred on the page in a band whose margins are
+           fixed: the breadcrumb row (26px down), the clipped text
+           (--text-lines of 24px) and a 16px gap, mirrored at the bottom,
+           less room for a caption or scrub bar under the media. Where the
+           media sits never depends on how much text a section has. */
+        --band: calc(26px + var(--text-lines) * 24px + 16px);
+        --section-media-h: min(800px, max(240px, calc(100dvh - 2 * var(--band) - 48px)));
     }
     /* a grid of several images may run right up to the index instead,
        so a row of five stays legible */
     .sectioned-article .media-wide {
         --media-max: max(629px, 100vw - 500px);
-    }
-    /* centred on the page (unless it flows below long text), so it must
-       clear the header row (--top-block, where it ends) and the same
-       distance at the bottom, with room for a pair's captions */
-    .sectioned-article:not(.media-flows) {
-        --section-media-h: min(800px, max(240px, calc(100dvh - 2 * (var(--top-block, 240px) + 24px) - 40px)));
     }
 }
 
@@ -387,14 +390,14 @@ body.wf-cursor-on * {
         margin-inline: auto;
     }
     /* centred on the page, a stacked pair shares the height budget; a
-       video's cell also gives up its scrub bar's 40px, since two bars
+       video's cell also gives up its scrub bar's 48px, since two bars
        won't both fit in the caption allowance */
     @media (min-width: 1024px) {
-        .sectioned-article:not(.media-flows) .media-row--stack > .media-cell {
+        .sectioned-article .media-row--stack > .media-cell {
             max-width: calc(var(--section-media-h) / 2 * var(--ar, 1));
         }
-        .sectioned-article:not(.media-flows) .media-row--stack > .media-cell:has(.video-block) {
-            max-width: calc((var(--section-media-h) / 2 - 40px) * var(--ar, 1));
+        .sectioned-article .media-row--stack > .media-cell:has(.video-block) {
+            max-width: calc((var(--section-media-h) / 2 - 48px) * var(--ar, 1));
         }
     }
 }
@@ -410,6 +413,23 @@ body.wf-cursor-on * {
        out (paragraphs here stay under Chrome's six-line cap for balance) */
     .sectioned-article .section-body p {
         text-wrap: balance;
+    }
+    /* the text shows --text-lines lines and fades out if there is more;
+       pointed at, it expands to its full height (--full, measured) over
+       the media, which stays where it is */
+    .sectioned-article .section-body {
+        max-height: calc(var(--text-lines) * 1.6em);
+        overflow: hidden;
+        background: var(--page-bg);
+        transition: max-height 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .sectioned-article .section-body[data-clipped='true'] {
+        mask-image: linear-gradient(to bottom, #000 calc(100% - 1.6em), transparent);
+    }
+    .sectioned-article .section-text:hover .section-body,
+    .sectioned-article .section-text:focus-within .section-body {
+        max-height: var(--full, 80vh);
+        mask-image: none;
     }
 }
 .section-body {
@@ -479,7 +499,7 @@ body.wf-cursor-on * {
 
 /* ---- Playback bar: play/pause and a scrub rail under a video ---- */
 /* the block takes the video's width (its --ar), so the bar spans the
-   video exactly; the bar's 40px sit in the budget's caption allowance */
+   video exactly; the bar's 48px sit in the budget's caption allowance */
 .video-block {
     width: 100%;
 }
@@ -494,7 +514,7 @@ body.wf-cursor-on * {
     align-items: center;
     gap: 8px;
     height: 32px;
-    margin-top: 8px;
+    margin-top: 16px;
     color: var(--color-neutral-800);
     -webkit-user-select: none;
     user-select: none;

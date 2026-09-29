@@ -51,15 +51,19 @@ export function naturalWidth(media: React.ReactNode): string | undefined {
   type MediaProps = { width?: number; height?: number; designWidth?: number; designHeight?: number; displayHeight?: number; src?: string; maxWidth?: number }
   if (!isValidElement<MediaProps>(media)) return undefined
   const { width, height, designWidth, designHeight, displayHeight, src, maxWidth } = media.props
-  // a demo keeps its design size (plus the frame's 16px sides) so the
-  // demos of an article all match, whatever the text beside them
-  if (designWidth && designHeight) return `${designWidth + 32}px`
+  // a demo shows at its design size (plus the frame's 16px sides and
+  // 24px top and bottom) so an article's demos all match, and scales
+  // down with the budget when that doesn't fit
+  if (designWidth && designHeight) {
+    const frame = (designWidth + 32) / (designHeight + 48)
+    return `min(${designWidth + 32}px, calc(var(--section-media-h) * ${frame.toFixed(4)}))`
+  }
   const ar = width && height ? width / height : src ? 16 / 9 : undefined
   if (!ar) return undefined
+  const byHeight = `calc(var(--section-media-h) * ${ar})`
   // likewise a video shown at a fixed height, so an article's phone
   // recordings all match
-  if (displayHeight) return `${Math.round(displayHeight * ar)}px`
-  const byHeight = `calc(var(--section-media-h) * ${ar})`
+  if (displayHeight) return `min(${Math.round(displayHeight * ar)}px, ${byHeight})`
   // an image may ask to be shown smaller than the budget allows
   return maxWidth ? `min(${byHeight}, ${maxWidth}px)` : byHeight
 }
@@ -85,13 +89,4 @@ function gridWidth(rows: number[][]): string {
 // 1000px, so a row of five stays legible.
 export function wideMedia(media: React.ReactNode): boolean {
   return gridRows(media) !== null
-}
-
-// A demo's fixed height (design height plus the frame's 24px top and
-// bottom) or a video's display height; undefined for media that scales
-// to the height budget.
-export function fixedHeight(media: React.ReactNode): number | undefined {
-  if (!isValidElement<{ designHeight?: number; displayHeight?: number }>(media)) return undefined
-  const { designHeight, displayHeight } = media.props
-  return displayHeight ?? (designHeight ? designHeight + 48 : undefined)
 }
