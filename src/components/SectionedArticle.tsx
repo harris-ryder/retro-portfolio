@@ -85,14 +85,34 @@ export function SectionedArticle({ title, sections, extras }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [go, index])
 
-  // the text is clipped on desktop: measure how tall it is in full, so
-  // the hover expansion can animate to exactly that
+  // the text is cut off on desktop. Measure where to cut (--cut: the last
+  // line that ends within --text-lines lines, over every paragraph, so a
+  // line is never split) and how tall the text is in full (--full), so
+  // the hover expansion animates between exactly those two heights.
   const bodyRef = useRef<HTMLDivElement>(null)
+  const [cut, setCut] = useState(0)
   const [full, setFull] = useState(0)
   useLayoutEffect(() => {
     const body = bodyRef.current
     if (!body) return
-    const measure = () => setFull(body.scrollHeight)
+    const measure = () => {
+      setFull(body.scrollHeight)
+      const style = getComputedStyle(body)
+      const lineHeight = parseFloat(style.lineHeight) || 24
+      const limit = (parseFloat(style.getPropertyValue('--text-lines')) || 4) * lineHeight
+      const top = body.getBoundingClientRect().top
+      let last = 0
+      for (const block of Array.from(body.children)) {
+        const rect = block.getBoundingClientRect()
+        const lh = parseFloat(getComputedStyle(block).lineHeight) || lineHeight
+        const lines = Math.max(1, Math.round(rect.height / lh))
+        for (let n = 1; n <= lines; n++) {
+          const bottom = rect.top - top + n * lh
+          if (bottom <= limit + 0.5) last = bottom
+        }
+      }
+      setCut(last || limit)
+    }
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(body)
@@ -123,7 +143,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
               key={ids[index]}
               ref={bodyRef}
               className="section-body section-in"
-              style={{ '--full': `${full}px` } as React.CSSProperties}
+              style={cut ? ({ '--cut': `${cut}px`, '--full': `${full}px` } as React.CSSProperties) : undefined}
             >
               {section.body}
             </div>

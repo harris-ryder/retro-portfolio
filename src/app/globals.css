@@ -414,18 +414,46 @@ body.wf-cursor-on * {
     .sectioned-article .section-body p {
         text-wrap: balance;
     }
-    /* the text is cut off after --text-lines lines; pointed at, it
-       expands to its full height (--full, measured) over the media,
-       which stays where it is */
+    /* the text is cut off on a line boundary within --text-lines lines
+       (--cut, measured; the plain line count until then); pointed at, it
+       expands to its full height (--full, measured) over the media, which
+       stays where it is */
     .sectioned-article .section-body {
-        max-height: calc(var(--text-lines) * 1.6em);
+        max-height: var(--cut, calc(var(--text-lines) * 1.6em));
         overflow: hidden;
-        background: var(--page-bg);
-        transition: max-height 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+        transition: max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1);
     }
     .sectioned-article .section-text:hover .section-body,
     .sectioned-article .section-text:focus-within .section-body {
         max-height: var(--full, 80vh);
+    }
+    /* what it expands onto: a frosted pane that fades in behind the text
+       and its Back / Next line, so whatever it drops over shows through,
+       softened */
+    .sectioned-article .section-text {
+        position: relative;
+        isolation: isolate;
+    }
+    .sectioned-article .section-text::before {
+        content: '';
+        position: absolute;
+        inset: -20px -24px;
+        z-index: -1;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.6);
+        -webkit-backdrop-filter: blur(24px) saturate(1.5);
+        backdrop-filter: blur(24px) saturate(1.5);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.9),
+            0 0 0 1px rgba(50, 50, 50, 0.05),
+            0 24px 64px -24px rgba(50, 50, 50, 0.22);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+    .sectioned-article .section-text:hover::before,
+    .sectioned-article .section-text:focus-within::before {
+        opacity: 1;
     }
 }
 .section-body {
