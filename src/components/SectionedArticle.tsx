@@ -86,7 +86,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
           {title}
         </p>
         {section.body && (
-          <div key={ids[index]} className="section-body section-in mt-6 max-w-[629px]">
+          <div key={ids[index]} className="section-body section-in mt-6 max-w-[1000px]">
             {section.body}
           </div>
         )}

@@ -302,7 +302,7 @@ body.wf-cursor-on * {
     /* narrow screens: media is at most 800px tall, less on a short window
        so it never pushes Next below the fold */
     --section-media-h: min(800px, max(240px, calc(100dvh - 420px)));
-    /* media may run wider than the 629px text column; on desktop it
+    /* media may run wider than the text column; on desktop it
        stops short of the index on the left (mirrored on the right) */
     --media-max: 100%;
 }
