@@ -5,7 +5,6 @@ import type { Section } from '@/data/projects'
 import type { PairColumn } from '@/components/pairColumn'
 
 const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
-const number = (i: number) => String(i + 1).padStart(2, '0')
 
 type Props = {
   title: string
@@ -18,17 +17,15 @@ type Props = {
 }
 
 // One section at a time. The section's text sits under the breadcrumb,
-// left-aligned on the same margin, in full. The media is centred on the
-// page, both ways, and a numbered index on the left, centred on the same
-// line, picks the section (numbers up to and including the current one
-// are dark, the rest grey, so it doubles as a progress rail). The
-// media's size comes from the window alone, in a band with fixed
-// margins. Text past --text-lines lines is cut off on a line boundary;
+// left-aligned on the same margin, under a line of numbered section
+// titles that picks the section (the current one dark, the rest grey).
+// The media is centred on the page, both ways, and its size comes from
+// the window alone, in a band with fixed margins. Text past --text-lines lines is cut off on a line boundary;
 // pointing at it fades the rest in, and the media moves down by the
 // same distance as it does (see --reveal in globals.css). The arrow keys and
 // the URL hash step through sections too. On narrow screens everything
 // simply flows top to bottom, with Back / Next in the footer in place
-// of the index.
+// of the index line.
 export function SectionedArticle({ title, sections, extras }: Props) {
   const [index, setIndex] = useState(0)
 
@@ -130,6 +127,23 @@ export function SectionedArticle({ title, sections, extras }: Props) {
           <span className="text-neutral-400"> / </span>
           {title}
         </p>
+        {/* desktop: the index as a line of numbered titles under the
+            breadcrumb; the current one dark, the rest grey */}
+        <nav aria-label="Sections" className="mt-6 hidden flex-wrap gap-x-[2ch] lg:flex">
+          {sections.map((s, i) => (
+            <button
+              key={ids[i]}
+              type="button"
+              // drop focus after a click, or the browser's focus ring would
+              // stay once the arrow keys put it in keyboard mode
+              onClick={e => { e.currentTarget.blur(); go(i) }}
+              aria-current={i === index ? 'step' : undefined}
+              className={`cursor-pointer whitespace-nowrap outline-none transition-colors ${i === index ? '' : 'text-neutral-400 hover:text-neutral-800'}`}
+            >
+              {i + 1}. {s.title}
+            </button>
+          ))}
+        </nav>
         {section.body && (
           <div key={ids[index]} className="section-text section-in relative mt-6 max-w-[1000px]">
             <div ref={bodyRef} className="section-body">
@@ -145,30 +159,6 @@ export function SectionedArticle({ title, sections, extras }: Props) {
           </div>
         )}
       </header>
-
-      {/* desktop: vertical index on the left edge, centred on the page */}
-      <nav aria-label="Sections" className="absolute top-1/2 left-[57px] hidden -translate-y-1/2 lg:block">
-        <ol className="section-index type-tight flex flex-col" style={{ '--n': sections.length } as React.CSSProperties}>
-          {sections.map((s, i) => (
-            <li key={ids[i]}>
-              <button
-                type="button"
-                // drop focus after a click, or the title would stay revealed
-                // once the arrow keys put the browser in keyboard mode
-                onClick={e => { e.currentTarget.blur(); go(i) }}
-                aria-current={i === index ? 'step' : undefined}
-                className={`group flex h-[1em] cursor-pointer items-baseline gap-[10px] text-left outline-none ${i > index ? 'text-neutral-400' : ''}`}
-              >
-                <span aria-hidden="true">{number(i)}</span>
-                {/* a hovered title appears at once and lingers on the way out */}
-                <span className={i === index ? '' : 'text-neutral-400 opacity-0 transition-opacity duration-[900ms] group-hover:opacity-100 group-hover:duration-150 group-focus-visible:opacity-100 group-focus-visible:duration-150'}>
-                  {s.title}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ol>
-      </nav>
 
       {/* the media, centred on the page; in flow below the text on narrow
           screens */}
