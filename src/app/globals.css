@@ -421,18 +421,23 @@ body.wf-cursor-on * {
     .sectioned-article .section-body {
         max-height: var(--cut, calc(var(--text-lines) * 1.6em));
         overflow: hidden;
-        transition: max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        transition: max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1), color 0.4s ease;
     }
+    /* expanded, the text inverts: ink-coloured backing, page-white text */
     .sectioned-article .section-text:hover .section-body,
     .sectioned-article .section-text:focus-within .section-body {
         max-height: var(--full, 80vh);
+        color: var(--page-bg);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
-    /* what it expands onto: each line of text carries its own white
-       backing (a span per paragraph, drawn per line and padded to the
-       line pitch so the lines join), and the gap above a paragraph is
-       backed to the width of its first line (--first-line, measured), so
-       the backing follows the ragged edge of the text rather than boxing
-       it. All of it fades in while the text is expanded. */
+    /* what it expands onto: each line of text carries its own backing in
+       the text's ink colour (a span per paragraph, drawn per line and
+       padded to the line pitch so the lines join), and the gap above a
+       paragraph is backed to the width of its first line (--first-line,
+       measured), so the backing follows the ragged edge of the text
+       rather than boxing it. All of it fades in while the text is
+       expanded, as the text itself fades to white. */
     .sectioned-article .section-body .text-run {
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
@@ -458,7 +463,7 @@ body.wf-cursor-on * {
     .sectioned-article .section-text:hover .section-body > * + *::before,
     .sectioned-article .section-text:focus-within .text-run,
     .sectioned-article .section-text:focus-within .section-body > * + *::before {
-        background: var(--page-bg);
+        background: var(--color-neutral-800);
     }
 }
 .section-body {
