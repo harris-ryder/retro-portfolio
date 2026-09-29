@@ -1,22 +1,29 @@
 'use client'
 
-import { Children, isValidElement, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { Children, Fragment, cloneElement, isValidElement, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { SequenceContext, type Sequence } from '@/components/VideoSequence'
+import { Video } from '@/components/Video'
 
 type Props = {
   children: ReactNode
-  // one label per child, drawn in the bottom right corner of the asset
+  // one label per child, e.g. ['Before', 'After']
   labels: string[]
   // how long a still is shown before the flip, in ms
   hold?: number
 }
 
+type AssetProps = { width?: number; height?: number; src?: string; bar?: ReactNode }
+
 // A Before / After pair (or longer run) shown one asset at a time in one
-// slot, with its label in the bottom right corner. A video flips to the
-// next asset when it ends; a still flips after a hold; the last flips
-// back to the first. Assets crossfade, and only the one on show can be
-// pointed at. The slot is as wide as the widest asset at the height
-// budget (see naturalWidth in pairColumn.ts); narrower ones sit centred.
+// slot, with a "Before / After" switch in the voice of the page's other
+// text: the one on show dark, the rest grey, each a button. On a video
+// the switch sits at the right end of the scrub bar's row; under a still
+// it gets a line of its own. A video flips to the next asset when it
+// ends, a still after a hold, the last back to the first, and choosing
+// one starts the round from it. Assets crossfade, and only the one on
+// show can be pointed at. The slot is as wide as the widest asset at the
+// height budget (see naturalWidth in pairColumn.ts); narrower ones sit
+// centred.
 export function Flip({ children, labels, hold = 4000 }: Props) {
   const items = Children.toArray(children)
   const [index, setIndex] = useState(0)
@@ -44,17 +51,31 @@ export function Flip({ children, labels, hold = 4000 }: Props) {
     return () => window.clearTimeout(timer)
   }, [index, items.length, hold])
 
+  const switcher = (
+    <span className="flip-switch [&_button]:cursor-pointer [&_button]:outline-none [&_button]:transition-colors">
+      {labels.map((label, j) => (
+        <Fragment key={label}>
+          {j > 0 && <span className="text-neutral-400"> / </span>}
+          <button type="button" onClick={() => setIndex(j)} aria-pressed={j === index} className={j === index ? '' : 'text-neutral-400 hover:text-neutral-800'}>
+            {label}
+          </button>
+        </Fragment>
+      ))}
+    </span>
+  )
+
   return (
     <SequenceContext.Provider value={sequence}>
       <div ref={slotRef} className="flip">
         {items.map((item, i) => {
-          const props = isValidElement<{ width?: number; height?: number }>(item) ? item.props : {}
-          const ar = props.width && props.height ? props.width / props.height : undefined
+          const asset = isValidElement<AssetProps>(item) ? item : null
+          const ar = asset?.props.width && asset.props.height ? asset.props.width / asset.props.height : undefined
+          const isVideo = !!asset && (asset.type === Video || /\.mp4$/.test(asset.props.src ?? ''))
           return (
             <div key={i} className="flip-item" data-on={i === index} aria-hidden={i !== index}>
               <div className="flip-asset" style={ar ? ({ '--ar': ar } as React.CSSProperties) : undefined}>
-                {item}
-                {labels[i] && <span className="flip-label">{labels[i]}</span>}
+                {isVideo && asset ? cloneElement(asset, { bar: switcher }) : item}
+                {!isVideo && <p className="flip-switch-row">{switcher}</p>}
               </div>
             </div>
           )

@@ -12,9 +12,11 @@ import { useEffect, useRef, useState } from 'react'
 
 type Props = {
   video: React.RefObject<HTMLVideoElement | null>
+  // drawn at the right end of the bar, after the track (e.g. a Before / After switch)
+  children?: React.ReactNode
 }
 
-export function PlaybackBar({ video }: Props) {
+export function PlaybackBar({ video, children }: Props) {
   const [playing, setPlaying] = useState(true)
   const [fraction, setFraction] = useState(0)
   const trackRef = useRef<HTMLDivElement>(null)
@@ -123,6 +125,7 @@ export function PlaybackBar({ video }: Props) {
         <span className="pb-fill" style={{ width: `${fraction * 100}%` }} />
         <OvalIcon className="pb-knob" style={{ left: `calc(${fraction * 100}% - 12px)`, transform: `rotate(${fraction * 1080}deg)` }} />
       </div>
+      {children}
     </div>
   )
 }

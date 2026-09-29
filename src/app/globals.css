@@ -618,8 +618,9 @@ body.wf-cursor-on * {
 
 /* ---- Before / After: a labelled pair shown one asset at a time ---- */
 /* the assets share one grid cell and crossfade; each sits centred at its
-   own width (its --ar against the height budget), with its label in its
-   bottom right corner, above a video's scrub bar */
+   own width (its --ar against the height budget). The Before / After
+   switch sits at the right end of a video's scrub bar, or on a line of
+   its own under a still. */
 .flip {
     display: grid;
     width: 100%;
@@ -635,7 +636,6 @@ body.wf-cursor-on * {
     pointer-events: auto;
 }
 .flip-asset {
-    position: relative;
     width: min(100%, calc(var(--section-media-h) * var(--ar, 1)));
     margin-inline: auto;
 }
@@ -644,16 +644,13 @@ body.wf-cursor-on * {
     width: 100%;
     margin: 0;
 }
-.flip-label {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    padding: 0.15em 0.55em;
-    background: #000;
-    color: #fff;
-    line-height: 1.6;
-    pointer-events: none;
+.flip-switch {
+    white-space: nowrap;
 }
-.flip-asset:has(.video-block) > .flip-label {
-    bottom: 48px;
+.pb > .flip-switch {
+    margin-left: 8px;
+}
+.flip-switch-row {
+    margin-top: 8px;
+    text-align: right;
 }

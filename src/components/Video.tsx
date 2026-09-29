@@ -12,12 +12,14 @@ type Props = {
   // the video toggles it too
   controls?: boolean
   // show at this height (CSS px) whatever the budget, so an article's
-  // phone recordings all match; the section flows below the text when
-  // the centred band can't fit it (see fixedHeight in pairColumn.ts)
+  // phone recordings all match, scaling down with the budget when that
+  // doesn't fit (see naturalWidth in pairColumn.ts)
   displayHeight?: number
+  // drawn at the right end of the scrub bar (e.g. a Before / After switch)
+  bar?: React.ReactNode
 }
 
-export function Video({ src, width, height, wrapperStyle, controls = true, displayHeight }: Props) {
+export function Video({ src, width, height, wrapperStyle, controls = true, displayHeight, bar }: Props) {
   const [ready, setReady] = useState(false)
   const ref = useRef<HTMLVideoElement | null>(null)
   const ar = width / height
@@ -73,7 +75,7 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
   return (
     <div className="video-block" style={{ '--ar': ar, ...fixed } as React.CSSProperties}>
       {card}
-      <PlaybackBar video={ref} />
+      <PlaybackBar video={ref}>{bar}</PlaybackBar>
     </div>
   )
 }
