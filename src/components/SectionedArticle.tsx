@@ -102,7 +102,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
       const limit = (parseFloat(style.getPropertyValue('--text-lines')) || 4) * lineHeight
       const top = body.getBoundingClientRect().top
       let last = 0
-      for (const block of Array.from(body.children)) {
+      for (const block of Array.from(body.children) as HTMLElement[]) {
         const rect = block.getBoundingClientRect()
         const lh = parseFloat(getComputedStyle(block).lineHeight) || lineHeight
         const lines = Math.max(1, Math.round(rect.height / lh))
@@ -110,6 +110,10 @@ export function SectionedArticle({ title, sections, extras }: Props) {
           const bottom = rect.top - top + n * lh
           if (bottom <= limit + 0.5) last = bottom
         }
+        // the gap above a paragraph is backed to the width of its first
+        // line (see .section-body > * + *::before in globals.css)
+        const first = block.querySelector('.text-run')?.getClientRects()[0]
+        block.style.setProperty('--first-line', `${first ? Math.ceil(first.width) : 0}px`)
       }
       setCut(last || limit)
     }

@@ -428,29 +428,36 @@ body.wf-cursor-on * {
         max-height: var(--full, 80vh);
     }
     /* what it expands onto: each line of text carries its own white
-       backing, so the backing follows the ragged edge of the text rather
-       than boxing it. The inner span (.text-line) is drawn per line,
-       padded to the line pitch so the lines join; the outer span
-       (.text-run) is drawn as one sliced box, so its top padding falls on
-       the first line only and fills the gap above the paragraph to that
-       line's width. Both fade in while the text is expanded. */
-    .sectioned-article .section-body .text-run,
-    .sectioned-article .section-body .text-line {
-        background: rgba(255, 255, 255, 0);
-        transition: background 0.4s ease;
-    }
-    .sectioned-article .section-body .text-line {
+       backing (a span per paragraph, drawn per line and padded to the
+       line pitch so the lines join), and the gap above a paragraph is
+       backed to the width of its first line (--first-line, measured), so
+       the backing follows the ragged edge of the text rather than boxing
+       it. All of it fades in while the text is expanded. */
+    .sectioned-article .section-body .text-run {
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
         padding: 0.2em 0.35em;
+        background: rgba(255, 255, 255, 0);
+        transition: background 0.4s ease;
     }
-    .sectioned-article .section-body > * + * > .text-run {
-        padding-top: 1.2em;
+    .sectioned-article .section-body > * {
+        position: relative;
+    }
+    .sectioned-article .section-body > * + *::before {
+        content: '';
+        position: absolute;
+        top: -1em;
+        right: 0;
+        width: var(--first-line, 0px);
+        height: 1em;
+        background: rgba(255, 255, 255, 0);
+        transition: background 0.4s ease;
+        pointer-events: none;
     }
     .sectioned-article .section-text:hover .text-run,
-    .sectioned-article .section-text:hover .text-line,
+    .sectioned-article .section-text:hover .section-body > * + *::before,
     .sectioned-article .section-text:focus-within .text-run,
-    .sectioned-article .section-text:focus-within .text-line {
+    .sectioned-article .section-text:focus-within .section-body > * + *::before {
         background: var(--page-bg);
     }
 }
