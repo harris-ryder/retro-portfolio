@@ -355,20 +355,6 @@ body.wf-cursor-on * {
     container-type: inline-size;
 }
 
-/* Back / Next: always there on narrow screens; on desktop a hint that
-   fades in when the arrow keys are used (--hint) and fades away again
-   more slowly (--hint-ms), or shows while pointed at */
-@media (min-width: 1024px) {
-    .section-hint {
-        opacity: var(--hint, 0);
-        transition: opacity var(--hint-ms, 1200ms) ease;
-    }
-    .section-hint:hover,
-    .section-hint:focus-within {
-        opacity: 1;
-        transition-duration: 200ms;
-    }
-}
 /* a pair shares one height: cells grow in proportion to their aspect
    ratio, and both reach the height budget together */
 .sectioned-article .media-row {

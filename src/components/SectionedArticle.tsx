@@ -25,8 +25,8 @@ type Props = {
 // the page's centre line. The band starts where the text ends
 // (--top-block, published from here), so the media scales to the room
 // the text leaves. The arrow keys and the URL hash step through
-// sections too, and Next sits in the footer band. On narrow screens
-// everything simply flows top to bottom.
+// sections too. On narrow screens everything simply flows top to
+// bottom, with Back / Next in the footer in place of the index.
 export function SectionedArticle({ title, sections, extras }: Props) {
   const [index, setIndex] = useState(0)
   const mainRef = useRef<HTMLElement>(null)
@@ -43,24 +43,12 @@ export function SectionedArticle({ title, sections, extras }: Props) {
     })
   }, [sections])
 
-  // Back / Next is a hint: it fades in whenever the section changes (a
-  // click or an arrow key) and fades away again shortly after
-  const [hint, setHint] = useState(false)
-  const hintTimer = useRef<number | undefined>(undefined)
-  const showHint = useCallback(() => {
-    setHint(true)
-    window.clearTimeout(hintTimer.current)
-    hintTimer.current = window.setTimeout(() => setHint(false), 1600)
-  }, [])
-  useEffect(() => () => window.clearTimeout(hintTimer.current), [])
-
   const go = useCallback((i: number) => {
     const next = Math.max(0, Math.min(sections.length - 1, i))
     setIndex(next)
     history.replaceState(null, '', `#${ids[next]}`)
     window.scrollTo({ top: 0 })
-    showHint()
-  }, [sections.length, ids, showHint])
+  }, [sections.length, ids])
 
   useEffect(() => {
     const sync = () => {
@@ -87,8 +75,8 @@ export function SectionedArticle({ title, sections, extras }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [go, index])
 
-  // the band starts where the header (breadcrumb, text, hint) ends:
-  // publish that, and again whenever the text or the window changes
+  // the band starts where the header (breadcrumb and text) ends: publish
+  // that, and again whenever the text or the window changes
   useLayoutEffect(() => {
     const header = headerRef.current
     const main = mainRef.current
@@ -119,22 +107,11 @@ export function SectionedArticle({ title, sections, extras }: Props) {
           <span className="text-neutral-400"> / </span>
           {title}
         </p>
-        <div className="section-text mt-6 max-w-[629px]">
-          {section.body && (
-            <div key={ids[index]} className="section-body section-in">
-              {section.body}
-            </div>
-          )}
-          {/* Back / Next, in the voice of the home page's Work / Playground */}
-          <p
-            className={`section-hint hidden [&_button]:cursor-pointer [&_button]:outline-none [&_button:disabled]:cursor-default [&_button:disabled]:text-neutral-400 lg:block ${section.body ? 'mt-6' : ''}`}
-            style={{ '--hint': hint ? 1 : 0, '--hint-ms': hint ? '200ms' : '1200ms' } as React.CSSProperties}
-          >
-            <button type="button" onClick={() => go(index - 1)} disabled={index === 0}>Back</button>
-            <span className="text-neutral-400"> / </span>
-            <button type="button" onClick={() => go(index + 1)} disabled={index === sections.length - 1}>Next</button>
-          </p>
-        </div>
+        {section.body && (
+          <div key={ids[index]} className="section-body section-in mt-6 max-w-[629px]">
+            {section.body}
+          </div>
+        )}
       </header>
 
       {/* desktop: vertical index in the top right corner, on the
