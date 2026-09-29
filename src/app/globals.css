@@ -414,22 +414,18 @@ body.wf-cursor-on * {
     .sectioned-article .section-body p {
         text-wrap: balance;
     }
-    /* the text shows --text-lines lines and fades out if there is more;
-       pointed at, it expands to its full height (--full, measured) over
-       the media, which stays where it is */
+    /* the text is cut off after --text-lines lines; pointed at, it
+       expands to its full height (--full, measured) over the media,
+       which stays where it is */
     .sectioned-article .section-body {
         max-height: calc(var(--text-lines) * 1.6em);
         overflow: hidden;
         background: var(--page-bg);
         transition: max-height 0.35s cubic-bezier(0.32, 0.72, 0, 1);
     }
-    .sectioned-article .section-body[data-clipped='true'] {
-        mask-image: linear-gradient(to bottom, #000 calc(100% - 1.6em), transparent);
-    }
     .sectioned-article .section-text:hover .section-body,
     .sectioned-article .section-text:focus-within .section-body {
         max-height: var(--full, 80vh);
-        mask-image: none;
     }
 }
 .section-body {

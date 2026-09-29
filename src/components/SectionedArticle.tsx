@@ -20,8 +20,8 @@ type Props = {
 // One section at a time. The section's media is centred on the page,
 // both ways, in a band with fixed margins (see --band in globals.css),
 // so where it sits never depends on the text. The text sits top right
-// beside the breadcrumb, clipped to a few lines with a fade; pointing at
-// it expands it over the media rather than moving anything. A numbered
+// beside the breadcrumb, cut off after a few lines; pointing at it
+// expands it over the media rather than moving anything. A numbered
 // index on the left (also centred) picks the section: numbers up to and
 // including the current one are dark, the rest grey, so it doubles as a
 // progress rail. The arrow keys and the URL hash step through sections
@@ -85,18 +85,14 @@ export function SectionedArticle({ title, sections, extras }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [go, index])
 
-  // the text is clipped on desktop: note whether it really overflows (for
-  // the fade) and how tall it is in full (for the hover expansion)
+  // the text is clipped on desktop: measure how tall it is in full, so
+  // the hover expansion can animate to exactly that
   const bodyRef = useRef<HTMLDivElement>(null)
-  const [clipped, setClipped] = useState(false)
   const [full, setFull] = useState(0)
   useLayoutEffect(() => {
     const body = bodyRef.current
     if (!body) return
-    const measure = () => {
-      setFull(body.scrollHeight)
-      setClipped(body.scrollHeight > body.clientHeight + 1)
-    }
+    const measure = () => setFull(body.scrollHeight)
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(body)
@@ -127,7 +123,6 @@ export function SectionedArticle({ title, sections, extras }: Props) {
               key={ids[index]}
               ref={bodyRef}
               className="section-body section-in"
-              data-clipped={clipped}
               style={{ '--full': `${full}px` } as React.CSSProperties}
             >
               {section.body}
