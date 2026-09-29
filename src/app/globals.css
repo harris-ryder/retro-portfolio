@@ -309,18 +309,12 @@ body.wf-cursor-on * {
 @media (min-width: 1024px) {
     .sectioned-article {
         --media-max: max(629px, min(1000px, 100vw - 500px));
-        /* the band under the header: from where the text ends
-           (--top-block, measured) plus a gap, down to a fixed margin at
-           the foot. The media is centred in it, and its height budget is
-           what's left, less room for a caption or scrub bar under it. */
-        --band-top: calc(var(--top-block, 170px) + 24px);
-        --band-bottom: 64px;
-        --band-centre: calc(var(--band-top) + (100dvh - var(--band-top) - var(--band-bottom)) / 2);
-        --section-media-h: min(800px, max(240px, calc(100dvh - var(--band-top) - var(--band-bottom) - 48px)));
-    }
-    .sectioned-article .section-stage {
-        top: var(--band-centre);
-        transform: translateY(-50%);
+        /* the media is centred on the page, both ways, so its height
+           budget is the window less the header (where the text ends:
+           --top-block, measured) and a gap, mirrored at the bottom, and
+           less room for a caption or scrub bar under it. Long text means
+           smaller media; the remedy is shorter text. */
+        --section-media-h: min(800px, max(240px, calc(100dvh - 2 * (var(--top-block, 170px) + 24px) - 48px)));
     }
     /* a grid of several images may run right up to the index instead,
        so a row of five stays legible */
@@ -376,7 +370,7 @@ body.wf-cursor-on * {
         width: 100%;
         margin-inline: auto;
     }
-    /* centred in the band, a stacked pair shares the height budget; a
+    /* centred on the page, a stacked pair shares the height budget; a
        video's cell also gives up its scrub bar's 48px, since two bars
        won't both fit in the caption allowance */
     @media (min-width: 1024px) {
@@ -404,9 +398,10 @@ body.wf-cursor-on * {
 }
 
 /* the index steps at the home page's row pitch (32px) until the list
-   would outgrow the window, then tightens (--n = section count) */
+   would outgrow the space between header and footer, then tightens
+   (--n = section count) */
 .section-index {
-    gap: clamp(6px, calc((100dvh - 120px) / var(--n) - 1em), 17px);
+    gap: clamp(6px, calc((100dvh - 360px) / var(--n) - 1em), 17px);
 }
 
 /* the interactive demos sit flat like the other media and follow the

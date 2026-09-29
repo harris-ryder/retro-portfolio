@@ -18,13 +18,12 @@ type Props = {
 }
 
 // One section at a time. The section's text sits under the breadcrumb,
-// left-aligned on the same margin, in full, and a numbered index in the
-// top right corner picks the section (numbers up to and including the
-// current one are dark, the rest grey, so it doubles as a progress
-// rail). Below the text is the band, with the media centred in it on
-// the page's centre line. The band starts where the text ends
-// (--top-block, published from here), so the media scales to the room
-// the text leaves. The arrow keys and the URL hash step through
+// left-aligned on the same margin, in full. The media is centred on the
+// page, both ways, and a numbered index on the left, centred on the same
+// line, picks the section (numbers up to and including the current one
+// are dark, the rest grey, so it doubles as a progress rail). The
+// media's height budget clears the text (--top-block, published from
+// here) and as much again at the foot, so long text means smaller media. The arrow keys and the URL hash step through
 // sections too. On narrow screens everything simply flows top to
 // bottom, with Back / Next in the footer in place of the index.
 export function SectionedArticle({ title, sections, extras }: Props) {
@@ -114,10 +113,9 @@ export function SectionedArticle({ title, sections, extras }: Props) {
         )}
       </header>
 
-      {/* desktop: vertical index in the top right corner, on the
-          breadcrumb's line; titles read leftwards from the numbers */}
-      <nav aria-label="Sections" className="absolute top-[26px] right-[57px] hidden lg:block">
-        <ol className="section-index type-tight flex flex-col items-end" style={{ '--n': sections.length } as React.CSSProperties}>
+      {/* desktop: vertical index on the left edge, centred on the page */}
+      <nav aria-label="Sections" className="absolute top-1/2 left-[57px] hidden -translate-y-1/2 lg:block">
+        <ol className="section-index type-tight flex flex-col" style={{ '--n': sections.length } as React.CSSProperties}>
           {sections.map((s, i) => (
             <li key={ids[i]}>
               <button
@@ -126,7 +124,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
                 // once the arrow keys put the browser in keyboard mode
                 onClick={e => { e.currentTarget.blur(); go(i) }}
                 aria-current={i === index ? 'step' : undefined}
-                className={`group flex h-[1em] cursor-pointer flex-row-reverse items-baseline gap-[10px] text-right outline-none ${i > index ? 'text-neutral-400' : ''}`}
+                className={`group flex h-[1em] cursor-pointer items-baseline gap-[10px] text-left outline-none ${i > index ? 'text-neutral-400' : ''}`}
               >
                 <span aria-hidden="true">{number(i)}</span>
                 {/* a hovered title appears at once and lingers on the way out */}
@@ -139,12 +137,12 @@ export function SectionedArticle({ title, sections, extras }: Props) {
         </ol>
       </nav>
 
-      {/* the media, centred in the band; in flow below the text on narrow
+      {/* the media, centred on the page; in flow below the text on narrow
           screens */}
       {section.media && (
         <div
           key={ids[index]}
-          className={`section-stage section-in mx-auto w-full max-w-[calc(var(--media-max)_+_2rem)] px-4 pt-8 lg:absolute lg:inset-x-0 lg:pt-0 ${section.wide ? 'media-wide' : ''}`}
+          className={`section-stage section-in mx-auto w-full max-w-[calc(var(--media-max)_+_2rem)] px-4 pt-8 lg:absolute lg:inset-x-0 lg:top-1/2 lg:-translate-y-1/2 lg:pt-0 ${section.wide ? 'media-wide' : ''}`}
         >
           <div className="section-screen" style={natural}>
             <div className="section-media">{section.media}</div>
