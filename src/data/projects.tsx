@@ -47,9 +47,8 @@ export const projects: Project[] = [
         // shown well under its pixel size, which keeps a soft capture looking crisp
         media: <Img src="/images/nothing-ai-builder/overview.webp" alt="Overview of the Essential App Builder editor" width={1932} height={1336} maxWidth={760} />,
         body: <>
-          <p>Nothing&apos;s Gen UI lets non-technical users create and deploy AI-powered phone widgets. My team was tasked with rebuilding the entire app in a single sprint to raise the bar across the board. I had sole responsibility for the frontend.</p>
-          <p>The editor is split into a chat panel for prompting the agent, a code view, and a live preview, with a gallery of every widget you have created so far.</p>
-          <p>Under the hood: Tailwind on design tokens, strict TypeScript with no any, TanStack Query in place of useEffect, and components organised by feature.</p>
+          <p>Nothing&apos;s Gen UI lets non-technical users create and deploy AI-powered phone widgets. My team was tasked with rebuilding the entire app in a single sprint to raise the bar across the board.</p>
+          <p>The rebuild took three weeks in a team of four. I was the sole owner of the frontend and also worked on part of the redesign.</p>
         </>,
       },
       {
@@ -61,8 +60,7 @@ export const projects: Project[] = [
           </MediaRow>
         ),
         body: <>
-          <p>The original had room to improve on mobile, which matters for a widget builder whose whole point is putting widgets on a phone. Getting mobile right was a key focus of the rewrite.</p>
-          <p>The rewrite adds a bottom toggle to switch between chat and preview, and improves spacing and contrast throughout so the app stays legible at phone size. It also introduces a top bar that surfaces the information that matters most, such as the current version, alongside a burger menu that holds navigation.</p>
+          <p>The rewrite improved the mobile web experience, with better contrast and a smoother overall UX.</p>
         </>,
       },
       {
@@ -74,9 +72,8 @@ export const projects: Project[] = [
           </MediaRow>
         ),
         body: <>
-          <p>Once happy with the preview you can deploy the widget to your phone. The backend compiles the React Native code into a real app that lives in the widget drawer.</p>
-          <p>The original ran everything in sequence: a starting screen, streamed build logs while the server compiled the app, then a form to name the widget, then a completion screen. Four surfaces one after another, and 40 seconds in the video. The logs served no purpose for a non-technical user, since nothing on that screen was theirs to act on, so they only added waiting time and risked confusing them.</p>
-          <p>The rewrite starts the compile the moment Deploy is clicked and lets it run in the background. To parallelise the work the form is shown straight away, so the build happens while the user fills it in. Once the form is done, a success, failed, or under-review (when publishing) screen appears. That is two surfaces instead of four, and the same process takes 12 seconds.</p>
+          <p>Deploying an app triggers compiling the code and deploying it to mobile.</p>
+          <p>The original ran four screens in sequence, including build logs that meant nothing to a non-technical user, and took 40 seconds. The rewrite compiles in the background while the user names the widget, cutting that to two screens and 12 seconds.</p>
         </>,
       },
       {
