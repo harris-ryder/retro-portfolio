@@ -312,13 +312,13 @@ body.wf-cursor-on * {
     .sectioned-article {
         --media-max: max(629px, min(1000px, 100vw - 500px));
         /* the media is centred on the page, both ways, in a band with a
-           fixed margin top and bottom: the breadcrumb row, the index line,
-           the text cut to --text-lines lines and the gaps between (26 +
-           24 + 24 + 24 + 24 + 3 * 24 + 24). Being fixed, the text has no
-           say in the media's size, and being that tall, the visible lines
-           never run over it. The budget also keeps room for a caption or
-           scrub bar under the media. */
-        --band-margin: 218px;
+           fixed margin top and bottom: the breadcrumb row, the row of
+           index and text with the text cut to --text-lines lines, and
+           the gaps (26 + 24 + 24 + 3 * 24 + 24). Being fixed, the text has
+           no say in the media's size, and being that tall, the visible
+           lines never run over it. The budget also keeps room for a
+           caption or scrub bar under the media. */
+        --band-margin: 170px;
         --section-media-h: min(800px, max(240px, calc(100dvh - 2 * var(--band-margin) - 48px)));
     }
     /* a grid of several images may run right up to the index instead,

@@ -16,11 +16,11 @@ type Props = {
   extras?: React.ReactNode
 }
 
-// One section at a time. The section's text sits under the breadcrumb,
-// left-aligned on the same margin, under a line of numbered section
-// titles that picks the section (the current one dark, the rest grey).
-// The media is centred on the page, both ways, and its size comes from
-// the window alone, in a band with fixed margins. Text past --text-lines lines is cut off on a line boundary;
+// One section at a time. Under the breadcrumb, two halves: numbered
+// section titles on the left that pick the section (the current one
+// dark, the rest grey), and the section's text on the right. The media
+// is centred on the page, both ways, and its size comes from the window
+// alone, in a band with fixed margins. Text past --text-lines lines is cut off on a line boundary;
 // pointing at it fades the rest in, and the media moves down by the
 // same distance as it does (see --reveal in globals.css). The arrow keys and
 // the URL hash step through sections too. On narrow screens everything
@@ -127,37 +127,39 @@ export function SectionedArticle({ title, sections, extras }: Props) {
           <span className="text-neutral-400"> / </span>
           {title}
         </p>
-        {/* desktop: the index as a line of numbered titles under the
-            breadcrumb; the current one dark, the rest grey */}
-        <nav aria-label="Sections" className="mt-6 hidden flex-wrap gap-x-[2ch] lg:flex">
-          {sections.map((s, i) => (
-            <button
-              key={ids[i]}
-              type="button"
-              // drop focus after a click, or the browser's focus ring would
-              // stay once the arrow keys put it in keyboard mode
-              onClick={e => { e.currentTarget.blur(); go(i) }}
-              aria-current={i === index ? 'step' : undefined}
-              className={`cursor-pointer whitespace-nowrap outline-none transition-colors ${i === index ? '' : 'text-neutral-400 hover:text-neutral-800'}`}
-            >
-              {i + 1}. {s.title}
-            </button>
-          ))}
-        </nav>
-        {section.body && (
-          <div key={ids[index]} className="section-text section-in relative mt-6 max-w-[1000px]">
-            <div ref={bodyRef} className="section-body">
-              {section.body}
+        {/* under the breadcrumb, two halves: the index as numbered titles
+            on the left (desktop), the section's text on the right */}
+        <div className="mt-6 lg:grid lg:grid-cols-2 lg:gap-x-8">
+          <nav aria-label="Sections" className="hidden flex-wrap content-start gap-x-[2ch] lg:flex">
+            {sections.map((s, i) => (
+              <button
+                key={ids[i]}
+                type="button"
+                // drop focus after a click, or the browser's focus ring would
+                // stay once the arrow keys put it in keyboard mode
+                onClick={e => { e.currentTarget.blur(); go(i) }}
+                aria-current={i === index ? 'step' : undefined}
+                className={`cursor-pointer whitespace-nowrap outline-none transition-colors ${i === index ? '' : 'text-neutral-400 hover:text-neutral-800'}`}
+              >
+                {i + 1}. {s.title}
+              </button>
+            ))}
+          </nav>
+          {section.body && (
+            <div key={ids[index]} className="section-text section-in relative">
+              <div ref={bodyRef} className="section-body">
+                {section.body}
+              </div>
+              {/* the same text in full, laid over the cut one and invisible
+                  until pointed at, so the rest fades in rather than unrolls */}
+              <div className="section-body section-full" aria-hidden="true">
+                {section.body}
+              </div>
+              {/* on the row below the cut, where the hidden text will appear */}
+              {full > cut + 1 && <span className="read-more text-neutral-400">Read more</span>}
             </div>
-            {/* the same text in full, laid over the cut one and invisible
-                until pointed at, so the rest fades in rather than unrolls */}
-            <div className="section-body section-full" aria-hidden="true">
-              {section.body}
-            </div>
-            {/* on the row below the cut, where the hidden text will appear */}
-            {full > cut + 1 && <span className="read-more text-neutral-400">Read more</span>}
-          </div>
-        )}
+          )}
+        </div>
       </header>
 
       {/* the media, centred on the page; in flow below the text on narrow
