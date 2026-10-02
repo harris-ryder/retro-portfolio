@@ -123,7 +123,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
           the two meet */}
       <header className="relative z-10 flex-none px-4 pt-[26px] lg:px-[57px]">
         <p>
-          <Link href="/" className="text-neutral-400 no-underline transition-colors hover:text-neutral-800">Work</Link>
+          <Link href="/work" className="text-neutral-400 no-underline transition-colors hover:text-neutral-800">Work</Link>
           <span className="text-neutral-400"> / </span>
           {title}
         </p>

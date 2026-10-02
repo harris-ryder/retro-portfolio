@@ -31,9 +31,10 @@
     --animate-fly-paste: flyPaste 0.75s cubic-bezier(0.55, 0.05, 0.35, 1) both;
 }
 
-/* The site's type: one size everywhere. type-body is the running text
-   (home page and articles alike); type-tight is the same size set solid,
-   for the index rows. Colour comes from the neutral tokens above. */
+/* The site's type. type-body is the articles' running text; type-tight
+   is the same size set solid, for the index rows; type-home is the home
+   page and its Work / Playground / Contact lists, a size down. Colour
+   comes from the neutral tokens above. */
 @utility type-body {
     font-size: 15px;
     line-height: 1.6;
@@ -41,6 +42,10 @@
 @utility type-tight {
     font-size: 15px;
     line-height: 1;
+}
+@utility type-home {
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 @font-face {
@@ -62,6 +67,30 @@
 
 .cursor-blink {
     animation: cursor-blink 0.7s step-end infinite;
+}
+
+/* ---- Work page: an asset in a grey, bordered card (see MediaCard) ---- */
+/* the card keeps one shape whatever the asset's; the asset sits centred
+   at 80% of its width */
+.asset-card {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    background-color: #f2f2f2;
+}
+.asset-card > img,
+.asset-card > video {
+    display: block;
+    width: 80%;
+    height: auto;
+    /* a 3:2 picture at 80% width is 85% of the card's height, the tallest
+       the assets get */
+    max-height: 85%;
+    object-fit: contain;
+    -webkit-user-drag: none;
 }
 
 /* ---- Workflow plugin demos: keyframes + font scope ---- */
