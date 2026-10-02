@@ -14,8 +14,12 @@ import { promptLego } from '@/data/prompt-lego'
 export type Project = {
   slug: string
   title: string
+  // the line under Overview in the article's side column
   tagline: string
   date: string
+  // the side column's Company and Contribution lines
+  company?: string
+  contribution?: string
   // not listed on the home page (the article is still reachable by URL)
   hidden?: boolean
   // written but not published: not listed, and its URL is a 404
@@ -42,9 +46,11 @@ const muraclePage = (n: number) => <Img src={`/images/muracle/MPDesignProject${n
 export const projects: Project[] = [
   {
     slug: 'nothing-ai-builder',
-    title: 'Essential Builder',
+    title: 'Essential Apps',
     tagline: 'A ground-up rewrite of the Gen UI product at Nothing',
     date: '2026',
+    company: 'Nothing',
+    contribution: 'Design, Front-end engineering.',
     sections: [
       {
         title: 'Overview',
@@ -134,6 +140,8 @@ export const projects: Project[] = [
     title: 'Workflow Figma Plugin',
     tagline: 'The Figma plugin that pushed design files into the Workflow app',
     date: '2025',
+    company: 'Workflow',
+    contribution: 'Design, Front-end engineering.',
     extras: <TryMeCursor />,
     sections: [
       {

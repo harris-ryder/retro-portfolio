@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { TypewriterItem } from '@/components/TypewriterItem'
 
 export type Item = {
   year: string
   title: string
-  /** shown on hover; rows without one just link */
+  /** a line about it; kept with the entry, not shown at present */
   tagline?: string
   href: string
   external: boolean
@@ -15,8 +14,10 @@ export type Item = {
 
 const itemLink = 'no-underline cursor-pointer'
 // kept as a plain string: Tailwind's build scan only extracts classes it
-// can see whole, not ones glued to a template expression
-const row = 'flex gap-[2ch]'
+// can see whole, not ones glued to a template expression. The rows meet
+// edge to edge (padding, not a margin, between them), so pointing
+// anywhere along one, text or not, counts as pointing at it.
+const row = 'flex gap-[2ch] py-1'
 
 function useTypeIn(text: string, active: boolean, startDelay: number) {
   const [count, setCount] = useState(active ? 0 : text.length)
@@ -36,7 +37,9 @@ function useTypeIn(text: string, active: boolean, startDelay: number) {
   return count
 }
 
-function Row({ item, index, typeIn }: { item: Item; index: number; typeIn?: boolean }) {
+type Hover = (index: number | null) => void
+
+function Row({ item, index, typeIn, onHover }: { item: Item; index: number; typeIn?: boolean; onHover?: Hover }) {
   const rowDelay = index * 120
   const yearCount = useTypeIn(item.year, !!typeIn, rowDelay)
   const titleCount = useTypeIn(item.title, !!typeIn, rowDelay)
@@ -49,19 +52,26 @@ function Row({ item, index, typeIn }: { item: Item; index: number; typeIn?: bool
     : <span>{item.title.slice(0, titleCount)}<span className="opacity-50">|</span></span>
 
   return (
-    <li className={typeIn && !titleDone ? `${row} pointer-events-none` : row}>
+    <li
+      className={typeIn && !titleDone ? `${row} pointer-events-none` : row}
+      onMouseEnter={() => onHover?.(index)}
+      onMouseLeave={() => onHover?.(null)}
+      onFocus={() => onHover?.(index)}
+      onBlur={() => onHover?.(null)}
+    >
       <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">
         {typeIn ? item.year.slice(0, yearCount) : item.year}
       </span>
-      {item.tagline ? <TypewriterItem tagline={item.tagline}>{titleNode}</TypewriterItem> : titleNode}
+      {titleNode}
     </li>
   )
 }
 
-export function ProjectList({ items, typeIn }: { items: Item[]; typeIn?: boolean }) {
+// onHover is told which row is pointed at or focused (null for none)
+export function ProjectList({ items, typeIn, onHover }: { items: Item[]; typeIn?: boolean; onHover?: Hover }) {
   return (
-    <ul className="list-none pl-0 [&>li]:mb-2">
-      {items.map((item, i) => <Row key={item.href} item={item} index={i} typeIn={typeIn} />)}
+    <ul className="list-none pl-0">
+      {items.map((item, i) => <Row key={item.href} item={item} index={i} typeIn={typeIn} onHover={onHover} />)}
     </ul>
   )
 }

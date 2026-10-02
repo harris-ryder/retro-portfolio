@@ -1,13 +1,11 @@
 import { projectsBySlug } from '@/data/projects'
 import { notFound } from 'next/navigation'
-import { SectionedArticle } from '@/components/SectionedArticle'
-import { prepare } from '@/components/prepare'
+import { FrameArticle } from '@/components/FrameArticle'
 
 export default async function WorkPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const project = projectsBySlug[slug]
   if (!project || project.draft) notFound()
 
-  // media is measured and text glued here, while they are still plain elements
-  return <SectionedArticle title={project.title} sections={prepare(project)} extras={project.extras} />
+  return <FrameArticle project={project} />
 }

@@ -28,14 +28,14 @@ export const promptLego: Project = {
       // a 390px Figma frame at 2x; shown a little over its design size
       media: <Img src={`${P}/hero-lego-stack.webp`} alt="A prompt assembled from lego-like bricks: Workout App, Focused on calisthenics, Minimalist app one main view, Widget size should be 4x2, Colours should be" width={780} height={628} maxWidth={560} />,
       body: <>
-        <p>Essential Builder is Nothing&apos;s Gen UI app: you describe a phone widget and an agent builds it. In testing, the first prompt was often the problem. People typed things like &ldquo;Build me an Instagram clone&rdquo;, which is too broad for a widget and says nothing about features, size or look. The agent had to guess, and the first build was rarely what they had in mind. Prompt Lego is a prototype of how the app could help people say what they want before anything gets built.</p>
+        <p>Essential Apps is Nothing&apos;s Gen UI app: you describe a phone widget and an agent builds it. In testing, the first prompt was often the problem. People typed things like &ldquo;Build me an Instagram clone&rdquo;, which is too broad for a widget and says nothing about features, size or look. The agent had to guess, and the first build was rarely what they had in mind. Prompt Lego is a prototype of how the app could help people say what they want before anything gets built.</p>
         <p>The name comes from the idea that a good prompt is built from a few small, separable pieces: what the widget does, what it shows, how big it is, how it looks. Each is a brick, and the user should be able to add or swap one without rewriting the whole thing.</p>
       </>,
     },
     {
       title: 'What users were doing',
       media: phone('sprint1-jarvis', 'Phone screen: a draft that just says Build me jarvis sits in the composer, with an Enhance button beside it'),
-      body: <p>One interview made the problem concrete. A user showed us their workaround: they wrote their idea in Gemini first, asked it to turn it into a better prompt, then pasted the result into Essential Builder. They had bolted the missing step onto the front of the app themselves. That set the brief. The app should do that step for them, and do it better than a general chat can, because it knows what a widget is.</p>,
+      body: <p>One interview made the problem concrete. A user showed us their workaround: they wrote their idea in Gemini first, asked it to turn it into a better prompt, then pasted the result into Essential Apps. They had bolted the missing step onto the front of the app themselves. That set the brief. The app should do that step for them, and do it better than a general chat can, because it knows what a widget is.</p>,
     },
     {
       title: 'References',

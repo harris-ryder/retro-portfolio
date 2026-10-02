@@ -60,37 +60,147 @@
     to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes cursor-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
-
-.cursor-blink {
-    animation: cursor-blink 0.7s step-end infinite;
-}
-
-/* ---- Work page: an asset in a grey, bordered card (see MediaCard) ---- */
-/* the card keeps one shape whatever the asset's; the asset sits centred
-   at 80% of its width */
-.asset-card {
-    display: grid;
+/* ---- Work page: the pointed-at entry's asset, mid-window (see WorkIndex) ---- */
+/* the assets share one spot in the middle of the window, unseen until
+   their row is pointed at. Pointer-only, so left out on narrow screens. */
+.work-peek {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: none;
     place-items: center;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    border: 1px solid #e8e8e8;
-    border-radius: 4px;
-    background-color: #f2f2f2;
+    list-style: none;
+    pointer-events: none;
 }
-.asset-card > img,
-.asset-card > video {
+@media (min-width: 1024px) {
+    .work-peek {
+        display: grid;
+    }
+}
+.work-peek > li {
+    grid-area: 1 / 1;
+    width: min(640px, 60vw);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+.work-peek > li[data-open] {
+    opacity: 1;
+}
+.work-peek img,
+.work-peek video {
     display: block;
-    width: 80%;
+    width: 100%;
     height: auto;
-    /* a 3:2 picture at 80% width is 85% of the card's height, the tallest
-       the assets get */
-    max-height: 85%;
+    max-height: 80vh;
     object-fit: contain;
     -webkit-user-drag: none;
+}
+
+/* ---- Article: a side column that stays, a column of media that scrolls
+   (see FrameArticle). The design's measures: 43px in from the left, 46px
+   from the top, a 388px side column, 136px across to the media column,
+   which is at most 766px wide, 120px between one piece of media and the
+   next. ---- */
+.frame-article {
+    --frame-media-h: 80dvh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+    min-height: 100dvh;
+    padding: 24px;
+}
+@media (min-width: 1024px) {
+    .frame-article {
+        grid-template-columns: 388px minmax(0, 766px);
+        column-gap: 136px;
+        padding: 46px 32px 46px 43px;
+    }
+    /* the side column fills the window's height and stays put, the
+       breadcrumb and details at its top, the current text at its bottom */
+    .frame-side {
+        position: sticky;
+        top: 46px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 48px;
+        height: calc(100dvh - 92px);
+    }
+    /* wide screens: the text under each piece of media is the side
+       column's job */
+    .frame-item-body {
+        display: none;
+    }
+}
+.frame-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6em;
+}
+.frame-meta dd {
+    max-width: 350px;
+}
+.frame-caption,
+.frame-text {
+    max-width: 350px;
+}
+.frame-caption {
+    /* a long text is cut at the top rather than overlapping the details */
+    overflow: hidden;
+}
+/* narrow screens: the current text stays put under its media instead */
+@media (max-width: 1023px) {
+    .frame-caption {
+        display: none;
+    }
+}
+.frame-column {
+    display: flex;
+    flex-direction: column;
+    gap: 120px;
+    list-style: none;
+}
+.frame-item {
+    scroll-margin-top: 46px;
+}
+.frame-item-body {
+    margin-top: 1.6em;
+}
+/* flat media, as wide as the column or as tall as the window allows,
+   keeping its aspect ratio (--ar); a pair shares one height */
+.frame-article .media-wrapper {
+    width: min(100%, calc(var(--frame-media-h) * var(--ar, 1.5)));
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+.frame-article .video-block {
+    width: min(100%, calc(var(--frame-media-h) * var(--ar, 1.5)));
+}
+.frame-article .video-block > .media-wrapper,
+.frame-article .flip-asset > .media-wrapper,
+.frame-article .flip-asset > .video-block {
+    width: 100%;
+}
+.frame-article .flip-asset {
+    width: min(100%, calc(var(--frame-media-h) * var(--ar, 1)));
+    margin: 0;
+}
+.frame-article .media-row {
+    margin: 0;
+    align-items: flex-start;
+}
+.frame-article .media-cell {
+    flex: var(--ar, 1) 1 0;
+}
+.frame-article .wf-demo {
+    width: 100%;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: #ffffff;
 }
 
 /* ---- Workflow plugin demos: keyframes + font scope ---- */
