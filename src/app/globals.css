@@ -99,8 +99,9 @@
 /* ---- Article: a side column that stays, a column of media that scrolls
    (see FrameArticle). The design's measures: 43px in from the left, 46px
    from the top, a 388px side column, 136px across to the media column,
-   which is at most 766px wide, 120px between one piece of media and the
-   next. ---- */
+   whose media is at most 766px wide, 120px between one piece of media
+   and the next. The media column takes the rest of the width, and each
+   piece of media sits in the middle of it. ---- */
 .frame-article {
     --frame-media-h: 80dvh;
     display: grid;
@@ -111,9 +112,24 @@
 }
 @media (min-width: 1024px) {
     .frame-article {
-        grid-template-columns: 388px minmax(0, 766px);
+        grid-template-columns: 388px minmax(0, 1fr);
         column-gap: 136px;
         padding: 46px 32px 46px 43px;
+    }
+    /* each piece of media is centred in the column, at most 766px wide
+       (a narrower one, say a phone, in the middle of that measure too);
+       a section that is only text keeps to the left of the measure */
+    .frame-column {
+        align-items: center;
+    }
+    .frame-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: min(100%, 766px);
+    }
+    .frame-item > .frame-text {
+        align-self: flex-start;
     }
     /* the side column fills the window's height and stays put, the
        back arrow and details at its top, the current text at its bottom */
@@ -186,6 +202,13 @@
 .frame-article .flip-asset {
     width: min(100%, calc(var(--frame-media-h) * var(--ar, 1)));
     margin: 0;
+}
+/* wide screens: a narrow asset sits in the middle of its slot, like the
+   rest of the media in the column */
+@media (min-width: 1024px) {
+    .frame-article .flip-asset {
+        margin-inline: auto;
+    }
 }
 .frame-article .media-row {
     margin: 0;
