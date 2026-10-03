@@ -1,12 +1,13 @@
 'use client'
 
 import { createContext, useContext, useMemo, useRef, type ReactNode } from 'react'
+import { onceFullyInView } from '@/components/inView'
 
-// The videos in one row play in turn: the first starts, holds its last
-// frame when it ends, then the next plays, and so on round the row. Only
-// one plays at a time, so playing one by hand pauses the rest, and the
-// round carries on from whichever ends. A row with a single video simply
-// starts it again.
+// The videos in one row play in turn: the first starts once it is fully
+// on screen, holds its last frame when it ends, then the next plays, and
+// so on round the row. Only one plays at a time, so playing one by hand
+// pauses the rest, and the round carries on from whichever ends. A row
+// with a single video simply starts it again.
 export type Sequence = { register: (video: HTMLVideoElement) => () => void }
 
 // A Video inside a provider of this context neither autoplays nor loops:
@@ -37,15 +38,24 @@ export function VideoSequence({ children }: { children: ReactNode }) {
       }
       video.addEventListener('ended', onEnded)
       video.addEventListener('play', onPlay)
-      // the first to register (document order) opens the round
+      // the first to register (document order) opens the round, once it
+      // is fully on screen; if it goes before then, the next one may
+      let waiting: (() => void) | undefined
       if (!started.current) {
         started.current = true
-        void video.play().catch(() => {})
+        waiting = onceFullyInView(video, () => {
+          waiting = undefined
+          void video.play().catch(() => {})
+        })
       }
       return () => {
         video.removeEventListener('ended', onEnded)
         video.removeEventListener('play', onPlay)
         videos.current = videos.current.filter(v => v !== video)
+        if (waiting) {
+          waiting()
+          started.current = false
+        }
       }
     },
   }), [])

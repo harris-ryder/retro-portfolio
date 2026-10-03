@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { PlaybackBar } from '@/components/PlaybackBar'
 import { useVideoSequence } from '@/components/VideoSequence'
+import { onceFullyInView } from '@/components/inView'
 
 type Props = {
   src: string
@@ -19,6 +20,10 @@ type Props = {
   bar?: React.ReactNode
 }
 
+// every Video on the page: one plays at a time, so when one starts (on
+// coming fully into view, or by hand) whichever was playing pauses
+const all = new Set<HTMLVideoElement>()
+
 export function Video({ src, width, height, wrapperStyle, controls = true, displayHeight, bar }: Props) {
   const [ready, setReady] = useState(false)
   const ref = useRef<HTMLVideoElement | null>(null)
@@ -26,11 +31,33 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
   // a fixed size is a width the wrapper (or the block, with controls) keeps
   const fixed: React.CSSProperties = displayHeight ? { width: `min(100%, ${Math.round(displayHeight * ar)}px)` } : {}
 
+  useEffect(() => {
+    const v = ref.current
+    if (!v) return
+    all.add(v)
+    const onPlay = () => {
+      for (const other of all) if (other !== v && !other.paused) other.pause()
+    }
+    v.addEventListener('play', onPlay)
+    return () => {
+      v.removeEventListener('play', onPlay)
+      all.delete(v)
+    }
+  }, [])
+
   // in a row, the videos take turns rather than each looping on its own
   const sequence = useVideoSequence()
   useEffect(() => {
     if (!sequence || !ref.current) return
     return sequence.register(ref.current)
+  }, [sequence])
+
+  // on its own, the video loops, but holds its first frame until it is
+  // fully on screen (a row's provider does the same for its first video)
+  useEffect(() => {
+    const v = ref.current
+    if (sequence || !v) return
+    return onceFullyInView(v, () => void v.play().catch(() => {}))
   }, [sequence])
 
   const toggle = () => {
@@ -52,7 +79,6 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
       )}
       <video
         src={src}
-        autoPlay={!sequence}
         loop={!sequence}
         muted
         playsInline
