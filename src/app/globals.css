@@ -116,7 +116,7 @@
         padding: 46px 32px 46px 43px;
     }
     /* the side column fills the window's height and stays put, the
-       breadcrumb and details at its top, the current text at its bottom */
+       back arrow and details at its top, the current text at its bottom */
     .frame-side {
         position: sticky;
         top: 46px;

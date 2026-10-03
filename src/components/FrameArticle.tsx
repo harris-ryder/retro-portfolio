@@ -20,7 +20,7 @@ const useWide = () => useSyncExternalStore(
 )
 
 // An article as one scrolling column of its sections' media, with a side
-// column that stays put: the breadcrumb and the project's Company, Year,
+// column that stays put: a back arrow and the project's Company, Year,
 // Overview and Contribution at the top, and at the bottom the text of
 // whichever section is in the frame (nearest the middle of the window).
 // A section with no media shows its text in the column instead, and the
@@ -92,18 +92,20 @@ export function FrameArticle({ project }: { project: Project }) {
   }, [current])
 
   const section = sections[current]
-  const crumb = 'text-neutral-400 no-underline transition-colors hover:text-neutral-800'
 
   return (
     <main className="frame-article type-home">
       <aside className="frame-side">
         <div className="flex flex-col gap-[1.6em]">
+          {/* a back arrow in place of a breadcrumb */}
           <p>
-            <Link href="/" className={crumb}>Harris</Link>
-            <span className="text-neutral-400">{' / '}</span>
-            <Link href="/work" className={crumb}>Work</Link>
-            <span className="text-neutral-400">{' / '}</span>
-            {project.title}
+            <Link
+              href="/work"
+              aria-label="Back to Work"
+              className="text-neutral-400 no-underline transition-colors hover:text-neutral-800"
+            >
+              ←
+            </Link>
           </p>
           <dl className="frame-meta">
             {project.company && (

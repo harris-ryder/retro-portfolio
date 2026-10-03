@@ -47,18 +47,18 @@ export const projects: Project[] = [
   {
     slug: 'nothing-ai-builder',
     title: 'Essential Apps',
-    tagline: 'A ground-up rewrite of the Gen UI product at Nothing',
+    tagline: 'A ground-up rewrite of the Essential Apps interface',
     date: '2026',
     company: 'Nothing',
-    contribution: 'Design, Front-end engineering.',
+    contribution: 'Design, Front-end engineering',
     sections: [
       {
         title: 'Overview',
-        // shown well under its pixel size, which keeps a soft capture looking crisp
-        media: <Img src="/images/nothing-ai-builder/overview.webp" alt="Overview of the Essential App Builder editor" width={1932} height={1336} maxWidth={760} />,
+        // the Work index's clip of the editor
+        media: <Video src="/videos/thumbs/nothing-ai-builder.mp4" width={960} height={540} />,
         body: <>
-          <p>Nothing&apos;s Gen UI lets non-technical users create and deploy AI-powered phone widgets. My team was tasked with rebuilding the entire app in a single sprint to raise the bar across the board.</p>
-          <p>The rebuild took three weeks in a team of four. I was the sole owner of the frontend and also worked on part of the redesign.</p>
+          <p>Essential Apps&apos; mission is to unlock people&apos;s freedom to create widgets customised to their needs. Using a chat interface users can describe their desired widget and deploy it to their phone.</p>
+          <p>I was responsible for the re-write of the web client, which took four weeks. I worked on this solely, collaborating with a designer.</p>
         </>,
       },
       {
@@ -83,14 +83,15 @@ export const projects: Project[] = [
         ),
         body: <>
           <p>Deploying an app triggers compiling the code and deploying it to mobile.</p>
-          <p>The original ran four screens in sequence, including build logs that meant nothing to a non-technical user, and took 40 seconds. The rewrite compiles in the background while the user names the widget, cutting that to two screens and 12 seconds.</p>
+          <p>The original ran four screens in sequence, including build logs that meant nothing to a non-technical user, and averaged 40 seconds.</p>
+          <p>After the rewrite the flow compiles in the background while the user names the widget, cutting that to two screens and 12 seconds.</p>
         </>,
       },
       {
         title: 'Widget size',
         media: <Video src="/videos/nothing-ai-builder/size-prompt.mp4" width={1882} height={1358} />,
         body: <>
-          <p>The app offered two sizes, square and landscape, but the choice was hidden in the message input as an ambiguous toggle. User feedback showed people missed it entirely and assumed square, the default, was the only option.</p>
+          <p>The app offered two sizes, square and landscape, but the choice was hidden in the message input as an ambiguous toggle. Feedback showed users assumed the only option was square.</p>
           <p>The rewrite makes it an explicit selection on the first prompt, bringing intentionality to the widget&apos;s design from the start.</p>
         </>,
       },
@@ -108,19 +109,14 @@ export const projects: Project[] = [
           </MediaRow>
         ),
         body: <>
-          <p>Every prompt produces a new version of the widget, so the app keeps a full version history. You can restore any earlier one, which clones the version you pick into a fresh version at the top of the history. The version number ticks up and the preview switches to show that new latest version.</p>
-          <p>The problem was that Restore read as Preview. People expected clicking it to simply display that version in the editor, and visually that is what happens. But it also adds a new version: with 14 versions, restoring v2 quietly creates a v15 that clones v2. It was easy to assume you were only previewing and never notice the version number had gone up.</p>
-          <p>The fix puts Preview and Restore in a dropdown as separate choices, so Restore is no longer taken for a preview. That still left what Restore actually does unclear, so a dialog now appears once to explain what happens when you click it.</p>
+          <p>Every prompt creates a new version of the widget, and any earlier version can be restored. Before, the Restore button read as Preview to many users, and what restoring actually did was neither clear in the UI nor explained.</p>
+          <p>After, a dropdown makes the two choices explicit, Preview and Restore. Choosing Restore opens a dialog with a simple animation that shows how a restore works before the user commits.</p>
         </>,
       },
       {
         title: 'Gallery',
         media: <Video src="/videos/nothing-ai-builder/gallery-view.mp4" width={1888} height={1152} />,
         body: <p>The rewrite fetches only what fits on screen, shows skeleton cards on slow connections, and uses optimistic updates for rename and delete. Fully keyboard-navigable with semantic HTML throughout.</p>,
-      },
-      {
-        title: 'Preview architecture',
-        body: <p>The widget preview runs inside an iframe so a broken widget can&apos;t crash the editor. In the original that iframe had its own backend connection and state, which could drift out of sync with the parent silently. The rewrite makes the main app the single owner of state. The iframe&apos;s only job is to receive files via postMessage, bundle them, and report back.</p>,
       },
       {
         title: 'Fun',
@@ -141,7 +137,7 @@ export const projects: Project[] = [
     tagline: 'The Figma plugin that pushed design files into the Workflow app',
     date: '2025',
     company: 'Workflow',
-    contribution: 'Design, Front-end engineering.',
+    contribution: 'Design, Front-end engineering',
     extras: <TryMeCursor />,
     sections: [
       {
