@@ -24,9 +24,10 @@ const useWide = () => useSyncExternalStore(
 // Overview and Contribution at the top, and at the bottom the text of
 // whichever section is in the frame (nearest the middle of the window).
 // A section with no media shows its text in the column instead, and the
-// bottom text steps aside while it is in the frame. On narrow screens
-// the side column sits above the media and each section's text follows
-// its media. See .frame-article in globals.css.
+// bottom text steps aside while it is in the frame. A section marked
+// keepText has nothing of its own to say: the text before it stays up.
+// On narrow screens the side column sits above the media and each
+// section's text follows its media. See .frame-article in globals.css.
 //
 // A section's text is rendered in one place only, the side column or
 // under its media, never both, and the side column's text is swapped in
@@ -86,10 +87,20 @@ export function FrameArticle({ project }: { project: Project }) {
     }
   }, [sections])
 
+  // the section whose text the side column shows: the one in the frame,
+  // or, through a run of keepText sections, the nearest before it with
+  // text of its own
+  const textIndex = useMemo(() => {
+    let i = current
+    while (i > 0 && sections[i].keepText && !sections[i].body) i--
+    return i
+  }, [current, sections])
+  const text = sections[textIndex]?.body
+
   // the side column's text fades in each time it changes
   useEffect(() => {
     caption.current?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease' })
-  }, [current])
+  }, [textIndex])
 
   const section = sections[current]
 
@@ -130,9 +141,9 @@ export function FrameArticle({ project }: { project: Project }) {
             )}
           </dl>
         </div>
-        {wide && section?.media && section.body && (
+        {wide && section?.media && text && (
           <div ref={caption} className="frame-caption section-body">
-            {section.body}
+            {text}
           </div>
         )}
       </aside>

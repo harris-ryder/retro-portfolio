@@ -1,4 +1,5 @@
 import React from 'react'
+import { GeistPixelSquare } from 'geist/font/pixel'
 import { Img } from '@/components/Img'
 import { Video } from '@/components/Video'
 import { Embed } from '@/components/Embed'
@@ -34,6 +35,9 @@ export type Section = {
   title: string
   media?: React.ReactNode
   body?: React.ReactNode
+  // nothing to add: the side column keeps the previous section's text up
+  // through this one (see FrameArticle)
+  keepText?: boolean
 }
 
 // a run of same-sized boards, one per section under a shared title
@@ -50,7 +54,7 @@ export const projects: Project[] = [
     tagline: 'A ground-up rewrite of the Essential Apps interface',
     date: '2026',
     company: 'Nothing',
-    contribution: 'Design, Front-end engineering',
+    contribution: 'Design, Lead front-end engineering',
     sections: [
       {
         title: 'Overview',
@@ -132,12 +136,105 @@ export const projects: Project[] = [
   },
   promptLego,
   {
+    slug: 'essential-search',
+    title: 'Essential Search',
+    tagline: 'The swipe-up search that shipped with Phone (3)',
+    date: '2025',
+    company: 'Nothing',
+    contribution: 'Backend optimisation, User research',
+    sections: [
+      {
+        title: 'Overview',
+        // the feature film, 1080p without its sound
+        media: <Video src="/videos/essential-search/essential-search.mp4" width={1920} height={1080} />,
+        body: <>
+          <p>Essential Search shipped with Phone (3) in 2025. Swipe up on the home screen and one field searches for anything, answering in the Nothing style.</p>
+          <p>It is on <a href="https://play.google.com/store/apps/details?id=com.nothing.essential.search&hl=en_GB" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>Google Play</a>.</p>
+        </>,
+      },
+    ],
+  },
+  {
+    slug: 'playground',
+    title: 'Playground',
+    tagline: 'Nothing’s community site for making and sharing widgets',
+    date: '2025',
+    company: 'Nothing',
+    contribution: 'Front-end engineering',
+    sections: [
+      {
+        title: 'Overview',
+        // 33s to 55s of the launch film, Introducing Playground (October 2025),
+        // at 1080p without its sound
+        media: <Video src="/videos/playground/introducing-playground.mp4" width={1920} height={1080} />,
+        body: <>
+          <p>Playground is where the Nothing community comes together to create. Widgets and Glyph Toys are made in the browser, then shared for everyone else to use and play with.</p>
+          <p>It is live at <a href="https://playground.nothing.tech/" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>playground.nothing.tech</a>.</p>
+        </>,
+      },
+      {
+        title: 'Key art',
+        media: <Img src="/images/thumbs/essential-apps.webp" alt="Playground key art, a collage of pink, green and blue textures with PLAYGROUND across it in dot-matrix type" width={1200} height={800} />,
+        keepText: true,
+      },
+    ],
+  },
+  {
+    slug: 'modelnote',
+    title: 'ModelNote',
+    tagline: 'A review tool for feedback on 3D models',
+    date: '2024',
+    company: 'ModelNote',
+    contribution: 'Creator',
+    sections: [
+      {
+        title: 'Overview',
+        // a screen recording of the app, cropped to its window, 1920 wide
+        media: <Video src="/videos/modelnote/modelnote.mp4" width={1920} height={1184} />,
+        body: <>
+          <p>ModelNote is a 3D annotation app. Upload a model and reviewers leave comments pinned to it, with sketches drawn over the view and images attached. I founded it and built it together with <a href="https://x.com/florianherrengt" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>Florian Herrengt</a>. I did the design and full-stack development.</p>
+          <p>It is live at <a href="https://modelnote.io/" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>modelnote.io</a>.</p>
+        </>,
+      },
+    ],
+  },
+  {
+    slug: 'apiject',
+    title: 'Apiject',
+    tagline: 'A prefilled, single-dose injector',
+    date: '2023',
+    company: 'Apiject',
+    contribution: 'Creative Technologist',
+    sections: [
+      {
+        title: 'Overview',
+        // 14s to 19s of Apiject's film of the injector being assembled, without its sound
+        media: <Video src="/videos/apiject/assembly.mp4" width={1920} height={1080} />,
+        body: <>
+          <p>Apiject is a medical technology company developing a prefilled, single-dose injector. I am a named inventor on four patents from my time there.</p>
+          <p>More at <a href="https://apiject.com/" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>apiject.com</a>.</p>
+        </>,
+      },
+      {
+        title: 'Patents',
+        // the front pages of two of the patents, from the WIPO publications
+        media: (
+          <MediaRow>
+            <Img src="/images/apiject/patent-wo2022053948.webp" alt="Front page of international patent publication WO 2022/053948, Pre-filled multi-fluid medical delivery assemblies" width={1000} height={1415} />
+            <Img src="/images/apiject/patent-wo2022180488.webp" alt="Front page of international patent publication WO 2022/180488, Pre-filled multi-fluid medical delivery assemblies" width={1000} height={1415} />
+          </MediaRow>
+        ),
+        keepText: true,
+      },
+    ],
+  },
+  {
     slug: 'workflow-figma-plugin',
     title: 'Workflow Figma Plugin',
     tagline: 'The Figma plugin that pushed design files into the Workflow app',
     date: '2025',
     company: 'Workflow',
-    contribution: 'Design, Front-end engineering',
+    contribution: 'Product owner, design, full stack',
     extras: <TryMeCursor />,
     sections: [
       {
@@ -148,7 +245,13 @@ export const projects: Project[] = [
             <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="!no-underline">Workflow</a>{' '}is an app for managing creative assets, including Figma files. Its Figma plugin lets users select work and upload it to the main app.
           </p>
           <p>
-            For the plugin to send a Figma file anywhere, the user has to give it the file&apos;s link themselves. My job was to make that painless.
+            I was responsible for building the Figma plugin, including its login and upload flows. That covered the design and full-stack development.
+          </p>
+          <p>
+            This piece covers the challenges of improving the upload flow, which needs the file&apos;s Figma link passed into the plugin.
+          </p>
+          <p>
+            The plugin is on the <a href="https://www.figma.com/community/plugin/1194400816695978796/workflow" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>Figma Community</a>.
           </p>
         </>,
       },
