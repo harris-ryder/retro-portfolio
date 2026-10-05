@@ -26,6 +26,10 @@ export const workItems: WorkItem[] = [
   caseStudy('apiject', clip('apiject', 960, 540)),
 ]
 
+// the clips among the Work entries, in list order, for fetching ahead
+// (see PrefetchClips)
+export const workClips = workItems.flatMap(item => (item.media.video ? [item.media.video] : []))
+
 // The Playground list: things that live on other sites, newest first
 const playgroundLinks = [
   { year: '2026', title: 'Cloudflare Wallet', tagline: 'Released with a bunch of issues, so I made a polished version', url: 'https://harris-dummy-pay.vercel.app/' },

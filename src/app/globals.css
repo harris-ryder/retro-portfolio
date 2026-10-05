@@ -78,6 +78,8 @@
     }
 }
 .work-peek > li {
+    /* relative: a slot's "loading" label (.media-loading) lies over its clip */
+    position: relative;
     grid-area: 1 / 1;
     width: min(640px, 60vw);
     opacity: 0;
@@ -85,6 +87,16 @@
 }
 .work-peek > li[data-open] {
     opacity: 1;
+}
+/* while a slot's asset loads, a thin outline shows where it will be;
+   the slot has its size from the asset's width and height already */
+.work-peek > li {
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    transition: opacity 0.15s ease, outline-color 0.25s;
+}
+.work-peek > li[data-loading] {
+    outline-color: var(--color-neutral-300);
 }
 .work-peek img,
 .work-peek video {
@@ -94,6 +106,8 @@
     max-height: 80vh;
     object-fit: contain;
     -webkit-user-drag: none;
+    /* an asset fades in once it has loaded (a clip, once it can play) */
+    transition: opacity 0.25s;
 }
 
 /* ---- Article: a side column that stays, a column of media that scrolls
@@ -190,6 +204,15 @@
     border: none;
     border-radius: 0;
     box-shadow: none;
+    /* while the media loads, a thin outline shows where it will be (the
+       wrapper already has its size from the asset's width and height);
+       an outline, not a border, so the media's box is unchanged */
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    transition: outline-color 0.25s;
+}
+.frame-article .media-wrapper.media-skeleton {
+    outline-color: var(--color-neutral-300);
 }
 .frame-article .video-block {
     width: min(100%, calc(var(--frame-media-h) * var(--ar, 1.5)));

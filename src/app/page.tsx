@@ -1,9 +1,13 @@
 import Link from 'next/link'
 import { GeistPixelSquare } from 'geist/font/pixel'
+import { PrefetchClips } from '@/components/PrefetchClips'
+import { workClips } from '@/data/links'
 
 export default function Home() {
   return (
     <main className="type-home min-h-dvh p-6 sm:p-10">
+      {/* the Work list's clips start downloading here, so they play at once over there */}
+      <PrefetchClips urls={workClips} />
       <p className="max-w-[40ch] text-balance">
         My name is Harris. I design and engineer software at{' '}
         <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer" className={`${GeistPixelSquare.className} underline underline-offset-[0.2em] transition-colors hover:text-[#777777]`}>Nothing</a>

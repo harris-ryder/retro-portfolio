@@ -30,9 +30,14 @@ export function WorkIndex({ items }: { items: WorkItem[] }) {
 }
 
 // All the assets sit in the one spot, only the active one visible, so a
-// clip is ready the moment its row is pointed at
+// clip is ready the moment its row is pointed at. Until an asset has
+// loaded (a clip, buffered enough to play), its slot shows an outline of
+// its size and says "loading" instead (the clips are fetched ahead of
+// time where possible, see PrefetchClips).
 function Peek({ items, active }: { items: WorkItem[]; active: number | null }) {
   const ref = useRef<HTMLUListElement>(null)
+  const [ready, setReady] = useState<Record<number, boolean>>({})
+  const markReady = (i: number) => setReady(r => (r[i] ? r : { ...r, [i]: true }))
 
   useEffect(() => {
     const peek = ref.current
@@ -50,26 +55,51 @@ function Peek({ items, active }: { items: WorkItem[]; active: number | null }) {
       {items.map((item, i) => {
         const { src, video, width, height } = item.media
         return (
-          <li key={item.href} data-open={i === active || undefined}>
+          <li key={item.href} data-open={i === active || undefined} data-loading={!ready[i] || undefined}>
             {video ? (
-              <video
-                src={video}
-                poster={src}
+              <>
+                <video
+                  src={video}
+                  poster={src}
+                  width={width}
+                  height={height}
+                  preload="metadata"
+                  muted
+                  loop
+                  playsInline
+                  disablePictureInPicture
+                  onCanPlay={() => markReady(i)}
+                  onPlaying={() => markReady(i)}
+                  // React leaves the muted attribute out of the server HTML, and
+                  // an unmuted video may not be played without a gesture; a
+                  // cached clip can be ready before hydration attaches onCanPlay
+                  ref={el => {
+                    if (!el) return
+                    el.muted = true
+                    if (el.readyState >= 3) markReady(i)
+                  }}
+                  style={{ opacity: ready[i] ? 1 : 0 }}
+                />
+              </>
+            ) : (
+              <img
+                src={src}
+                alt=""
                 width={width}
                 height={height}
-                preload="metadata"
-                muted
-                loop
-                playsInline
-                disablePictureInPicture
-                // React leaves the muted attribute out of the server HTML, and
-                // an unmuted video may not be played without a gesture
+                draggable={false}
+                onLoad={() => markReady(i)}
+                // a cached picture can be complete before hydration attaches onLoad
                 ref={el => {
-                  if (el) el.muted = true
+                  if (el?.complete && el.naturalWidth > 0) markReady(i)
                 }}
+                style={{ opacity: ready[i] ? 1 : 0 }}
               />
-            ) : (
-              <img src={src} alt="" width={width} height={height} draggable={false} />
+            )}
+            {!ready[i] && (
+              <span className="media-loading">
+                loading<span className="media-loading-dots">...</span>
+              </span>
             )}
           </li>
         )
