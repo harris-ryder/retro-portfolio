@@ -701,10 +701,13 @@ body.wf-cursor-on * {
 .sectioned-article .video-block > .media-wrapper {
     width: 100%;
 }
+/* the glyph sits flush with the video's left edge; the rail is a 1px
+   hairline like the media's loading outline, the played part dark, with
+   a 1px tick at the playhead. The whole row is a 32px hit area. */
 .pb {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     height: 32px;
     margin-top: 16px;
     color: var(--color-neutral-800);
@@ -712,10 +715,10 @@ body.wf-cursor-on * {
     user-select: none;
 }
 .pb-toggle {
-    position: relative;
     display: grid;
-    place-items: center;
-    width: 32px;
+    align-items: center;
+    justify-items: start;
+    width: 20px;
     height: 32px;
     padding: 0;
     border: 0;
@@ -723,55 +726,47 @@ body.wf-cursor-on * {
     color: inherit;
     cursor: pointer;
 }
-.pb-icon {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    opacity: 0;
-    transform: scale(0.4);
-    filter: blur(3px);
-    transition: opacity 0.22s, transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.22s;
-}
-.pb-icon[data-show='true'] {
-    opacity: 1;
-    transform: none;
-    filter: none;
+/* Radix draws its glyphs 3px in from the canvas edge; pull the icon
+   back by as much so the triangle's edge is flush with the video's */
+.pb-toggle svg {
+    display: block;
+    margin-left: -3px;
 }
 .pb-track {
     position: relative;
     flex: 1;
-    height: 28px;
+    height: 32px;
     cursor: pointer;
     touch-action: none;
     outline: none;
 }
 .pb-rail,
-.pb-fill {
+.pb-fill,
+.pb-head {
     position: absolute;
-    top: calc(50% - 1.5px);
-    left: 0;
-    height: 3px;
-    border-radius: 2px;
     pointer-events: none;
+}
+.pb-rail,
+.pb-fill {
+    top: calc(50% - 0.5px);
+    left: 0;
+    height: 1px;
 }
 .pb-rail {
     right: 0;
-    background: rgba(50, 50, 50, 0.15);
+    background: var(--color-neutral-300);
 }
 .pb-fill {
-    background: var(--color-neutral-800);
+    background: currentColor;
 }
-.pb-knob {
-    position: absolute;
-    top: 2px;
-    width: 24px;
-    height: 24px;
-    color: var(--color-neutral-800);
-    pointer-events: none;
+.pb-head {
+    top: calc(50% - 5px);
+    width: 1px;
+    height: 10px;
+    background: currentColor;
 }
-.pb-track:focus-visible .pb-knob {
-    color: var(--color-neutral-400);
+.pb-track:focus-visible .pb-head {
+    background: var(--color-neutral-400);
 }
 
 /* ---- Before / After: a labelled pair shown one asset at a time ---- */
