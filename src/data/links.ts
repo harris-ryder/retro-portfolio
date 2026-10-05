@@ -22,7 +22,7 @@ export const workItems: WorkItem[] = [
   caseStudy('essential-search', clip('essential-search', 1000, 600)),
   caseStudy('workflow-figma-plugin', still('workflow-figma-plugin', 1200, 685)),
   caseStudy('modelnote', clip('modelnote', 960, 592)),
-  { year: '2024', title: 'Workflow Design', href: 'https://www.workflow.design/', external: true, media: clip('workflow-design', 960, 614) },
+  caseStudy('workflow-design', clip('workflow-design', 960, 614)),
   caseStudy('apiject', clip('apiject', 960, 540)),
 ]
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { GeistPixelSquare } from 'geist/font/pixel'
 import { Img } from '@/components/Img'
 import { Video } from '@/components/Video'
@@ -225,6 +226,51 @@ export const projects: Project[] = [
           </MediaRow>
         ),
         keepText: true,
+      },
+    ],
+  },
+  {
+    slug: 'workflow-design',
+    title: 'Workflow Design',
+    tagline: 'A review tool for design work, from live sites to Figma files',
+    date: '2024',
+    company: 'Workflow',
+    contribution: 'Founding engineer',
+    sections: [
+      {
+        title: 'Overview',
+        // a review of a Figma file in the web app, three comments on its
+        // third version; the 2264-wide recording encoded at 1920 without
+        // its sound
+        media: <Video src="/videos/workflow/review.mp4" width={1920} height={1226} />,
+        body: <>
+          <p>Workflow is a review tool for design work. A designer shares a link to a live website, a Figma file, an image, a video or a deck, and the client clicks anywhere on it to leave a comment. Every version keeps its comments, so nothing is lost in emails or Slack.</p>
+          <p>I joined Workflow as its founding engineer in 2024 and built across the web app, as well as the Figma plugin that brings files in.</p>
+          <p>It is live at <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>workflow.design</a>.</p>
+        </>,
+      },
+      {
+        title: 'One review page for anything',
+        // the review page as shown on workflow.design for each kind of
+        // work, shot at 2x and resized to 1600 wide
+        media: (
+          <MediaRow labels={['Website', 'Image', 'Video', 'Deck']}>
+            <Img src="/images/workflow/review-site.webp" alt="A Workflow review of a live Squarespace site, The Wanderer, with two comments on its fifth version" width={1600} height={1024} />
+            <Img src="/images/workflow/review-images.webp" alt="A Workflow review of a retouched hero image, with a comment asking for a look at the new edits" width={1600} height={1024} />
+            <Img src="/images/workflow/review-videos.webp" alt="A Workflow review of a travel video's second rough cut, with four comments pinned to the timeline" width={1600} height={1024} />
+            <Img src="/images/workflow/review-presentations.webp" alt="A Workflow review of a pitch deck's fourth version, three slides and one comment" width={1600} height={1024} />
+          </MediaRow>
+        ),
+        body: <>
+          <p>A reviewer opens the link and clicks anywhere to leave a comment. There is no account to make. The designer ticks the comments off, uploads the next version, and the thread carries on underneath it. A recorded walkthrough can introduce the work.</p>
+        </>,
+      },
+      {
+        title: 'The Figma plugin',
+        media: <Video src="/videos/workflow/figma-flow.mp4" width={1280} height={800} />,
+        body: <>
+          <p>Figma files come in through a plugin I designed and built. Getting the file&apos;s link into it without a copy and paste took three attempts, which have <Link href="/work/workflow-figma-plugin" className={GeistPixelSquare.className}>their own write-up</Link>.</p>
+        </>,
       },
     ],
   },
