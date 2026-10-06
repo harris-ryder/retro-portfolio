@@ -10,10 +10,10 @@ const links = [
 export default function ContactPage() {
   return (
     <Page title="Contact">
-      <ul className="list-none [&>li]:mb-2 [&_a]:underline [&_a]:underline-offset-[0.2em] [&_a]:transition-colors [&_a:hover]:text-neutral-400">
+      <ul className="list-none [&>li]:mb-2">
         {links.map(l => (
           <li key={l.href}>
-            <a href={l.href} target={l.href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer">{l.label}</a>
+            <a href={l.href} target={l.href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer" className="link">{l.label}</a>
           </li>
         ))}
       </ul>

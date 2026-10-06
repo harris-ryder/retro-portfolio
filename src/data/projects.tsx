@@ -1,6 +1,5 @@
 import React from 'react'
 import Link from 'next/link'
-import { GeistPixelSquare } from 'geist/font/pixel'
 import { Img } from '@/components/Img'
 import { Video } from '@/components/Video'
 import { Embed } from '@/components/Embed'
@@ -150,7 +149,7 @@ export const projects: Project[] = [
         media: <Video src="/videos/essential-search/essential-search.mp4" width={1920} height={1080} />,
         body: <>
           <p>Essential Search shipped with Phone (3) in 2025. Swipe up on the home screen and one field searches for anything, answering in the Nothing style.</p>
-          <p>It is on <a href="https://play.google.com/store/apps/details?id=com.nothing.essential.search&hl=en_GB" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>Google Play</a>.</p>
+          <p>It is on <a href="https://play.google.com/store/apps/details?id=com.nothing.essential.search&hl=en_GB" target="_blank" rel="noopener noreferrer" className="link">Google Play</a>.</p>
         </>,
       },
     ],
@@ -170,7 +169,7 @@ export const projects: Project[] = [
         media: <Video src="/videos/playground/introducing-playground.mp4" width={1920} height={1080} />,
         body: <>
           <p>Playground is where the Nothing community comes together to create. Widgets and Glyph Toys are made in the browser, then shared for everyone else to use and play with.</p>
-          <p>It is live at <a href="https://playground.nothing.tech/" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>playground.nothing.tech</a>.</p>
+          <p>It is live at <a href="https://playground.nothing.tech/" target="_blank" rel="noopener noreferrer" className="link">playground.nothing.tech</a>.</p>
         </>,
       },
       {
@@ -193,8 +192,8 @@ export const projects: Project[] = [
         // a screen recording of the app, cropped to its window, 1920 wide
         media: <Video src="/videos/modelnote/modelnote.mp4" width={1920} height={1184} />,
         body: <>
-          <p>ModelNote is a 3D annotation app. Upload a model and reviewers leave comments pinned to it, with sketches drawn over the view and images attached. I founded it and built it together with <a href="https://x.com/florianherrengt" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>Florian Herrengt</a>. I did the design and full-stack development.</p>
-          <p>It is live at <a href="https://modelnote.io/" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>modelnote.io</a>.</p>
+          <p>ModelNote is a 3D annotation app. Upload a model and reviewers leave comments pinned to it, with sketches drawn over the view and images attached. I founded it and built it together with <a href="https://x.com/florianherrengt" target="_blank" rel="noopener noreferrer" className="link">Florian Herrengt</a>. I did the design and full-stack development.</p>
+          <p>It is live at <a href="https://modelnote.io/" target="_blank" rel="noopener noreferrer" className="link">modelnote.io</a>.</p>
         </>,
       },
     ],
@@ -213,7 +212,7 @@ export const projects: Project[] = [
         media: <Video src="/videos/apiject/assembly.mp4" width={1920} height={1080} />,
         body: <>
           <p>Apiject is a medical technology company developing a prefilled, single-dose injector. I am a named inventor on four patents from my time there.</p>
-          <p>More at <a href="https://apiject.com/" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>apiject.com</a>.</p>
+          <p>More at <a href="https://apiject.com/" target="_blank" rel="noopener noreferrer" className="link">apiject.com</a>.</p>
         </>,
       },
       {
@@ -246,7 +245,7 @@ export const projects: Project[] = [
         body: <>
           <p>Workflow is a review tool for design work. A designer shares a link to a live website, a Figma file, an image, a video or a deck, and the client clicks anywhere on it to leave a comment. Every version keeps its comments, so nothing is lost in emails or Slack.</p>
           <p>I joined Workflow as its founding engineer in 2024 and built across the web app, as well as the Figma plugin that brings files in.</p>
-          <p>It is live at <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>workflow.design</a>.</p>
+          <p>It is live at <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="link">workflow.design</a>.</p>
         </>,
       },
       {
@@ -269,7 +268,7 @@ export const projects: Project[] = [
         title: 'The Figma plugin',
         media: <Video src="/videos/workflow/figma-flow.mp4" width={1280} height={800} />,
         body: <>
-          <p>Figma files come in through a plugin I designed and built. Getting the file&apos;s link into it without a copy and paste took three attempts, which have <Link href="/work/workflow-figma-plugin" className={GeistPixelSquare.className}>their own write-up</Link>.</p>
+          <p>Figma files come in through a plugin I designed and built. Getting the file&apos;s link into it without a copy and paste took three attempts, which have <Link href="/work/workflow-figma-plugin" className="link">their own write-up</Link>.</p>
         </>,
       },
     ],
@@ -288,7 +287,7 @@ export const projects: Project[] = [
         media: <Video src="/videos/workflow/figma-flow.mp4" width={1280} height={800} />,
         body: <>
           <p>
-            <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="!no-underline">Workflow</a>{' '}is an app for managing creative assets, including Figma files. Its Figma plugin lets users select work and upload it to the main app.
+            <a href="https://www.workflow.design/" target="_blank" rel="noopener noreferrer" className="link">Workflow</a>{' '}is an app for managing creative assets, including Figma files. Its Figma plugin lets users select work and upload it to the main app.
           </p>
           <p>
             I was responsible for building the Figma plugin, including its login and upload flows. That covered the design and full-stack development.
@@ -297,7 +296,7 @@ export const projects: Project[] = [
             This piece covers the challenges of improving the upload flow, which needs the file&apos;s Figma link passed into the plugin.
           </p>
           <p>
-            The plugin is on the <a href="https://www.figma.com/community/plugin/1194400816695978796/workflow" target="_blank" rel="noopener noreferrer" className={GeistPixelSquare.className}>Figma Community</a>.
+            The plugin is on the <a href="https://www.figma.com/community/plugin/1194400816695978796/workflow" target="_blank" rel="noopener noreferrer" className="link">Figma Community</a>.
           </p>
         </>,
       },

@@ -4,6 +4,9 @@
 @theme {
     --color-neutral-400: #626262;
     --color-neutral-800: #323232;
+    /* text links (see .link) */
+    --color-link: #0000ee;
+    --color-link-hover: #0000a8;
 
     /* ---- Workflow plugin demos (scoped to .wf-demo) ---- */
     --font-inter: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -48,11 +51,30 @@
     line-height: 1.6;
 }
 
+/* Suisse Works (Swiss Typefaces) is the site's one family. The files are
+   licensed, so they are not in the repo: drop the web package's woff2s
+   into public/fonts under these names (or point the three src lines at
+   theirs). Until they are there the stack falls back to Georgia. */
 @font-face {
-    font-family: 'ABCDiatype';
-    src: url('/fonts/ABCDiatypeSemiMono-Regular.otf') format('opentype');
-    font-weight: normal;
+    font-family: 'Suisse Works';
+    src: url('/fonts/SuisseWorks-Regular.woff2') format('woff2');
+    font-weight: 400;
     font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Suisse Works';
+    src: url('/fonts/SuisseWorks-RegularItalic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Suisse Works';
+    src: url('/fonts/SuisseWorks-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
 }
 
 @keyframes fade-in {
@@ -361,7 +383,7 @@ body.wf-cursor-on * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
-        font-family: 'ABCDiatype', sans-serif;
+        font-family: 'Suisse Works', Georgia, 'Times New Roman', serif;
     }
 
     a {
@@ -370,11 +392,25 @@ body.wf-cursor-on * {
 
 }
 
-/* ABC Diatype ships a single weight, so grayscale font-smoothing is the
-   only "lighter" lever available. Apply it app-wide by text role:
-   secondary (gray) text renders a touch thinner, primary (dark) text
-   keeps its normal (heavier) rendering, even inside a gray container
-   that would otherwise thin it via inheritance. */
+/* A link in running text (an article's "It is live at", the home
+   sentence, the contact list): link blue with a hairline underline, a
+   shade darker when pointed at. Navigation (the lists, the back links)
+   stays in the text's own colours. */
+.link {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+    transition: color 0.15s;
+}
+.link:hover {
+    color: var(--color-link-hover);
+}
+
+/* Grayscale font-smoothing as a "lighter" lever, by text role: secondary
+   (gray) text renders a touch thinner, primary (dark) text keeps its
+   normal (heavier) rendering, even inside a gray container that would
+   otherwise thin it via inheritance. */
 .text-neutral-400,
 .media-loading {
     -webkit-font-smoothing: antialiased;

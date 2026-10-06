@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { GeistPixelSquare } from 'geist/font/pixel'
 import { PrefetchClips } from '@/components/PrefetchClips'
 import { workClips } from '@/data/links'
 
@@ -10,7 +9,7 @@ export default function Home() {
       <PrefetchClips urls={workClips} />
       <p className="max-w-[40ch] text-balance">
         My name is Harris. I design and engineer software at{' '}
-        <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer" className={`${GeistPixelSquare.className} underline underline-offset-[0.2em] transition-colors hover:text-[#777777]`}>Nothing</a>
+        <a href="https://nothing.tech/" target="_blank" rel="noopener noreferrer" className="link">Nothing</a>
         {' '}in London.
       </p>
       <nav aria-label="Sections" className="mt-[1.6em]">
