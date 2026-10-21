@@ -4,6 +4,7 @@ import { Img } from '@/components/Img'
 import { Video } from '@/components/Video'
 import { Embed } from '@/components/Embed'
 import { MediaRow } from '@/components/MediaRow'
+import { nothingPhone } from '@/data/phone'
 import { DemoFrame } from '@/components/workflow/DemoFrame'
 import { Kbd } from '@/components/workflow/Kbd'
 import { TryMeCursor } from '@/components/workflow/TryMeCursor'
@@ -37,7 +38,7 @@ export type Section = {
   media?: React.ReactNode
   body?: React.ReactNode
   // nothing to add: the side column keeps the previous section's text up
-  // through this one (see FrameArticle)
+  // through this one (see WorkFrame)
   keepText?: boolean
 }
 
@@ -70,8 +71,8 @@ export const projects: Project[] = [
         title: 'Mobile',
         media: (
           <MediaRow labels={['Before', 'After']}>
-            <Video src="/videos/nothing-ai-builder/old-mobile-flow.mp4" width={1080} height={2114} />
-            <Video src="/videos/nothing-ai-builder/web-mobile-flow.mp4" width={1080} height={2114} />
+            <Video src="/videos/nothing-ai-builder/old-mobile-flow.mp4" width={1080} height={2114} frame={nothingPhone} browser={{ theme: 'dark', url: 'playground.nothing.tech' }} />
+            <Video src="/videos/nothing-ai-builder/web-mobile-flow.mp4" width={1080} height={2114} frame={nothingPhone} browser={{ theme: 'light', url: 'playground.nothing.tech' }} />
           </MediaRow>
         ),
         body: <>

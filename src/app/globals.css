@@ -82,62 +82,13 @@
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ---- Work page: the pointed-at entry's asset, mid-window (see WorkIndex) ---- */
-/* the assets share one spot in the middle of the window, unseen until
-   their row is pointed at. Pointer-only, so left out on narrow screens. */
-.work-peek {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    display: none;
-    place-items: center;
-    list-style: none;
-    pointer-events: none;
-}
-@media (min-width: 1024px) {
-    .work-peek {
-        display: grid;
-    }
-}
-.work-peek > li {
-    /* relative: a slot's "loading" label (.media-loading) lies over its clip */
-    position: relative;
-    grid-area: 1 / 1;
-    width: min(640px, 60vw);
-    opacity: 0;
-    transition: opacity 0.15s ease;
-}
-.work-peek > li[data-open] {
-    opacity: 1;
-}
-/* while a slot's asset loads, a thin outline shows where it will be;
-   the slot has its size from the asset's width and height already */
-.work-peek > li {
-    outline: 1px solid transparent;
-    outline-offset: -1px;
-    transition: opacity 0.15s ease, outline-color 0.25s;
-}
-.work-peek > li[data-loading] {
-    outline-color: var(--color-neutral-300);
-}
-.work-peek img,
-.work-peek video {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 80vh;
-    object-fit: contain;
-    -webkit-user-drag: none;
-    /* an asset fades in once it has loaded (a clip, once it can play) */
-    transition: opacity 0.25s;
-}
-
 /* ---- Article: a side column that stays, a column of media that scrolls
-   (see FrameArticle). The design's measures: 43px in from the left, 46px
+   (see WorkFrame). The design's measures: 43px in from the left, 46px
    from the top, a 388px side column, 136px across to the media column,
    whose media is at most 766px wide, 120px between one piece of media
    and the next. The media column takes the rest of the width, and each
-   piece of media sits in the middle of it. ---- */
+   piece of media sits against its right edge, as far in from the
+   window's right as the side column is from its left. ---- */
 .frame-article {
     --frame-media-h: 80dvh;
     display: grid;
@@ -150,25 +101,26 @@
     .frame-article {
         grid-template-columns: 388px minmax(0, 1fr);
         column-gap: 136px;
-        padding: 46px 32px 46px 43px;
+        padding: 46px 43px;
     }
-    /* each piece of media is centred in the column, at most 766px wide
-       (a narrower one, say a phone, in the middle of that measure too);
-       a section that is only text keeps to the left of the measure */
+    /* each piece of media sits against the column's right edge, at
+       most 766px wide (a narrower one, say a phone, at the right of that
+       measure too); a section that is only text keeps to the left of it */
     .frame-column {
-        align-items: center;
+        align-items: flex-end;
     }
     .frame-item {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-end;
         width: min(100%, 766px);
     }
     .frame-item > .frame-text {
         align-self: flex-start;
     }
-    /* the side column fills the window's height and stays put, the
-       back arrow and details at its top, the current text at its bottom */
+    /* the side column fills the window's height and stays put, the list
+       (or the back arrow and details) at its top, the current text at
+       its bottom */
     .frame-side {
         position: sticky;
         top: 46px;
@@ -183,6 +135,15 @@
     .frame-item-body {
         display: none;
     }
+}
+/* the side column's top fades in as the list and an article's details
+   swap (the block is keyed, so it remounts) */
+@keyframes frame-swap {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+.frame-side-top {
+    animation: frame-swap 0.2s ease;
 }
 .frame-meta {
     display: flex;
@@ -248,11 +209,11 @@
     width: min(100%, calc(var(--frame-media-h) * var(--ar, 1)));
     margin: 0;
 }
-/* wide screens: a narrow asset sits in the middle of its slot, like the
+/* wide screens: a narrow asset sits at the right of its slot, like the
    rest of the media in the column */
 @media (min-width: 1024px) {
     .frame-article .flip-asset {
-        margin-inline: auto;
+        margin-left: auto;
     }
 }
 .frame-article .media-row {
@@ -870,6 +831,96 @@ body.wf-cursor-on * {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+/* a web page recorded on a phone, between a drawn browser's bars: the
+   bars are sized in the screen's own width (em = 1/24 of it; the screen
+   is 1248/1381 of the frame with its bleed, the frame the container) and the recording
+   takes what is left, whole */
+.phone-frame:has(> .phone-browser) {
+    container-type: inline-size;
+}
+.phone-browser {
+    display: flex;
+    flex-direction: column;
+    font-size: calc(100cqw * 1248 / 1381 / 24);
+    line-height: 1;
+    overflow: hidden;
+    background: var(--pb-bg);
+    color: var(--pb-fg);
+}
+.phone-browser--light {
+    --pb-bg: #ffffff;
+    --pb-fg: #1a1a1a;
+    --pb-pill: #ececec;
+    --pb-muted: #6b6b6b;
+}
+.phone-browser--dark {
+    --pb-bg: #1f1f1f;
+    --pb-fg: #f2f2f2;
+    --pb-pill: #333333;
+    --pb-muted: #a0a0a0;
+}
+.phone-browser-top *,
+.phone-browser-bottom * {
+    font-family: Roboto, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.phone-browser > .media-wrapper {
+    flex: 1 1 0;
+    min-height: 0;
+    height: auto;
+}
+.phone-browser video {
+    object-fit: cover;
+    object-position: top;
+}
+.phone-browser svg {
+    display: block;
+    width: 1.1em;
+    height: 1.1em;
+}
+.phone-browser-top {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45em;
+    padding: 0.55em 1em 0.5em;
+    flex: none;
+}
+.phone-browser-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 0.6em;
+    font-size: 0.75em;
+    font-weight: 500;
+}
+.phone-browser-status-icons {
+    display: flex;
+    gap: 0.35em;
+}
+.phone-browser-address {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    height: 1.9em;
+    padding-inline: 0.75em;
+    border-radius: 999px;
+    background: var(--pb-pill);
+    font-size: 0.75em;
+    color: var(--pb-fg);
+}
+.phone-browser-address svg {
+    width: 0.95em;
+    height: 0.95em;
+    color: var(--pb-muted);
+}
+.phone-browser-bottom {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex: none;
+    height: 2.4em;
+    padding-bottom: 0.3em;
+    color: var(--pb-fg);
 }
 .phone-frame-render {
     display: block;

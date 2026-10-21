@@ -7,5 +7,5 @@ export const nothingPhone: Frame = {
   src: '/images/essential-apps-mobile/phone.webp',
   width: 1381,
   height: 2865,
-  screen: { x: 72, y: 58, width: 1236, height: 2747 },
+  screen: { x: 72, y: 58, width: 1236, height: 2747, radius: 74 },
 }

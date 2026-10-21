@@ -2,7 +2,7 @@
 
 import { Children, Fragment, cloneElement, isValidElement, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { SequenceContext, type Sequence } from '@/components/VideoSequence'
-import { Video } from '@/components/Video'
+import { Video, type Frame } from '@/components/Video'
 import { onceFullyInView } from '@/components/inView'
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
   hold?: number
 }
 
-type AssetProps = { width?: number; height?: number; src?: string; bar?: ReactNode }
+type AssetProps = { width?: number; height?: number; src?: string; bar?: ReactNode; frame?: Frame }
 
 // A Before / After pair (or longer run) shown one asset at a time in one
 // slot, with a "Before / After" switch in the voice of the page's other
@@ -85,7 +85,10 @@ export function Flip({ children, labels, hold = 4000 }: Props) {
       <div ref={slotRef} className="flip">
         {items.map((item, i) => {
           const asset = isValidElement<AssetProps>(item) ? item : null
-          const ar = asset?.props.width && asset.props.height ? asset.props.width / asset.props.height : undefined
+          // a video in a phone render takes the render's shape
+          const frame = asset?.props.frame
+          const ar = frame ? frame.width / frame.height
+            : asset?.props.width && asset.props.height ? asset.props.width / asset.props.height : undefined
           const isVideo = !!asset && (asset.type === Video || /\.mp4$/.test(asset.props.src ?? ''))
           return (
             <div key={i} className="flip-item" data-on={i === index} aria-hidden={i !== index}>

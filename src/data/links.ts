@@ -1,34 +1,40 @@
-import { projectsBySlug } from '@/data/projects'
+import { isValidElement, type ReactNode } from 'react'
+import { projectsBySlug, type Project } from '@/data/projects'
 import type { Item } from '@/components/ProjectList'
 
-// A Work entry's picture, or a silent clip with the picture as its poster
-export type Media = { src: string; width: number; height: number; video?: string }
-export type WorkItem = Item & { media: Media }
+// A Work entry: a case study's row, with its slug for the frame (see WorkFrame)
+export type WorkItem = Item & { slug: string }
 
-const still = (name: string, width: number, height: number): Media => ({ src: `/images/thumbs/${name}.webp`, width, height })
-const clip = (name: string, width: number, height: number): Media => ({ ...still(name, width, height), video: `/videos/thumbs/${name}.mp4` })
-
-// A case study, by slug, as a list row
-const caseStudy = (slug: string, media: Media): WorkItem => {
+const caseStudy = (slug: string): WorkItem => {
   const p = projectsBySlug[slug]
-  return { year: p.date, title: p.title, href: `/work/${p.slug}`, external: false, media }
+  return { slug, year: p.date, title: p.title, href: `/work/${p.slug}`, external: false }
 }
 
 // The Work list, in the order it shows (newest first, by hand)
 export const workItems: WorkItem[] = [
-  caseStudy('nothing-ai-builder', clip('nothing-ai-builder', 960, 540)),
-  caseStudy('essential-apps-mobile', still('essential-builder-mobile', 1200, 601)),
-  caseStudy('playground', still('essential-apps', 1200, 800)),
-  caseStudy('essential-search', clip('essential-search', 1000, 600)),
-  caseStudy('workflow-figma-plugin', still('workflow-figma-plugin', 1200, 685)),
-  caseStudy('modelnote', clip('modelnote', 960, 592)),
-  caseStudy('workflow-design', clip('workflow-design', 960, 614)),
-  caseStudy('apiject', clip('apiject', 960, 540)),
+  caseStudy('nothing-ai-builder'),
+  caseStudy('essential-apps-mobile'),
+  caseStudy('playground'),
+  caseStudy('essential-search'),
+  caseStudy('workflow-figma-plugin'),
+  caseStudy('modelnote'),
+  caseStudy('workflow-design'),
+  caseStudy('apiject'),
 ]
 
-// the clips among the Work entries, in list order, for fetching ahead
-// (see PrefetchClips)
-export const workClips = workItems.flatMap(item => (item.media.video ? [item.media.video] : []))
+// the listed articles in full, for the Work frame: pointing at a row shows
+// its article's opening media, and opening the article keeps that up
+export const workProjects: Project[] = workItems.map(item => projectsBySlug[item.slug])
+
+// the clips in the listed articles' opening media, in list order, for
+// fetching ahead (see PrefetchClips)
+const clipsIn = (node: ReactNode): string[] => {
+  if (Array.isArray(node)) return node.flatMap(clipsIn)
+  if (!isValidElement<{ src?: unknown; children?: ReactNode }>(node)) return []
+  const { src, children } = node.props
+  return [...(typeof src === 'string' && src.endsWith('.mp4') ? [src] : []), ...clipsIn(children)]
+}
+export const workClips = workProjects.flatMap(p => clipsIn(p.sections[0]?.media))
 
 // The Playground list: things that live on other sites, newest first
 const playgroundLinks = [
