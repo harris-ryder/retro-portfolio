@@ -11,6 +11,7 @@ import { OldPluginDemo } from '@/components/workflow/OldPluginDemo'
 import { FirstVersionDemo } from '@/components/workflow/FirstVersionDemo'
 import { MainDemo } from '@/components/workflow/MainDemo'
 import { promptLego } from '@/data/prompt-lego'
+import { essentialAppsMobile } from '@/data/essential-apps-mobile'
 
 export type Project = {
   slug: string
@@ -134,6 +135,7 @@ export const projects: Project[] = [
       },
     ],
   },
+  essentialAppsMobile,
   promptLego,
   {
     slug: 'essential-search',

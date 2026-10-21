@@ -846,3 +846,36 @@ body.wf-cursor-on * {
     text-align: right;
 }
 
+
+/* ---- A device render around a recording (Video's frame) ---- */
+/* the render sets the size; the screen hole, a percentage box in it, holds
+   the video underneath. The render takes no pointer events, so clicking
+   the video still toggles it */
+.phone-frame {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+.phone-frame-screen {
+    display: block;
+    position: absolute;
+}
+.phone-frame-screen > .media-wrapper {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    outline: none;
+}
+.phone-frame-screen video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.phone-frame-render {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+}

@@ -18,18 +18,33 @@ type Props = {
   displayHeight?: number
   // drawn at the right end of the scrub bar (e.g. a Before / After switch)
   bar?: React.ReactNode
+  // a device render laid over the video, which fills its screen hole; the
+  // block then takes the render's size, with displayHeight still the
+  // screen's (see src/data/phone.ts)
+  frame?: Frame
+}
+
+export type Frame = {
+  src: string
+  width: number
+  height: number
+  // the transparent hole in the render, in its pixels
+  screen: { x: number; y: number; width: number; height: number }
 }
 
 // every Video on the page: one plays at a time, so when one starts (on
 // coming fully into view, or by hand) whichever was playing pauses
 const all = new Set<HTMLVideoElement>()
 
-export function Video({ src, width, height, wrapperStyle, controls = true, displayHeight, bar }: Props) {
+export function Video({ src, width, height, wrapperStyle, controls = true, displayHeight, bar, frame }: Props) {
   const [ready, setReady] = useState(false)
   const ref = useRef<HTMLVideoElement | null>(null)
   const ar = width / height
+  // what the block is sized by: the render when there is one, else the video
+  const boxAr = frame ? frame.width / frame.height : ar
+  const boxHeight = displayHeight && frame ? displayHeight * (frame.height / frame.screen.height) : displayHeight
   // a fixed size is a width the wrapper (or the block, with controls) keeps
-  const fixed: React.CSSProperties = displayHeight ? { width: `min(100%, ${Math.round(displayHeight * ar)}px)` } : {}
+  const fixed: React.CSSProperties = boxHeight ? { width: `min(100%, ${Math.round(boxHeight * boxAr)}px)` } : {}
 
   useEffect(() => {
     const v = ref.current
@@ -70,7 +85,7 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
   const card = (
     <span
       className={`media-wrapper${ready ? '' : ' media-skeleton'}`}
-      style={{ aspectRatio: `${width} / ${height}`, '--ar': ar, ...(controls ? {} : fixed), ...wrapperStyle } as React.CSSProperties}
+      style={{ aspectRatio: `${width} / ${height}`, '--ar': ar, ...(controls || frame ? {} : fixed), ...wrapperStyle } as React.CSSProperties}
     >
       {!ready && (
         <span className="media-loading" aria-hidden="true">
@@ -95,12 +110,30 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
       />
     </span>
   )
-  if (!controls) return card
+  // in a frame, the video sits in the render's screen hole, under it
+  const pct = (n: number, of: number) => `${(100 * n) / of}%`
+  const shown = frame ? (
+    <span className="phone-frame" style={{ '--ar': boxAr, ...(controls ? {} : fixed) } as React.CSSProperties}>
+      <span
+        className="phone-frame-screen"
+        style={{
+          left: pct(frame.screen.x, frame.width),
+          top: pct(frame.screen.y, frame.height),
+          width: pct(frame.screen.width, frame.width),
+          height: pct(frame.screen.height, frame.height),
+        }}
+      >
+        {card}
+      </span>
+      <img className="phone-frame-render" src={frame.src} alt="" width={frame.width} height={frame.height} draggable={false} />
+    </span>
+  ) : card
+  if (!controls) return shown
 
   // the video and its bar share one block, which takes the video's width
   return (
-    <div className="video-block" style={{ '--ar': ar, ...fixed } as React.CSSProperties}>
-      {card}
+    <div className="video-block" style={{ '--ar': boxAr, ...fixed } as React.CSSProperties}>
+      {shown}
       <PlaybackBar video={ref}>{bar}</PlaybackBar>
     </div>
   )

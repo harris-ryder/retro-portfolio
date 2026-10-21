@@ -17,7 +17,7 @@ const caseStudy = (slug: string, media: Media): WorkItem => {
 // The Work list, in the order it shows (newest first, by hand)
 export const workItems: WorkItem[] = [
   caseStudy('nothing-ai-builder', clip('nothing-ai-builder', 960, 540)),
-  { year: '2026', title: 'Essential Apps Mobile', href: '/work/nothing-ai-builder#mobile', external: false, media: still('essential-builder-mobile', 1200, 601) },
+  caseStudy('essential-apps-mobile', still('essential-builder-mobile', 1200, 601)),
   caseStudy('playground', still('essential-apps', 1200, 800)),
   caseStudy('essential-search', clip('essential-search', 1000, 600)),
   caseStudy('workflow-figma-plugin', still('workflow-figma-plugin', 1200, 685)),

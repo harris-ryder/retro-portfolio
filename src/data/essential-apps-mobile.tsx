@@ -1,0 +1,64 @@
+import React from 'react'
+import { Video } from '@/components/Video'
+import { MediaRow } from '@/components/MediaRow'
+import type { Project } from '@/data/projects'
+import { nothingPhone } from '@/data/phone'
+
+/** One phone of a prototype, its 414x916 screen recorded at 2x, its bezel edge cropped off, in the
+ *  phone render, with the screen at the same 720px as the Prompt Lego recordings. */
+const phone = (name: string) => <Video src={`/videos/essential-apps-mobile/${name}.mp4`} width={824} height={1828} displayHeight={720} frame={nothingPhone} />
+
+const ext = (href: string, label: string) => <a href={href} target="_blank" rel="noopener noreferrer" className="link">{label}</a>
+
+export const essentialAppsMobile: Project = {
+  slug: 'essential-apps-mobile',
+  title: 'Essential Apps Mobile',
+  tagline: 'The agent that builds the widgets, and prototypes of the app around it',
+  date: '2026',
+  company: 'Nothing',
+  contribution: 'Design, Agent engineering, Prototyping',
+  sections: [
+    {
+      title: 'Build flow',
+      media: (
+        <MediaRow captions={['Before', 'After']}>
+          {phone('build-before')}
+          {phone('build-after')}
+        </MediaRow>
+      ),
+      body: <>
+        <p>You describe a widget in a chat, an agent writes it, and it lands on your home screen. I worked on the agent that does the building, rewritten as one model in one loop with the compiler inside it, and on the flows around it, each tried out first as a web prototype.</p>
+        <p>A build takes a while, and the app used to show a single Building block until it was done. The prototype replies straight away and offers to notify you, so it is fine to leave.</p>
+        <p>The block then works through thinking, writing the spec and building, and each step delivers its piece above it as it finishes. The description, the feature list, then the widget.</p>
+        <p>Try it at {ext('https://prototype-build-flow.vercel.app/', 'prototype-build-flow.vercel.app')}.</p>
+      </>,
+    },
+    {
+      title: 'Resize flow',
+      media: (
+        <MediaRow captions={['Before', 'After']}>
+          {phone('resize-before')}
+          {phone('resize-after')}
+        </MediaRow>
+      ),
+      body: <>
+        <p>Asking for a different size meant picking a cell count from a pill and then writing the resize out in words as well.</p>
+        <p>In the prototype the composer becomes the picker. Sizes are named by shape, Small, Wide, Tall and Large, and the widget sits on a grid with a button on each edge to grow it, so you see the change before asking for it. Rebuild sends on its own.</p>
+        <p>Try it at {ext('https://prototype-resize-flow.vercel.app/', 'prototype-resize-flow.vercel.app')}.</p>
+      </>,
+    },
+    {
+      title: 'Prompt Lego',
+      media: (
+        <MediaRow captions={['Before', 'After']}>
+          {phone('lego-before')}
+          {phone('lego-after')}
+        </MediaRow>
+      ),
+      body: <>
+        <p>First prompts were often too vague for a widget, things like &ldquo;Build me an Instagram clone&rdquo;. Prompt Lego tries out helping people say what they want before anything is built, with a short interview that assembles the prompt from small pieces. What it does, how big it is, how it looks.</p>
+        <p>Try it at {ext('https://prompt-lego-prototype.vercel.app/', 'prompt-lego-prototype.vercel.app')}.</p>
+      </>,
+    },
+  ],
+}
