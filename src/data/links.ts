@@ -38,6 +38,7 @@ export const workClips = workProjects.flatMap(p => clipsIn(p.sections[0]?.media)
 
 // The Playground list: things that live on other sites, newest first
 const playgroundLinks = [
+  { year: '2026', title: 'Decamp', tagline: 'Moves a Squarespace or Webflow site off its platform', url: 'https://getdecamp.com/' },
   { year: '2026', title: 'Cloudflare Wallet', tagline: 'Released with a bunch of issues, so I made a polished version', url: 'https://harris-dummy-pay.vercel.app/' },
   { year: '2026', title: 'Clock Widgets', tagline: 'Experimenting with different designs', url: 'https://clock-widgets.vercel.app/' },
   { year: '2025', title: 'Everything', tagline: 'Concept designs for future phone software', url: 'https://everything.harris-ryder.com/' },

@@ -52,7 +52,7 @@ const muraclePage = (n: number) => <Img src={`/images/muracle/MPDesignProject${n
 export const projects: Project[] = [
   {
     slug: 'nothing-ai-builder',
-    title: 'Essential Apps',
+    title: 'Essential Apps Web',
     tagline: 'A ground-up rewrite of the Essential Apps interface',
     date: '2026',
     company: 'Nothing',
@@ -253,16 +253,6 @@ export const projects: Project[] = [
       },
       {
         title: 'One review page for anything',
-        // the review page as shown on workflow.design for each kind of
-        // work, shot at 2x and resized to 1600 wide
-        media: (
-          <MediaRow labels={['Website', 'Image', 'Video', 'Deck']}>
-            <Img src="/images/workflow/review-site.webp" alt="A Workflow review of a live Squarespace site, The Wanderer, with two comments on its fifth version" width={1600} height={1024} />
-            <Img src="/images/workflow/review-images.webp" alt="A Workflow review of a retouched hero image, with a comment asking for a look at the new edits" width={1600} height={1024} />
-            <Img src="/images/workflow/review-videos.webp" alt="A Workflow review of a travel video's second rough cut, with four comments pinned to the timeline" width={1600} height={1024} />
-            <Img src="/images/workflow/review-presentations.webp" alt="A Workflow review of a pitch deck's fourth version, three slides and one comment" width={1600} height={1024} />
-          </MediaRow>
-        ),
         body: <>
           <p>A reviewer opens the link and clicks anywhere to leave a comment. There is no account to make. The designer ticks the comments off, uploads the next version, and the thread carries on underneath it. A recorded walkthrough can introduce the work.</p>
         </>,

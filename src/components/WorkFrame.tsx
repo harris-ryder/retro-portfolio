@@ -38,6 +38,18 @@ export function WorkFrame({ items, projects, children }: { items: WorkItem[]; pr
 
 const none: Section[] = []
 
+// what goes in a section's list item: its media (or, without any, its
+// text), and on a narrow screen its text under the media. Keyed, since on
+// a fresh load the media and text are still lazy references from the
+// server and React's key check misreads two of those side by side as a
+// list. The list's hover item is built the same way, so when the article
+// opens the opening media is the same element in the same place and a
+// clip keeps playing
+const item = (s: Section, wide: boolean) => [
+  <Fragment key="media">{s.media ?? <div className="frame-text section-body">{s.body}</div>}</Fragment>,
+  !wide && s.media && s.body && <div key="body" className="frame-item-body section-body">{s.body}</div>,
+]
+
 // A side column that stays put and one scrolling column of media (see
 // .frame-article in globals.css).
 //
@@ -223,16 +235,12 @@ export function Frame({ project, list }: { project: Project | null; list?: List 
         {project
           ? sections.map((s, i) => (
               <li key={`${project.slug}/${i}`} id={ids[i]} className="frame-item">
-                {/* keyed: on a fresh load the media and text are still lazy
-                    references from the server, and React's key check
-                    misreads two of those side by side as a list */}
-                <Fragment key="media">{s.media ?? <div className="frame-text section-body">{s.body}</div>}</Fragment>
-                {!wide && s.media && s.body && <div key="body" className="frame-item-body section-body">{s.body}</div>}
+                {item(s, wide)}
               </li>
             ))
-          : peek && (
+          : peek && peek.sections[0] && (
               <li key={`${peek.slug}/0`} className="frame-item frame-peek" aria-hidden="true">
-                {peek.sections[0]?.media}
+                {item(peek.sections[0], wide)}
               </li>
             )}
       </ol>
