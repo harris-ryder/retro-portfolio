@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { useSelectedLayoutSegment } from 'next/navigation'
 import { ProjectList } from '@/components/ProjectList'
@@ -223,12 +223,15 @@ export function Frame({ project, list }: { project: Project | null; list?: List 
         {project
           ? sections.map((s, i) => (
               <li key={`${project.slug}/${i}`} id={ids[i]} className="frame-item">
-                {s.media ?? <div className="frame-text section-body">{s.body}</div>}
-                {!wide && s.media && s.body && <div className="frame-item-body section-body">{s.body}</div>}
+                {/* keyed: on a fresh load the media and text are still lazy
+                    references from the server, and React's key check
+                    misreads two of those side by side as a list */}
+                <Fragment key="media">{s.media ?? <div className="frame-text section-body">{s.body}</div>}</Fragment>
+                {!wide && s.media && s.body && <div key="body" className="frame-item-body section-body">{s.body}</div>}
               </li>
             ))
           : peek && (
-              <li key={`${peek.slug}/0`} className="frame-item" aria-hidden="true">
+              <li key={`${peek.slug}/0`} className="frame-item frame-peek" aria-hidden="true">
                 {peek.sections[0]?.media}
               </li>
             )}

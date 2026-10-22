@@ -176,6 +176,15 @@
 .frame-item {
     scroll-margin-top: 46px;
 }
+/* the bar under a video waits for the article to open, keeping its space
+   so nothing moves when the hover asset becomes the article's first item */
+.frame-item .pb {
+    transition: opacity 0.25s;
+}
+.frame-peek .pb {
+    opacity: 0;
+    pointer-events: none;
+}
 .frame-item-body {
     margin-top: 1.6em;
 }
@@ -196,6 +205,11 @@
 }
 .frame-article .media-wrapper.media-skeleton {
     outline-color: var(--color-neutral-300);
+}
+/* on the Work list's hover there's no box, just the loading line */
+.frame-article .frame-peek .media-wrapper.media-skeleton {
+    outline-color: transparent;
+    background-color: transparent;
 }
 .frame-article .video-block {
     width: min(100%, calc(var(--frame-media-h) * var(--ar, 1.5)));
@@ -438,6 +452,10 @@ body.wf-cursor-on * {
 
 .media-skeleton {
     box-shadow: none;
+}
+/* a transparent video sits straight on the page */
+.media-wrapper.media-clear {
+    background-color: transparent;
 }
 
 .media-loading {

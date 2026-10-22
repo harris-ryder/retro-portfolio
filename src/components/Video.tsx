@@ -26,6 +26,10 @@ type Props = {
   // mobile browser's bars (status and address above, toolbar below) in
   // this theme rather than cropped to fill the screen
   browser?: { theme: 'light' | 'dark'; url: string }
+  // a video with a transparent background: src is then a VP9 WebM with
+  // alpha, and this its HEVC-with-alpha copy, which Safari plays instead
+  // (it shows a WebM's alpha as black); the card drops its background
+  safariSrc?: string
 }
 
 export type Frame = {
@@ -40,8 +44,14 @@ export type Frame = {
 // coming fully into view, or by hand) whichever was playing pauses
 const all = new Set<HTMLVideoElement>()
 
-export function Video({ src, width, height, wrapperStyle, controls = true, displayHeight, bar, frame, browser }: Props) {
+export function Video({ src, width, height, wrapperStyle, controls = true, displayHeight, bar, frame, browser, safariSrc }: Props) {
   const [ready, setReady] = useState(false)
+  // with a Safari copy, which file to load is only known in the browser,
+  // so neither is fetched until then
+  const [chosen, setChosen] = useState(safariSrc ? undefined : src)
+  useEffect(() => {
+    if (safariSrc) setChosen(isSafari() ? safariSrc : src)
+  }, [src, safariSrc])
   const ref = useRef<HTMLVideoElement | null>(null)
   const ar = width / height
   // what the block is sized by: the render when there is one, else the video
@@ -88,7 +98,7 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
 
   const card = (
     <span
-      className={`media-wrapper${ready ? '' : ' media-skeleton'}`}
+      className={`media-wrapper${ready ? '' : ' media-skeleton'}${safariSrc ? ' media-clear' : ''}`}
       style={{ aspectRatio: `${width} / ${height}`, '--ar': ar, ...(controls || frame ? {} : fixed), ...wrapperStyle } as React.CSSProperties}
     >
       {!ready && (
@@ -97,7 +107,7 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
         </span>
       )}
       <video
-        src={src}
+        src={chosen}
         loop={!sequence}
         muted
         playsInline
@@ -186,4 +196,11 @@ function BrowserBottom() {
       {icon('M12 5.5v.5M12 11.75v.5M12 18v.5')}
     </span>
   )
+}
+
+// Safari, or any browser on iOS (all WebKit), which plays HEVC's alpha but
+// not a WebM's
+function isSafari() {
+  const ua = navigator.userAgent
+  return /iPad|iPhone|iPod/.test(ua) || (/Safari\//.test(ua) && !/Chrome|Chromium|Edg|Firefox|Android/.test(ua))
 }
