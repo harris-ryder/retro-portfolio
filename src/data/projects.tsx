@@ -63,8 +63,9 @@ export const projects: Project[] = [
         // the Work index's clip of the editor
         media: <Video src="/videos/thumbs/nothing-ai-builder.mp4" width={960} height={540} />,
         body: <>
-          <p>Essential Apps&apos; mission is to unlock people&apos;s freedom to create widgets customised to their needs. Using a chat interface users can describe their desired widget and deploy it to their phone.</p>
+          <p>Essential Apps was a web app for building your own widgets with the help of an agent. You describe the widget in a chat, the agent makes it, and you send it to your Nothing phone.</p>
           <p>I was responsible for the re-write of the web client, which took four weeks. I worked on this solely, collaborating with a designer.</p>
+          <p>Below are a few of the improvements I made to the app.</p>
         </>,
       },
       {
@@ -115,7 +116,7 @@ export const projects: Project[] = [
           </MediaRow>
         ),
         body: <>
-          <p>Every prompt creates a new version of the widget, and any earlier version can be restored. Before, the Restore button read as Preview to many users, and what restoring actually did was neither clear in the UI nor explained.</p>
+          <p>Every prompt creates a new version of the widget, and any earlier version can be restored. User interviews showed that the Restore button read as Preview to many people, and that what restoring actually did was neither clear in the UI nor explained.</p>
           <p>After, a dropdown makes the two choices explicit, Preview and Restore. Choosing Restore opens a dialog with a simple animation that shows how a restore works before the user commits.</p>
         </>,
       },

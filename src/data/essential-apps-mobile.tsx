@@ -13,7 +13,7 @@ const ext = (href: string, label: string) => <a href={href} target="_blank" rel=
 export const essentialAppsMobile: Project = {
   slug: 'essential-apps-mobile',
   title: 'Essential Apps Mobile',
-  tagline: 'The agent that builds the widgets, and prototypes of the app around it',
+  tagline: 'The mobile app of Nothing\'s widget builder',
   date: '2026',
   company: 'Nothing',
   contribution: 'Design, Frontend Engineering, Backend',
@@ -22,9 +22,12 @@ export const essentialAppsMobile: Project = {
       title: 'Overview',
       // the widgets the agent built, scrolling in columns on a transparent
       // background, 1080p
-      media: <Video src="/videos/essential-apps-mobile/widgets.webm" safariSrc="/videos/essential-apps-mobile/widgets.mov" width={1920} height={1080} />,
+      media: <Video src="/videos/essential-apps-mobile/widgets.webm" safariSrc="/videos/essential-apps-mobile/widgets.mov" width={1710} height={1080} />,
       body: <>
-        <p>You describe a widget in a chat, an agent writes it, and it lands on your home screen. I worked on the agent that does the building, rewritten as one model in one loop with the compiler inside it, and on the flows around it, each tried out first as a web prototype.</p>
+        <p>You describe a widget in a chat, an agent writes it, and it lands on your home screen. Essential Apps began on the web, and this is the Android app that followed.</p>
+        <p>I worked on it as a design engineer. I helped design the app, carrying the web platform&apos;s designs over to the phone, and led the frontend engineering in Kotlin and Jetpack Compose.</p>
+        <p>Much of my time went into the flows, looking for better ones to make the app easier to use, each tried out first as a web prototype. Below are some of the explorations that made it to production.</p>
+        <p>I also rebuilt the agent that does the building, as one model in one loop with the compiler inside it. That cut its token cost 50 times over, and the widgets it makes look better.</p>
       </>,
     },
     {
@@ -36,7 +39,7 @@ export const essentialAppsMobile: Project = {
         </MediaRow>
       ),
       body: <>
-        <p>A build takes a while, and the app used to show a single Building block until it was done. The prototype replies straight away and offers to notify you, so it is fine to leave.</p>
+        <p>A build takes a while, and the app used to show a single Building block until it was done. Now it replies straight away and offers to notify you, so it is fine to leave.</p>
         <p>The block then works through thinking, writing the spec and building, and each step delivers its piece above it as it finishes. The description, the feature list, then the widget.</p>
         <p>{ext('https://prototype-build-flow.vercel.app/', 'Try the prototype')}</p>
       </>,
@@ -50,8 +53,8 @@ export const essentialAppsMobile: Project = {
         </MediaRow>
       ),
       body: <>
-        <p>Asking for a different size meant picking a cell count from a pill and then writing the resize out in words as well.</p>
-        <p>In the prototype the composer becomes the picker. Sizes are named by shape, Small, Wide, Tall and Large, and the widget sits on a grid with a button on each edge to grow it, so you see the change before asking for it. Rebuild sends on its own.</p>
+        <p>Asking for a different size used to mean picking a cell count from a pill and then having to include a prompt.</p>
+        <p>Now the composer is the picker. Sizes are named by shape, Small, Wide, Tall and Large, and the widget sits on a grid with a button on each edge to grow it, so you see the change before asking for it. Rebuild sends on its own.</p>
         <p>{ext('https://prototype-resize-flow.vercel.app/', 'Try the prototype')}</p>
       </>,
     },
@@ -64,7 +67,7 @@ export const essentialAppsMobile: Project = {
         </MediaRow>
       ),
       body: <>
-        <p>First prompts were often too vague for a widget, things like &ldquo;Build me an Instagram clone&rdquo;. Prompt Lego tries out helping people say what they want before anything is built, with a short interview that assembles the prompt from small pieces. What it does, how big it is, how it looks.</p>
+        <p>First prompts were often too vague for a widget, things like &ldquo;Build me an Instagram clone&rdquo;. Prompt Lego helps people say what they want before anything is built, with a short interview that assembles the prompt from small pieces. What features, how to prioritise them, size and style.</p>
         <p>{ext('https://prompt-lego-prototype.vercel.app/', 'Try the prototype')}</p>
       </>,
     },
