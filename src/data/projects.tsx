@@ -63,9 +63,9 @@ export const projects: Project[] = [
         // the Work index's clip of the editor
         media: <Video src="/videos/thumbs/nothing-ai-builder.mp4" width={960} height={540} />,
         body: <>
-          <p>Essential Apps was a web app for building your own widgets with the help of an agent. You describe the widget in a chat, the agent makes it, and you send it to your Nothing phone.</p>
-          <p>I was responsible for the re-write of the web client, which took four weeks. I worked on this solely, collaborating with a designer.</p>
-          <p>Below are a few of the improvements I made to the app.</p>
+          <p>Essential Apps was a web app for building your own widgets with the help of an agent. You describe the widget in a chat, the agent makes it, and you send it to your Nothing phone. It has 3,000 monthly users.</p>
+          <p>I was responsible for a complete rewrite of the web client from scratch, a new codebase and a new design system, which took four weeks. I worked on it solely. I made the case for inheriting the design system of a sister product for consistency, and implemented it.</p>
+          <p>Below are some surfaces from the app, and features I contributed as part of the rewrite.</p>
         </>,
       },
       {
