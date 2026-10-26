@@ -71,9 +71,9 @@ export const projects: Project[] = [
       {
         title: 'Mobile',
         media: (
-          <MediaRow labels={['Before', 'After']}>
-            <Video src="/videos/nothing-ai-builder/old-mobile-flow.mp4" width={1080} height={2114} frame={nothingPhone} browser={{ theme: 'dark', url: 'playground.nothing.tech' }} />
-            <Video src="/videos/nothing-ai-builder/web-mobile-flow.mp4" width={1080} height={2114} frame={nothingPhone} browser={{ theme: 'light', url: 'playground.nothing.tech' }} />
+          <MediaRow captions={['Before', 'After']}>
+            <Video src="/videos/nothing-ai-builder/old-mobile-flow.mp4" width={1080} height={2114} displayHeight={720} frame={nothingPhone} browser={{ theme: 'dark', url: 'playground.nothing.tech' }} />
+            <Video src="/videos/nothing-ai-builder/web-mobile-flow.mp4" width={1080} height={2114} displayHeight={720} frame={nothingPhone} browser={{ theme: 'light', url: 'playground.nothing.tech' }} />
           </MediaRow>
         ),
         body: <>
