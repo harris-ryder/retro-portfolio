@@ -129,8 +129,8 @@ export const projects: Project[] = [
         title: 'Fun',
         media: (
           <MediaRow>
-            <Video src="/videos/nothing-ai-builder/tetris-fun.mp4" width={1080} height={2400} />
-            <Img src="/images/nothing-ai-builder/widgets.webp" alt="Windows 98 themed widgets on device" width={900} height={2000} />
+            <Video src="/videos/nothing-ai-builder/tetris-fun.mp4" width={1080} height={2400} displayHeight={720} frame={nothingPhone} />
+            <Img src="/images/nothing-ai-builder/widgets.webp" alt="Windows 98 themed widgets on device" width={900} height={2000} frame={nothingPhone} />
           </MediaRow>
         ),
         body: <p>Some fun widgets made along the way.</p>,
