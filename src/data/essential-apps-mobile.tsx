@@ -16,7 +16,7 @@ export const essentialAppsMobile: Project = {
   tagline: 'The mobile app of Nothing\'s widget builder',
   date: '2026',
   company: 'Nothing',
-  contribution: 'Design, Frontend Engineering, Backend',
+  contribution: 'Design, Frontend Engineering',
   sections: [
     {
       title: 'Overview',
