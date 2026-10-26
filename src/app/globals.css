@@ -209,7 +209,7 @@
 /* a video's corners are rounded; one in a phone render takes the
    screen's corners instead */
 .frame-article .media-wrapper:has(> video):not(.phone-frame-screen > *) {
-    border-radius: var(--squircle-radius);
+    border-radius: 4px;
 }
 /* on the Work list's hover there's no box, just the loading line */
 .frame-article .frame-peek .media-wrapper.media-skeleton {
