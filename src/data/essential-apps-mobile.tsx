@@ -24,7 +24,7 @@ export const essentialAppsMobile: Project = {
       // background, 1080p
       media: <Video src="/videos/essential-apps-mobile/widgets.webm" safariSrc="/videos/essential-apps-mobile/widgets.mov" width={1710} height={1080} />,
       body: <>
-        <p>You describe a widget in a chat, an agent writes it, and it lands on your home screen. Essential Apps began on the web, and this is the Android app that followed.</p>
+        <p>You describe a widget in a chat, an agent writes it, and it lands on your home screen. Essential Apps began on the web, and this is the Android app that followed. It has 3,000 monthly active users.</p>
         <p>I worked on it as a design engineer. I helped design the app, carrying the web platform&apos;s designs over to the phone, and led the frontend engineering in Kotlin and Jetpack Compose.</p>
         <p>I spent a lot of time understanding users&apos; pain points and investigated new flows to make the app easier to use. Below are a few explorations that made it to production.</p>
         <p>I was also involved in a special project applying design principles to the agent to improve the aesthetic quality of its widgets. Through this work we improved the design quality and reduced the agent&apos;s error rate from 20% to 0.1%, which in turn let us move to a smaller model and cut token cost 50 times over.</p>
