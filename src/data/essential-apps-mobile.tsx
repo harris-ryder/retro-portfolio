@@ -59,7 +59,7 @@ export const essentialAppsMobile: Project = {
       </>,
     },
     {
-      title: 'Prompt Lego',
+      title: 'Prompt interview',
       media: (
         <MediaRow captions={['Before', 'After']}>
           {phone('lego-before')}
@@ -67,7 +67,7 @@ export const essentialAppsMobile: Project = {
         </MediaRow>
       ),
       body: <>
-        <p>First prompts were often too vague for a widget, things like &ldquo;Build me an Instagram clone&rdquo;. Prompt Lego helps people say what they want before anything is built, with a short interview that assembles the prompt from small pieces. What features, how to prioritise them, size and style.</p>
+        <p>First prompts were often too vague for a widget, things like &ldquo;Build me an Instagram clone&rdquo;. Now a short interview helps people say what they want before anything is built, assembling the prompt from small pieces. What features, how to prioritise them, size and style.</p>
         <p>{ext('https://prompt-lego-prototype.vercel.app/', 'Try the prototype')}</p>
       </>,
     },

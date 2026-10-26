@@ -12,8 +12,8 @@ const caseStudy = (slug: string): WorkItem => {
 
 // The Work list, in the order it shows (newest first, by hand)
 export const workItems: WorkItem[] = [
-  caseStudy('nothing-ai-builder'),
   caseStudy('essential-apps-mobile'),
+  caseStudy('nothing-ai-builder'),
   caseStudy('playground'),
   caseStudy('essential-search'),
   caseStudy('workflow-figma-plugin'),
