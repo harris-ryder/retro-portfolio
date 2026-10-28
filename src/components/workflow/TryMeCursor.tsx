@@ -25,6 +25,9 @@ const VB_H = 24
 const TIP_X = 2
 const TIP_Y = 2
 const SCALE = 0.9
+/* How far (px) outside the side column the pointer still counts as
+   approaching it, where the "Try me" cursor steps aside. */
+const SIDE_MARGIN = 40
 
 export function TryMeCursor() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -41,7 +44,18 @@ export function TryMeCursor() {
       if (!root || !arrow) return
 
       const el = target.current
-      if (!el || !mouse.current.seen) {
+      // over the side column (the back arrow and the article's details),
+      // or within a margin of it, the native cursor comes back so the
+      // arrow there is a plain link
+      const side = document.querySelector('.frame-side')
+      const inSide = (() => {
+        if (!side || !mouse.current.seen) return false
+        const r = side.getBoundingClientRect()
+        const m = SIDE_MARGIN
+        const { x, y } = mouse.current
+        return x >= r.left - m && x <= r.right + m && y >= r.top - m && y <= r.bottom + m
+      })()
+      if (!el || !mouse.current.seen || inSide) {
         root.style.opacity = '0'
         document.body.classList.remove('wf-cursor-on')
         active.current = false
