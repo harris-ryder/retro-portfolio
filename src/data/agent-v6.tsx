@@ -1,6 +1,7 @@
 import React from 'react'
 import type { Project } from '@/data/projects'
 import { Ascii } from '@/components/agent-v6/Ascii'
+import { Columns } from '@/components/agent-v6/Columns'
 import { Img } from '@/components/Img'
 import { MediaRow } from '@/components/MediaRow'
 import { Video } from '@/components/Video'
@@ -54,48 +55,6 @@ const sweep = (() => {
   return rows.join('\n')
 })()
 
-// the overview's three measures as paired columns, drawn like a box-office chart:
-// the legacy agent in colons, the new one in Xs, each chart scaled so the legacy
-// column stands ten rows, with a half row in lower case (or dots) on top
-const measures = (() => {
-  const H = 10, W = 7, SLOT = 20, GAP = 4
-  const charts = [
-    ['Cost, 100 widgets', '$25.34', '$0.47', 25.34, 0.47],
-    ['Time to a widget', '92 s', '49 s', 92, 49],
-    ['Never render', '7%', '0%', 7, 0],
-  ] as const
-  // one column's cell on row r, counted up from 0: a full row, a half row, its value, or blank
-  const cell = (v: number, max: number, value: string, r: number, full: string, half: string) => {
-    const halves = v > 0 ? Math.max(1, Math.round((v / max) * H * 2)) : 0
-    const top = Math.ceil(halves / 2)
-    if (r < Math.floor(halves / 2)) return full.repeat(W)
-    if (r < top) return half.repeat(W)
-    if (r === top) return value.padStart(Math.ceil((W + value.length) / 2)).padEnd(W)
-    return ' '.repeat(W)
-  }
-  // a cell in ink, so the colons are not dimmed as a frame would be
-  const mark = (k: string, s: string) => (s.trim() ? `«${k}|${s}»` : s)
-  const rows: string[] = []
-  for (let r = H; r >= 0; r--) {
-    const line = charts.map(([, oldValue, newValue, old, nw]) =>
-      `${mark('b', cell(old, old, oldValue, r, ':', '.'))}  ${mark('a', cell(nw, old, newValue, r, 'X', 'x'))}`
-      + ' '.repeat(SLOT - 2 * W - 2))
-    rows.push(`  ${line.join(' '.repeat(GAP))}`.trimEnd())
-  }
-  const titles = charts.map(([title]) => {
-    const pad = Math.max(0, Math.floor((2 * W + 2 - title.length) / 2))
-    return `${' '.repeat(pad)}«b|${title}»${' '.repeat(SLOT - pad - title.length)}`
-  })
-  return [
-    '  «b|::» = Legacy agent',
-    '  «a|XX» = New agent',
-    '',
-    ...rows,
-    '',
-    `  ${titles.join(' '.repeat(GAP))}`.trimEnd(),
-  ].join('\n')
-})()
-
 export const agentV6: Project = {
   slug: 'agent-v6',
   title: 'Essential Apps Agent',
@@ -130,9 +89,16 @@ export const agentV6: Project = {
         <p>I investigated why, wrote the replacement, and built the way we measure it. The new agent is one model with no sub-agents, eight tools where the legacy agent had seventeen, and the real compiler in the loop. It runs on a much smaller model than the legacy agent needed, renders everything it builds, in half the time, at a 50th of the cost.</p>
       </>,
       media: (
-        <Ascii label="Legacy agent against new agent in three column charts. Cost for 100 widgets $25.34 against $0.47, median time to a widget 92 s against 49 s, widgets that never render 7% against 0%">{`
-${measures}
-`}</Ascii>
+        <Columns
+          title="Legacy and new agent"
+          names={['Legacy', 'New']}
+          label="Legacy agent against new agent in three column charts. Cost for 100 widgets $25.34 against $0.47, median time to a widget 92 s against 49 s, widgets that never render 7% against 0%"
+          charts={[
+            { caption: ['Cost', '(100 widgets)'], before: { value: 25.34, label: '$25.34' }, after: { value: 0.47, label: '$0.47' } },
+            { caption: ['Time to a widget', '(median)'], before: { value: 92, label: '92 s' }, after: { value: 49, label: '49 s' } },
+            { caption: ['Never render', '(of 100)'], before: { value: 7, label: '7%' }, after: { value: 0, label: '0%' } },
+          ]}
+        />
       ),
     },
 

@@ -1166,6 +1166,32 @@ body.wf-cursor-on * {
         color: var(--color-body);
     }
 }
+/* paired outlined columns (see components/agent-v6/Columns) */
+.columns,
+.columns * {
+    font-family: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', 'Roboto Mono', monospace;
+}
+.columns {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+.columns-before { fill: none; stroke: var(--color-faint); stroke-width: 1.5; }
+.columns-after { fill: none; stroke: var(--color-body); stroke-width: 2.5; }
+.columns-rule { stroke: var(--color-body); stroke-width: 1; }
+.columns-title { font-size: 13px; letter-spacing: 0.08em; fill: var(--color-body); }
+.columns-small,
+.columns-big {
+    paint-order: stroke;
+    stroke: var(--color-page);
+    stroke-width: 6px;
+    stroke-linejoin: round;
+}
+.columns-small { font-size: 12px; fill: var(--color-muted); }
+.columns-big { font-size: 22px; fill: var(--color-body); }
+.columns-name { font-size: 10px; fill: var(--color-muted); }
+.columns-caption { font-size: 11px; letter-spacing: 0.12em; fill: var(--color-body); }
 /* a figure drawn in monospace text (see components/agent-v6/Ascii): the site's
    greys only; the focal thing is black and bold, what failed is quiet and underlined */
 .ascii,
