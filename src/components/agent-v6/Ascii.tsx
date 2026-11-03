@@ -7,12 +7,13 @@ import React from 'react'
  *  Markup inside the string: «k|text» wraps text in a class, where k is
  *    a  accent        g  success        r  failure        d  dim
  *    p  pill (label)  h  pill, accent   b  ink, bold
+ *    t  title, bold with 4px below it
  *  Everything else is plain ink. Runs of two or more structural characters
  *  (+ - | . : = > <) and lone + or | are dimmed automatically, so a box's
  *  frame sits back behind its words. Markers take no width, so align the
  *  visible text as it will render. */
 
-const CLASS: Record<string, string> = { a: 'ascii-a', g: 'ascii-g', r: 'ascii-r', d: 'ascii-d', p: 'ascii-p', h: 'ascii-h', b: 'ascii-b' }
+const CLASS: Record<string, string> = { a: 'ascii-a', g: 'ascii-g', r: 'ascii-r', d: 'ascii-d', p: 'ascii-p', h: 'ascii-h', b: 'ascii-b', t: 'ascii-t' }
 
 // the dim runs in plain text: a frame or connector, never a hyphenated word
 const STRUCTURE = /([+\-|.:=<>'`^]{2,}|(?<![A-Za-z0-9])[+|](?![A-Za-z0-9]))/g

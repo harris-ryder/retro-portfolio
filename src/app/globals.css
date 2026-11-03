@@ -1187,6 +1187,8 @@ body.wf-cursor-on * {
 .ascii-g { color: var(--color-body); }
 .ascii-r { color: var(--color-muted); text-decoration: underline; text-underline-offset: 3px; }
 .ascii-b { color: var(--color-body); font-weight: 600; }
+/* a chart title: the margin opens a gap smaller than a blank line */
+.ascii-t { display: inline-block; vertical-align: top; margin-bottom: 4px; color: var(--color-body); font-weight: 600; }
 .ascii-p,
 .ascii-h {
     background: var(--color-fill);
