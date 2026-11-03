@@ -64,7 +64,7 @@ const measures = ([
 ] as const).map(([title, oldLabel, newLabel, old, nw]) => {
   const bar = (v: number) => (v > 0 ? '█'.repeat(Math.max(1, Math.round((v / old) * 50))) : '')
   return [
-    `  ${title}`,
+    `  «b|${title}»`,
     '',
     `  Legacy agent   ${oldLabel.padStart(6)}   «d|${bar(old)}»`,
     `  New agent      «a|${`${newLabel.padStart(6)}   ${bar(nw)}`.trimEnd()}»`,
