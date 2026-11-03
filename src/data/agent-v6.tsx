@@ -69,7 +69,7 @@ export const agentV6: Project = {
     {
       title: 'Before and after',
       body: <>
-        <p>This is a long article about rewriting an AI agent, and most of it is measurement: where the time went, what each widget cost, which prompts failed and why. It is easy to read all of that and still not know what changed for the person holding the phone. So before any of it, the change itself.</p>
+        <p>This is a long article about rewriting an AI agent, and most of it is measurement of where the time went, what each widget cost, which prompts failed and why. It is easy to read all of that and still not know what changed for the person holding the phone. So before any of it, the change itself.</p>
         <p>Both phones below get the same request. The rest of the article is how we got from one to the other.</p>
       </>,
       media: (
@@ -116,7 +116,7 @@ export const agentV6: Project = {
       title: 'Architecture',
       level: 2,
       body: <>
-        <p>A turn began before the main model had read the request: a Haiku model guessed the widget&apos;s capabilities from the whole chat, and its answer was pasted into the system prompt and re-sent, uncached, on every step. Then the main model ran up to fifteen steps over seventeen tools.</p>
+        <p>A turn began before the main model had read the request. A Haiku model guessed the widget&apos;s capabilities from the whole chat, and its answer was pasted into the system prompt and re-sent, uncached, on every step. Then the main model ran up to fifteen steps over seventeen tools.</p>
         <p>Two more helper models hid in those tools. One chose the colour theme, in two Haiku calls. One chose which app a tap should open. Each had its own prompt, parser and silent fallback. When the theme picker failed, the widget came out black and red, which is why they all looked the same.</p>
       </>,
       media: (
@@ -151,7 +151,7 @@ export const agentV6: Project = {
     {
       title: 'Code through the model',
       level: 2,
-      body: <p>The tested modules we wanted in every widget, location, audio, storage, reached it by being flattened into the prompt and retyped by the model into <code>App.tsx</code>. The audio module alone was 900 lines: 8,400 tokens re-read on every step, then typed out once more. The validator checked the paste by grepping for a marker name.</p>,
+      body: <p>The tested modules we wanted in every widget, location, audio, storage, reached it by being flattened into the prompt and retyped by the model into <code>App.tsx</code>. The audio module alone was 900 lines, or 8,400 tokens re-read on every step and then typed out once more. The validator checked the paste by grepping for a marker name.</p>,
       media: (
         <Ascii label="How a tested module reached the widget before and after: retyped by the model and checked by name, against written as a read-only file and imported">{`
   «d|Legacy agent»
@@ -160,7 +160,7 @@ export const agentV6: Project = {
   900 tested      8.4k tokens  «a|900 lines, into App.tsx»  greps for a
   lines           a step                                 marker name
 
-  It compared names, not code: a paste that renamed one helper
+  It compared names, not code. A paste that renamed one helper
   failed, a rewrite that kept the names passed.
 
   «d|New agent»
@@ -183,7 +183,7 @@ export const agentV6: Project = {
         <Ascii label="Timeline of a turn before and after: the legacy agent compiled after the run was marked done, on a separate worker; the new agent type-checks after every write and gates the finish on tsc and Metro">{`
   «d|Legacy agent»   the compile happens after the turn
 
-  write ..... write ..... reply ..... run done .....: «r|another worker compiles,»
+  write ..... write ..... reply ..... run done ...... «r|another worker compiles,»
   regex       regex       files       told to the    «r|later. if it fails, the»
   check       check       saved       phone          «r|agent never hears»
 
@@ -200,7 +200,7 @@ export const agentV6: Project = {
       title: 'Happy on a crash',
       level: 2,
       body: <>
-        <p>Every file write went straight to the database, so a turn that died on step eight had already saved steps one to seven: a half-made version, a build of it, and a version pill in the chat.</p>
+        <p>Every file write went straight to the database, so a turn that died on step eight had already saved steps one to seven. That left a half-made version, a build of it, and a version pill in the chat.</p>
         <p>And a run reported success even when the widget crashed on the phone. In a sweep of 193 versions on production, 22 never rendered, usually from code calling a helper it had never declared. The regexes could not see it; the compiler was never asked.</p>
       </>,
       media: (
@@ -213,14 +213,14 @@ ${sweep}
   «d|░» rendered   «r|█» stuck on the host's spinner, forever   «r|○» drew nothing
 `}</Ascii>
       ),
-      caption: 'Found by hashing the frames: every stuck widget shared one byte-identical spinner image.',
+      caption: 'Found by hashing the frames. Every stuck widget shared one byte-identical spinner image.',
     },
     {
       title: 'How I found it',
       level: 2,
       body: <>
         <p>I read the agent end to end, rendered its prompt and tool schemas to count what each step sent, and traced one turn from phone to database. The numbers made the argument.</p>
-        <p>Then I ran it at volume on a phone: 100 prompts, two sizes, captured at the first rendered frame. Seven builds never rendered. I wrote the flaws up in one list so the rewrite could be checked against it. None of them should survive.</p>
+        <p>Then I ran it at volume on a phone, with 100 prompts in two sizes, each captured at the first rendered frame. Seven builds never rendered. I wrote the flaws up in one list so the rewrite could be checked against it. None of them should survive.</p>
       </>,
       media: (
         <Ascii label="Input tokens sent on each step of a six-step audio widget turn, split into cached and uncached parts">{`
@@ -248,7 +248,7 @@ ${sweep}
       title: 'How it works',
       level: 2,
       body: <>
-        <p>The loop is 126 lines: call the model, run its tools, append the results, repeat. TypeScript runs after every write and its errors go back to the model. When the model stops, TypeScript and Metro must both pass before the turn can end. Three red builds end it with a plain apology.</p>
+        <p>The loop is 126 lines. It calls the model, runs its tools, appends the results and repeats. TypeScript runs after every write and its errors go back to the model. When the model stops, TypeScript and Metro must both pass before the turn can end. Three red builds end it with a plain apology.</p>
         <p>All edits happen on a temp copy; only a green turn is saved, so a failed turn leaves no half-made version. A <code>declare</code> tool writes the tested modules as read-only files and returns their imports and type signatures, so nothing is retyped and a wrong import is a type error.</p>
       </>,
       media: (
@@ -261,11 +261,11 @@ ${sweep}
   |  3  Loop         126 lines, 8 tools, tsc after every write       |
   |                  declare fits write edit delete ask search fetch |
   |  4  «a|Finish gate  tsc + Metro must pass; 3 red builds end the turn» |
-  |  5  Save         once, only on green: the next version and spec  |
+  |  5  Save         the next version and spec, only on green        |
   +------------------------------------------------------------------+
 
-  declare writes the catalogue into the project:
-  11 capability modules, 29 hooks, app links, theme tokens
+  declare writes the catalogue into the project, with
+  11 capability modules, 29 hooks, app links and theme tokens
 `}</Ascii>
       ),
     },
@@ -291,7 +291,7 @@ ${sweep}
     {
       title: 'Faster checks',
       level: 2,
-      body: <p>The first version was twice as slow as the legacy agent. Timing each stage showed the model was not the slow part: every write ran a cold <code>tsc</code> on a worker with half a CPU, and the finish ran it again plus Metro. TypeScript 7&apos;s native compiler, <code>tsgo</code>, became the loop&apos;s only check, with Metro run once on the build worker. The median turn went from 161 to 49 seconds.</p>,
+      body: <p>The first version was twice as slow as the legacy agent. Timing each stage showed the model was not the slow part. Every write ran a cold <code>tsc</code> on a worker with half a CPU, and the finish ran it again plus Metro. TypeScript 7&apos;s native compiler, <code>tsgo</code>, became the loop&apos;s only check, with Metro run once on the build worker. The median turn went from 161 to 49 seconds.</p>,
       media: (
         <Ascii label="The checks a turn ran before and after: a cold tsc after every write and Metro twice, against tsgo after every write and Metro once on the build worker">{`
   «d|First version»                                        161 s median
@@ -312,7 +312,7 @@ ${sweep}
       title: 'Colour',
       level: 2,
       body: <>
-        <p>The agent&apos;s palettes are Radix colour scales. Each scale is twelve steps with a role for each: backgrounds, hover and pressed surfaces, borders, solid fills, text. The agent asks for a step by role, not a hex value, so a widget is laid out the same in any hue.</p>
+        <p>The agent&apos;s palettes are Radix colour scales. Each scale is twelve steps, each with a role, from backgrounds through hover and pressed surfaces, borders and solid fills to text. The agent asks for a step by role, not a hex value, so a widget is laid out the same in any hue.</p>
         <p>They are built in OKLCH, so hue and saturation hold across the steps and every step&apos;s contrast against the others is known in advance.</p>
       </>,
       media: (
@@ -349,7 +349,7 @@ ${sweep}
       level: 2,
       body: <>
         <p>We took the first prompt of every production conversation, hashed the user ids, scrubbed anything personal, and had a model label each by category, topic and whether it needed live data or the Nothing look.</p>
-        <p>Most requests are variations on about ten widget types, and a third of second prompts are corrections. From that we wrote the test set: 100 prompts weighted like real use, and ten-turn chains that edit one widget again and again.</p>
+        <p>Most requests are variations on about ten widget types, and a third of second prompts are corrections. From that we wrote the test set, 100 prompts weighted like real use and ten-turn chains that edit one widget again and again.</p>
       </>,
       media: (
         <Ascii label="Share of 23,712 production prompts by family, and what second prompts ask for; 37% are corrections">{`
@@ -378,7 +378,7 @@ ${sweep}
     {
       title: 'A new eval system',
       level: 2,
-      body: <p>The tests run on a phone, through the product. A debug service in the app posts each prompt, waits for the build, renders the widget in the real host and saves the first frame. Volume beat cleverness: one assertion misses a spinner, a hundred screenshots do not.</p>,
+      body: <p>The tests run on a phone, through the product. A debug service in the app posts each prompt, waits for the build, renders the widget in the real host and saves the first frame. Volume beat cleverness. One assertion misses a spinner, a hundred screenshots do not.</p>,
       media: (
         <Ascii label="The phone bench: a debug service posts prompts through the real product path and saves each widget's first frame">{`
   [ prompts ] ---> «a|[ BenchService ]» ---> [ run ] ---> [ build ] ---> [ render ]
@@ -393,7 +393,7 @@ ${sweep}
     {
       title: 'Edge cases',
       level: 2,
-      body: <p>Twenty widgets built by the legacy agent, then the environment switched to the new one with the database kept: it continued every one and repaired the five left broken, given ordinary edits. The reverse was checked too. The legacy agent stayed behind a one-line switch, so a rollback was a deploy, not a revert.</p>,
+      body: <p>Twenty widgets built by the legacy agent, then the environment switched to the new one with the database kept. It continued every one and repaired the five left broken, given ordinary edits. The reverse was checked too. The legacy agent stayed behind a one-line switch, so a rollback was a deploy, not a revert.</p>,
       media: (
         <Ascii label="Twenty widgets built by the legacy agent, then continued by the new agent with the database kept; six shown, with the five the legacy agent left broken">{`
   versions by the legacy agent, then by the new agent
@@ -405,7 +405,7 @@ ${strips}
   turns built and rendered     legacy   «d|█████████░░» 49 of 57
                                new      «g|███████████» 30 of 30
 
-  ten-turn edit chains: new 50 of 50; legacy failed in 3 of 5 chains
+  ten-turn edit chains     new 50 of 50, legacy failed 3 of 5
 `}</Ascii>
       ),
     },
@@ -413,7 +413,7 @@ ${strips}
     // ------------------------------------------------------------ 5
     {
       title: 'Caching',
-      body: <p>The prompt study showed people ask for the same things: a clock, a pomodoro, a water tracker. Variations on a small set. That makes a different first turn possible, where the agent is kept for the long tail.</p>,
+      body: <p>The prompt study showed people ask for the same things, such as a clock, a pomodoro or a water tracker. Variations on a small set. That makes a different first turn possible, where the agent is kept for the long tail.</p>,
     },
     {
       title: 'A library of widgets',
@@ -423,7 +423,7 @@ ${strips}
     {
       title: 'Picking with Jev',
       level: 2,
-      body: <p>A decision model returns a probability for each allowed answer instead of writing text. One call to Jev asks three questions at once: which template, which look, and whether settings alone will do. It beat embeddings on every count, at the same speed, and its third answer saves a wasted settings call on the prompts that need the agent.</p>,
+      body: <p>A decision model returns a probability for each allowed answer instead of writing text. One call to Jev asks three questions at once, picking the template and the look and deciding whether settings alone will do. It beat embeddings on every count, at the same speed, and its third answer saves a wasted settings call on the prompts that need the agent.</p>,
       media: (
         <Ascii label="Jev decisions against embeddings and the old chat picker on 34 test prompts: template, look and route accuracy, and time">{`
   +-----------------------+----------+----------+----------+--------+
@@ -440,7 +440,7 @@ ${strips}
     {
       title: 'Results',
       level: 2,
-      body: <p>On the phone a world clock went from 51 seconds to 27, and to 21 with the pre-built bundle. The agent&apos;s share of the cost fell to a quarter: 20 of 30 test prompts needed only the settings call. Delivery is now the wait; the same bundle installs in 9 seconds over USB.</p>,
+      body: <p>On the phone a world clock went from 51 seconds to 27, and to 21 with the pre-built bundle. The agent&apos;s share of the cost fell to a quarter, because 20 of 30 test prompts needed only the settings call. Delivery is now the wait; the same bundle installs in 9 seconds over USB.</p>,
       media: (
         <Ascii label="Two routes for a first prompt: from scratch through the agent in about 49 seconds, or through a template library in 21 to 27 seconds and a quarter of the cost">{`
   «d|From scratch»                                        about 49 s
@@ -453,7 +453,7 @@ ${strips}
   [ prompt ] ---> «a|[ Jev ]» ---> [ settings ] ---> [ bundle ] ---> «g|[ phone ]»
                   «a|0.4 s»        about 3 s         pre-built,
                     :                                no compile
-                    '...... new data or a new feature:
+                    '...... for new data or a new feature,
                             the agent edits the template instead
 `}</Ascii>
       ),
