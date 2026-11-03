@@ -111,7 +111,7 @@ export const agentV6: Project = {
       title: 'Architecture',
       level: 2,
       body: <>
-        <p>A turn began before the main model had read the request. A Haiku model read the whole chat and guessed which device capabilities the widget needed, such as location, audio or storage, and the tested module for each was pasted into the system prompt. It was there to make the main model use those modules, because left to choose it had used the location module in only 7 of 12 widgets that needed one. The paste was re-sent, uncached, on every step. Then the main model ran up to fifteen steps over seventeen tools.</p>
+        <p>A turn began before the main model had read the request. A Haiku model read the whole chat and guessed which device capabilities the widget needed, such as location, audio or storage, and the tested module for each was pasted into the system prompt. It was there to make the main model use those modules. The paste was re-sent, uncached, on every step. Then the main model ran up to fifteen steps over seventeen tools.</p>
         <p>Three more helper models hid in those tools. One chose the colour theme, in two Haiku calls. One chose which app a tap should open. One searched the web for a public API. Each had its own prompt, parser and silent fallback. When the theme picker failed, the widget fell back to the default Nothing theme, usually a dark colour scheme with red accents. That is why so many of them looked the same.</p>
       </>,
       media: (

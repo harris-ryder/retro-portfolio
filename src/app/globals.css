@@ -1029,7 +1029,8 @@ body.wf-cursor-on * {
    article are multiples of 4px, and blocks sit one 1.6em line apart */
 .article-back {
     position: fixed;
-    top: 48px;
+    /* the 20px arrow centred on the headline's 1.6em line */
+    top: calc(48px + (1.6em - 20px) / 2);
     left: 40px;
     z-index: 2;
 }
@@ -1166,6 +1167,15 @@ body.wf-cursor-on * {
     .article-chapters a:hover,
     .article-chapters a[data-current] {
         color: var(--color-body);
+    }
+    /* on load the first chapter's title sits level with the first entry in the
+       list. The list is centred and every entry one 24px line, so its top is
+       half the window less 12px an entry; the gap above the first chapter is
+       that, less the column's top padding and the one-line headline, plus the
+       0.8px that centres a 22.4px line on a 24px one. Never under 16px, where a
+       short window would push the list above the headline. */
+    .article-head + .article-chapter {
+        margin-top: max(16px, calc(50vh - var(--chapters) * 12px - 48px - 1.6em + 0.8px));
     }
 }
 /* the overview's measures as markers in one bar (see components/agent-v6/Indicators) */

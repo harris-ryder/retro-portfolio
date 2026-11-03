@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import type { Project } from '@/data/projects'
 
@@ -50,7 +50,9 @@ export function ArticleFrame({ project }: { project: Project }) {
     else tree[tree.length - 1]?.subs.push({ id: ids[i], title: s.title })
   })
   return (
-    <div className="article">
+    // the entry count sets the chapter list's height, and from that where the
+    // first chapter starts so the two line up (see .article-head + .article-chapter)
+    <div className="article" style={{ '--chapters': project.sections.length } as React.CSSProperties}>
       <nav aria-label="Chapters" className="article-chapters">
         <ol>
           {tree.map(t => (
