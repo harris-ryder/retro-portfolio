@@ -4,6 +4,7 @@ import { Ascii } from '@/components/agent-v6/Ascii'
 import { Indicators } from '@/components/agent-v6/Indicators'
 import { Turn } from '@/components/agent-v6/Turn'
 import { ModulePath } from '@/components/agent-v6/ModulePath'
+import { Servers } from '@/components/agent-v6/Servers'
 import { Img } from '@/components/Img'
 import { MediaRow } from '@/components/MediaRow'
 import { Video } from '@/components/Video'
@@ -171,21 +172,16 @@ export const agentV6: Project = {
         <p>Because the validator&apos;s verdict was unreliable, twelve guards had grown around it, and the loop chose its next move by searching tool output for <code>[ERROR]</code>.</p>
       </>,
       media: (
-        <Ascii label="Timeline of a turn before and after: the legacy agent compiled after the run was marked done, on a separate worker; the new agent type-checks after every write and gates the finish on tsc and Metro">{`
-  «d|Legacy agent»   the compile happens after the turn
-
-  write ..... write ..... reply ..... run done ...... «r|another worker compiles,»
-  regex       regex       files       told to the    «r|later. if it fails, the»
-  check       check       saved       phone          «r|agent never hears»
-
-  «d|New agent»      the compiler is in the loop
-
-  write ----- edit ----- write ----- «a|[ tsc + Metro ]» ----- «g|green» ----- reply
-  tsc         tsc        tsc         «a|both must pass»      saved       the same
-                                     «a|three red builds»    once        bundle
-                                     «a|end the turn»
-`}</Ascii>
+        <Servers
+          label="A legacy turn ran on the agent worker, writing and regex-checking, replying with the files saved, then marking the run done and telling the phone. Only then did a separate build worker compile the widget, and a failed build never came back to the agent."
+          servers={[
+            { name: 'Agent worker', line: 'The turn', steps: [['Write', 'Regex check'], ['Reply', 'Files saved'], ['Run done', 'Phone told']] },
+            { name: 'Build worker', line: 'After the turn', steps: [['Compile', 'Pass or fail']] },
+          ]}
+          back="← No feedback. A failed build never reaches the agent"
+        />
       ),
+      bare: true,
     },
     {
       title: 'Happy on a crash',
