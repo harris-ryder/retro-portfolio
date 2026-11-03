@@ -54,6 +54,23 @@ const sweep = (() => {
   return rows.join('\n')
 })()
 
+// the overview's measures as paired bars, each scaled so the legacy bar fills 50 columns
+const measures = ([
+  ['Cost for 100 widgets', '$25.34', '$0.47', 25.34, 0.47],
+  ['Widgets that never render', '7%', '0%', 7, 0],
+  ['Median time to a widget', '92 s', '49 s', 92, 49],
+  ['Tools', '17', '8', 17, 8],
+  ['Sub-agents per turn', '3', '0', 3, 0],
+] as const).map(([title, oldLabel, newLabel, old, nw]) => {
+  const bar = (v: number) => (v > 0 ? '█'.repeat(Math.max(1, Math.round((v / old) * 50))) : '')
+  return [
+    `  ${title}`,
+    '',
+    `  Legacy agent   ${oldLabel.padStart(6)}   «d|${bar(old)}»`,
+    `  New agent      «a|${`${newLabel.padStart(6)}   ${bar(nw)}`.trimEnd()}»`,
+  ].join('\n')
+}).join('\n\n')
+
 export const agentV6: Project = {
   slug: 'agent-v6',
   title: 'Essential Apps Agent',
@@ -88,21 +105,8 @@ export const agentV6: Project = {
         <p>I investigated why, wrote the replacement, and built the way we measure it. The new agent is one model, eight tools and the real compiler in the loop. It runs on a much smaller model than the legacy agent needed, renders everything it builds, in half the time, at a 50th of the cost.</p>
       </>,
       media: (
-        <Ascii label="Cost per 100 widgets, legacy agent against new agent, then five smaller measures">{`
-  Cost for 100 widgets
-
-  Legacy agent   $25.34   «d|██████████████████████████████████████████████████»
-  New agent      «a| $0.47   █»
-
-  +---------------------------+---------------+---------------+
-  |                           |  Legacy agent |     New agent |
-  +---------------------------+---------------+---------------+
-  | Widgets that never render |      7 of 100 |      «a|0 of 100» |
-  | Median time to a widget   |          92 s |          «a|49 s» |
-  | Lines of Python           |        18,402 |         «a|1,800» |
-  | Tools                     |            17 |             «a|8» |
-  | Helper models per turn    |             3 |             «a|0» |
-  +---------------------------+---------------+---------------+
+        <Ascii label="Legacy agent against new agent in five bar charts. Cost for 100 widgets $25.34 against $0.47, widgets that never render 7% against 0%, median time to a widget 92 s against 49 s, tools 17 against 8, sub-agents per turn 3 against 0">{`
+${measures}
 `}</Ascii>
       ),
     },
