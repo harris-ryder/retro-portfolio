@@ -183,7 +183,7 @@ export function Frame({ project, list }: { project: Project | null; list?: List 
                 <Link
                   href="/work"
                   aria-label="Back to Work"
-                  className="-ml-[3px] inline-flex text-neutral-500 no-underline transition-colors hover:text-neutral-900"
+                  className="-ml-[3px] inline-flex text-muted no-underline transition-colors hover:text-body"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                     <path d="M19 12H5M11 6l-6 6 6 6" />
@@ -193,21 +193,21 @@ export function Frame({ project, list }: { project: Project | null; list?: List 
               <dl className="frame-meta">
                 {project.company && (
                   <div>
-                    <dt className="text-neutral-400">Company</dt>
+                    <dt className="text-muted">Company</dt>
                     <dd>{project.company}</dd>
                   </div>
                 )}
                 <div>
-                  <dt className="text-neutral-400">Year</dt>
+                  <dt className="text-muted">Year</dt>
                   <dd>{project.date}</dd>
                 </div>
                 <div>
-                  <dt className="text-neutral-400">Overview</dt>
+                  <dt className="text-muted">Overview</dt>
                   <dd>{project.tagline}</dd>
                 </div>
                 {project.contribution && (
                   <div>
-                    <dt className="text-neutral-400">Contribution</dt>
+                    <dt className="text-muted">Contribution</dt>
                     <dd>{project.contribution}</dd>
                   </div>
                 )}
@@ -216,8 +216,8 @@ export function Frame({ project, list }: { project: Project | null; list?: List 
           ) : (
             <>
               <p>
-                <Link href="/" className="text-neutral-400 no-underline transition-colors hover:text-neutral-800">Harris</Link>
-                <span className="text-neutral-400">{' / '}</span>
+                <Link href="/" className="text-muted no-underline transition-colors hover:text-body">Harris</Link>
+                <span className="text-muted">{' / '}</span>
                 Work
               </p>
               {list && <ProjectList items={list.items} onHover={hover} />}

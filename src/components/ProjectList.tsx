@@ -59,7 +59,7 @@ function Row({ item, index, typeIn, onHover }: { item: Item; index: number; type
       onFocus={() => onHover?.(index)}
       onBlur={() => onHover?.(null)}
     >
-      <span className="tabular-nums w-[4ch] shrink-0 text-neutral-400">
+      <span className="tabular-nums w-[4ch] shrink-0 text-muted">
         {typeIn ? item.year.slice(0, yearCount) : item.year}
       </span>
       {titleNode}

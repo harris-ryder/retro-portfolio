@@ -71,8 +71,8 @@ export function Flip({ children, labels, hold = 4000 }: Props) {
     <span className="flip-switch [&_button]:cursor-pointer [&_button]:outline-none [&_button]:transition-colors">
       {labels.map((label, j) => (
         <Fragment key={label}>
-          {j > 0 && <span className="text-neutral-400"> / </span>}
-          <button type="button" onClick={() => choose(j)} aria-pressed={j === index} className={j === index ? '' : 'text-neutral-400 hover:text-neutral-800'}>
+          {j > 0 && <span className="text-muted"> / </span>}
+          <button type="button" onClick={() => choose(j)} aria-pressed={j === index} className={j === index ? '' : 'text-muted hover:text-body'}>
             {label}
           </button>
         </Fragment>

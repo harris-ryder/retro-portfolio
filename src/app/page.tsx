@@ -13,7 +13,7 @@ export default function Home() {
         {' '}in London.
       </p>
       <nav aria-label="Sections" className="mt-[1.6em]">
-        <ul className="list-none [&_a]:no-underline [&_a]:transition-colors [&_a:hover]:text-[#777777]">
+        <ul className="list-none [&_a]:no-underline [&_a]:transition-colors [&_a:hover]:text-muted">
           <li><Link href="/work">Work</Link></li>
           <li><Link href="/playground">Playground</Link></li>
           <li><Link href="/contact">Contact</Link></li>

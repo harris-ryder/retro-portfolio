@@ -6,8 +6,8 @@ export function Page({ title, children }: { title: string; children: React.React
   return (
     <main className="type-home flex min-h-dvh flex-col gap-[1.6em] p-6 sm:p-10">
       <p>
-        <Link href="/" className="text-neutral-400 no-underline transition-colors hover:text-neutral-800">Harris</Link>
-        <span className="text-neutral-400">{' / '}</span>
+        <Link href="/" className="text-muted no-underline transition-colors hover:text-body">Harris</Link>
+        <span className="text-muted">{' / '}</span>
         {title}
       </p>
       {children}

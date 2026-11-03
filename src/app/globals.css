@@ -2,42 +2,23 @@
 @import "tailwindcss";
 
 @theme {
-    --color-neutral-400: #626262;
-    --color-neutral-800: #323232;
-    /* text links (see .link) */
+    /* The site's palette, all of it. Tailwind's own colours are switched off
+       below, so a class like text-neutral-400 produces nothing; use these. */
+    --color-*: initial;
+    --color-body: #323232;   /* running text */
+    --color-muted: #626262;  /* labels, captions, breadcrumbs, index numbers */
+    --color-faint: #b4b4b4;  /* chapter list, article subheads, dim ascii */
+    --color-line: #e3e3e3;   /* hairlines, media edges, rails */
+    --color-fill: #efefef;   /* the one grey fill (ascii highlights, phone pill) */
+    --color-page: #ffffff;
     --color-link: #0000ee;
     --color-link-hover: #0000a8;
-
-    /* ---- Workflow plugin demos (scoped to .wf-demo) ---- */
-    --font-inter: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    --color-surface: #ffffff;
-    --color-hairline: #ededed;
-    --color-ink: #1a1a1a;
-    --color-ink-soft: #5e5e5e;
-    --color-ink-muted: #8a8a8a;
-    --color-ink-sub: #757575;
-    --color-logo-bg: #edebe7;
-    --color-gold: #e08a00;
-    --color-green: #33c635;
-    --color-green-soft: #4f8a5b;
-    --color-neutrals-surface: #ffffff;
-    --color-neutrals-border-weak: #e0e0e0;
-    --color-neutrals-text-weak: #b3b3b3;
-
-    --animate-win-in: winIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-    --animate-fade-up: fadeUp 0.34s cubic-bezier(0.22, 0.61, 0.36, 1) both;
-    --animate-slide-in: slideIn 0.36s cubic-bezier(0.22, 0.61, 0.36, 1) both;
-    --animate-label-in: labelIn 0.14s ease both;
-    --animate-card-in: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-    --animate-pop: pop 0.3s ease both;
-    --animate-clip-in: clipIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-    --animate-fly-paste: flyPaste 0.75s cubic-bezier(0.55, 0.05, 0.35, 1) both;
 }
 
 /* The site's type. type-body is the articles' running text; type-tight
    is the same size set solid, for the index rows; type-home is the home
    page and its Work / Playground / Contact lists, a size down. Colour
-   comes from the neutral tokens above. */
+   comes from the palette above. */
 @utility type-body {
     font-size: 15px;
     line-height: 1.6;
@@ -204,7 +185,7 @@
     transition: outline-color 0.25s;
 }
 .frame-article .media-wrapper.media-skeleton {
-    outline-color: var(--color-neutral-300);
+    outline-color: var(--color-line);
 }
 /* a video's corners are rounded; one in a phone render takes the
    screen's corners instead */
@@ -248,10 +229,39 @@
     border: none;
     border-radius: 0;
     box-shadow: none;
-    background-color: #ffffff;
+    background-color: var(--color-page);
 }
 
 /* ---- Workflow plugin demos: keyframes + font scope ---- */
+/* The demos' own palette: they depict the plugin's UI, not the site, so
+   these are not site colours. They live here, with the demo styles. */
+@theme {
+    --color-white: var(--color-page);
+    --color-black: #000000;
+    --font-inter: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --color-surface: var(--color-page);
+    --color-hairline: #ededed;
+    --color-ink: #1a1a1a;
+    --color-ink-soft: #5e5e5e;
+    --color-ink-muted: #8a8a8a;
+    --color-ink-sub: #757575;
+    --color-logo-bg: #edebe7;
+    --color-gold: #e08a00;
+    --color-green: #33c635;
+    --color-green-soft: #4f8a5b;
+    --color-neutrals-surface: var(--color-page);
+    --color-neutrals-border-weak: #e0e0e0;
+    --color-neutrals-text-weak: #b3b3b3;
+
+    --animate-win-in: winIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    --animate-fade-up: fadeUp 0.34s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    --animate-slide-in: slideIn 0.36s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    --animate-label-in: labelIn 0.14s ease both;
+    --animate-card-in: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    --animate-pop: pop 0.3s ease both;
+    --animate-clip-in: clipIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    --animate-fly-paste: flyPaste 0.75s cubic-bezier(0.55, 0.05, 0.35, 1) both;
+}
 .wf-demo,
 .wf-demo * {
     font-family: var(--font-inter);
@@ -287,12 +297,12 @@ body.wf-cursor-on * {
     box-sizing: border-box;
     width: 1.55em;
     height: 1.55em;
-    border: 1px solid var(--color-neutral-400);
+    border: 1px solid var(--color-muted);
     border-radius: 999px;
     font-size: 0.8em;
     line-height: 1;
-    background: var(--color-neutral-400);
-    color: #FCFCFC;
+    background: var(--color-muted);
+    color: var(--color-page);
 }
 .wf-kbd__k svg {
     width: 78%;
@@ -308,7 +318,7 @@ body.wf-cursor-on * {
     flex: none;
     width: 0.45em;
     height: 1px;
-    background: var(--color-neutral-400);
+    background: var(--color-muted);
 }
 
 @keyframes winIn {
@@ -355,8 +365,8 @@ body.wf-cursor-on * {
 
     body {
         /* plain white */
-        background-color: var(--page-bg);
-        color: #323232;
+        background-color: var(--color-page);
+        color: var(--color-body);
     }
 
     *, *::before, *::after {
@@ -391,20 +401,17 @@ body.wf-cursor-on * {
    (gray) text renders a touch thinner, primary (dark) text keeps its
    normal (heavier) rendering, even inside a gray container that would
    otherwise thin it via inheritance. */
-.text-neutral-400,
+.text-muted,
 .media-loading {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-.text-neutral-800 {
+.text-body {
     -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: auto;
 }
 
 :root {
-    /* the page background — plain white; surfaces
-       that should sit flush with the page (e.g. demo cards) reuse it */
-    --page-bg: #FFFFFF;
     --shadow-media: 0 4px 12px -2px #0000000d, 0 1px 3px 0 #00000008;
     --squircle-radius: 12px;
     --media-margin: 54px;
@@ -435,7 +442,7 @@ body.wf-cursor-on * {
 }
 .media-cell > figcaption {
     margin-top: 8px;
-    color: var(--color-neutral-400);
+    color: var(--color-muted);
 }
 
 /* Reserves the correct aspect-ratio space before media loads */
@@ -445,12 +452,12 @@ body.wf-cursor-on * {
     overflow: hidden;
     width: 100%;
     border-radius: var(--squircle-radius);
-    border: 1px solid rgba(50, 50, 50, 0.12);
+    border: 1px solid var(--color-line);
     box-shadow: var(--shadow-media);
     transition: box-shadow 0.25s;
     margin-top: var(--media-margin);
     margin-bottom: var(--media-margin);
-    background-color: #FCFCFC;
+    background-color: var(--color-page);
     -webkit-user-select: none;
     user-select: none;
 }
@@ -470,7 +477,7 @@ body.wf-cursor-on * {
     align-items: center;
     justify-content: center;
     font-size: 15px;
-    color: var(--color-neutral-400);
+    color: var(--color-muted);
     pointer-events: none;
 }
 
@@ -730,7 +737,7 @@ body.wf-cursor-on * {
     gap: 12px;
     height: 32px;
     margin-top: 16px;
-    color: var(--color-neutral-800);
+    color: var(--color-body);
     -webkit-user-select: none;
     user-select: none;
 }
@@ -774,7 +781,7 @@ body.wf-cursor-on * {
 }
 .pb-rail {
     right: 0;
-    background: var(--color-neutral-300);
+    background: var(--color-line);
 }
 .pb-fill {
     background: currentColor;
@@ -786,7 +793,7 @@ body.wf-cursor-on * {
     background: currentColor;
 }
 .pb-track:focus-visible .pb-head {
-    background: var(--color-neutral-400);
+    background: var(--color-muted);
 }
 
 /* ---- Before / After: a labelled pair shown one asset at a time ---- */
@@ -873,11 +880,12 @@ body.wf-cursor-on * {
     color: var(--pb-fg);
 }
 .phone-browser--light {
-    --pb-bg: #ffffff;
-    --pb-fg: #1a1a1a;
-    --pb-pill: #ececec;
-    --pb-muted: #6b6b6b;
+    --pb-bg: var(--color-page);
+    --pb-fg: var(--color-body);
+    --pb-pill: var(--color-fill);
+    --pb-muted: var(--color-muted);
 }
+/* a depiction of the phone's dark browser chrome, not site colours */
 .phone-browser--dark {
     --pb-bg: #1f1f1f;
     --pb-fg: #f2f2f2;

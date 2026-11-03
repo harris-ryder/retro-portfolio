@@ -145,7 +145,7 @@ export function TryMeCursor() {
           strokeLinejoin="round"
         />
       </svg>
-      <span className="absolute left-[16px] top-[12px] whitespace-nowrap text-[15px] font-normal leading-none text-neutral-800">
+      <span className="absolute left-[16px] top-[12px] whitespace-nowrap text-[15px] font-normal leading-none text-body">
         Try me
       </span>
     </div>

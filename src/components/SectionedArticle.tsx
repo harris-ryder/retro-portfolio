@@ -123,8 +123,8 @@ export function SectionedArticle({ title, sections, extras }: Props) {
           the two meet */}
       <header className="relative z-10 flex-none px-4 pt-[26px] lg:px-[57px]">
         <p>
-          <Link href="/work" className="text-neutral-400 no-underline transition-colors hover:text-neutral-800">Work</Link>
-          <span className="text-neutral-400"> / </span>
+          <Link href="/work" className="text-muted no-underline transition-colors hover:text-body">Work</Link>
+          <span className="text-muted"> / </span>
           {title}
         </p>
         {/* under the breadcrumb, two halves: the index as numbered titles
@@ -139,7 +139,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
                 // stay once the arrow keys put it in keyboard mode
                 onClick={e => { e.currentTarget.blur(); go(i) }}
                 aria-current={i === index ? 'step' : undefined}
-                className={`cursor-pointer whitespace-nowrap outline-none transition-colors ${i === index ? '' : 'text-neutral-400 hover:text-neutral-800'}`}
+                className={`cursor-pointer whitespace-nowrap outline-none transition-colors ${i === index ? '' : 'text-muted hover:text-body'}`}
               >
                 {i + 1}. {s.title}
               </button>
@@ -156,7 +156,7 @@ export function SectionedArticle({ title, sections, extras }: Props) {
                 {section.body}
               </div>
               {/* on the row below the cut, where the hidden text will appear */}
-              {full > cut + 1 && <span className="read-more text-neutral-400">Read more</span>}
+              {full > cut + 1 && <span className="read-more text-muted">Read more</span>}
             </div>
           )}
         </div>
@@ -176,11 +176,11 @@ export function SectionedArticle({ title, sections, extras }: Props) {
       )}
 
       {/* narrow screens: where you are, and Back / Next, in the footer band */}
-      <footer className="mt-auto flex justify-between px-4 pt-8 pb-8 [&_button]:cursor-pointer [&_button]:outline-none [&_button:disabled]:cursor-default [&_button:disabled]:text-neutral-400 lg:hidden">
+      <footer className="mt-auto flex justify-between px-4 pt-8 pb-8 [&_button]:cursor-pointer [&_button]:outline-none [&_button:disabled]:cursor-default [&_button:disabled]:text-muted lg:hidden">
         <p>{index + 1}/{sections.length}</p>
         <p>
           <button type="button" onClick={() => go(index - 1)} disabled={index === 0}>Back</button>
-          <span className="text-neutral-400"> / </span>
+          <span className="text-muted"> / </span>
           <button type="button" onClick={() => go(index + 1)} disabled={index === sections.length - 1}>Next</button>
         </p>
       </footer>
