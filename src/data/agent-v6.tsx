@@ -111,7 +111,7 @@ export const agentV6: Project = {
       level: 2,
       body: <>
         <p>A turn began before the main model had read the request. A Haiku model guessed the widget&apos;s capabilities from the whole chat, and its answer was pasted into the system prompt and re-sent, uncached, on every step. Then the main model ran up to fifteen steps over seventeen tools.</p>
-        <p>Two more helper models hid in those tools. One chose the colour theme, in two Haiku calls. One chose which app a tap should open. Each had its own prompt, parser and silent fallback. When the theme picker failed, the widget came out black and red, which is why they all looked the same.</p>
+        <p>Two more helper models hid in those tools. One chose the colour theme, in two Haiku calls. One chose which app a tap should open. Each had its own prompt, parser and silent fallback. When the theme picker failed, the widget fell back to the default Nothing theme, usually a dark colour scheme with red accents. That is why so many of them looked the same.</p>
       </>,
       media: (
         <Ascii label="One turn of the legacy agent: a Haiku pre-step, a fifteen-step loop with helper models inside its tools, a regex validator, and files written to the database as it goes">{`
