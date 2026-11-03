@@ -1167,8 +1167,13 @@ body.wf-cursor-on * {
     }
 }
 /* the overview's measures as markers in one bar (see components/agent-v6/Indicators) */
-/* before the script measures the column, the drawing is 600px wide; clip it */
-.indicators { overflow: hidden; }
+/* framed in the chapter list's grey; before the script measures the column
+   the drawing is 600px wide, so the frame clips it */
+.indicators {
+    padding: 24px;
+    border: 1px solid var(--color-faint);
+    overflow: hidden;
+}
 .indicators svg { display: block; }
 .indicators text {
     font-family: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', 'Roboto Mono', monospace;
