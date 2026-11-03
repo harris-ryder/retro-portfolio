@@ -74,7 +74,7 @@ export const agentV6: Project = {
         <p>The rest of the article is how we got from one to the other.</p>
       </>,
       media: (
-        <MediaRow captions={['Before', 'After']} together>
+        <MediaRow together>
           {phone('before')}
           {phone('after')}
         </MediaRow>
