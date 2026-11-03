@@ -65,7 +65,6 @@ const measures = ([
   const bar = (v: number) => (v > 0 ? '█'.repeat(Math.max(1, Math.round((v / old) * 50))) : '')
   return [
     `  «b|${title}»`,
-    '',
     `  Legacy agent   ${oldLabel.padStart(6)}   «d|${bar(old)}»`,
     `  New agent      «a|${`${newLabel.padStart(6)}   ${bar(nw)}`.trimEnd()}»`,
   ].join('\n')
