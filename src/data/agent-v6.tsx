@@ -90,10 +90,10 @@ export const agentV6: Project = {
       </>,
       media: (
         <Indicators
-          label="One bar for the legacy agent at 100%, with the new agent marked inside it. A 0% failure rate, none of 100 against 7. 98% less cost, $0.47 against $25.34 for 100 widgets. 47% less time, 49 s against 92 s."
+          label="One bar for the legacy agent at 100%, with the new agent marked inside it. A 0% failure rate against 7%. 98% less cost, $0.005 against $0.25 per widget. 47% less time, 49 s against 92 s."
           indicators={[
-            { share: 0, change: '0% failure rate', detail: '0 of 100 against 7', level: 0, tone: 'light' },
-            { share: 0.47 / 25.34, change: '98% less cost', detail: '$0.47 against $25.34 per 100', level: 1, tone: 'mid' },
+            { share: 0, change: '0% failure rate', detail: '0% against 7%', level: 0, tone: 'light' },
+            { share: 0.47 / 25.34, change: '98% less cost', detail: '$0.005 against $0.25 per widget', level: 1, tone: 'mid' },
             { share: 49 / 92, change: '47% less time', detail: '49 s against 92 s', level: 2, tone: 'dark' },
           ]}
         />
@@ -268,13 +268,13 @@ ${sweep}
       level: 2,
       body: <p>The first runs did exactly what the legacy agent did, with nothing broken, on the same model. Then came the part the legacy agent could not do. Its regexes needed the strongest model to stay out of trouble. The new agent checks its own work, so it can run a much smaller model, and it lost nothing in the move.</p>,
       media: (
-        <Ascii label="Legacy agent and new agent on the same 100 prompts: median time, cost per 100 widgets, and rendered counts">{`
-                    median time to a widget      cost for 100 widgets
+        <Ascii label="Legacy agent and new agent on the same 100 prompts: median time, cost per widget, and rendered counts">{`
+                    median time to a widget      cost per widget
 
-  Legacy agent      «d|███████████████████» 92 s     «d|████████████████████» $25.34
+  Legacy agent      «d|███████████████████» 92 s     «d|████████████████████» $0.25
   89 of 100 rendered
 
-  New agent         «a|██████████ 49 s»               «a|▏ $0.47»
+  New agent         «a|██████████ 49 s»               «a|▏ $0.005»
   90 of 100 rendered
 
   mean input tokens per widget  52,174 -> 4,371
