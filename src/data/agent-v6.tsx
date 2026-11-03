@@ -90,11 +90,11 @@ export const agentV6: Project = {
       </>,
       media: (
         <Indicators
-          label="One bar for the legacy agent at 100%, with the new agent marked inside it. Widgets that never render at 0%, none of 100 against 7. Cost at 2%, $0.47 against $25.34 for 100 widgets, 54 times cheaper. Time to a widget at 53%, 49 s against 92 s, 47% faster."
+          label="One bar for the legacy agent at 100%, with the new agent marked inside it. A 0% failure rate, none of 100 against 7. 98% less cost, $0.47 against $25.34 for 100 widgets. 47% less time, 49 s against 92 s."
           indicators={[
-            { share: 0, change: '100% fewer failures', detail: '0 of 100 against 7', level: 0, tone: 'light' },
-            { share: 0.47 / 25.34, change: '54× cheaper', detail: '$0.47 against $25.34 per 100', level: 1, tone: 'mid' },
-            { share: 49 / 92, change: '47% faster', detail: '49 s against 92 s', level: 2, tone: 'dark' },
+            { share: 0, change: '0% failure rate', detail: '0 of 100 against 7', level: 0, tone: 'light' },
+            { share: 0.47 / 25.34, change: '98% less cost', detail: '$0.47 against $25.34 per 100', level: 1, tone: 'mid' },
+            { share: 49 / 92, change: '47% less time', detail: '49 s against 92 s', level: 2, tone: 'dark' },
           ]}
         />
       ),

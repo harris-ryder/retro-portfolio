@@ -50,7 +50,7 @@ export function Indicators({ indicators, label }: { indicators: Indicator[]; lab
           const top = LEVELS[ind.level]
           return (
             <g key={ind.change}>
-              <line x1={cx} x2={cx} y1={top - 10} y2={mid - D} className="indicators-lead" />
+              <line x1={cx} x2={cx} y1={top - 10} y2={mid - D} className={`indicators-lead indicators-lead-${ind.tone}`} />
               <text x={cx + 7} y={top} className="indicators-change">{ind.change.toUpperCase()}</text>
               <text x={cx + 7} y={top + 15} className="indicators-detail">{ind.detail.toUpperCase()}</text>
               <rect
@@ -63,8 +63,9 @@ export function Indicators({ indicators, label }: { indicators: Indicator[]; lab
           )
         })}
 
-        <text x={x(0)} y={height - 6} textAnchor="middle" className="indicators-scale">0%</text>
-        <text x={width} y={height - 6} textAnchor="end" className="indicators-scale">100% = LEGACY AGENT</text>
+        {/* the scale ends sit under the bar's ends */}
+        <text x={0} y={height - 6} className="indicators-scale">0%</text>
+        <text x={width} y={height - 6} textAnchor="end" className="indicators-scale">100%</text>
       </svg>
     </div>
   )

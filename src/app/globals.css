@@ -1180,7 +1180,11 @@ body.wf-cursor-on * {
     letter-spacing: 0.06em;
 }
 .indicators-bar { fill: var(--color-page); stroke: var(--color-muted); stroke-width: 1; }
-.indicators-lead { stroke: var(--color-body); stroke-width: 1; }
+.indicators-lead { stroke-width: 1; }
+/* each hairline in its diamond's grey */
+.indicators-lead-light { stroke: var(--color-faint); }
+.indicators-lead-mid { stroke: var(--color-muted); }
+.indicators-lead-dark { stroke: var(--color-body); }
 .indicators-light { fill: var(--color-faint); }
 .indicators-mid { fill: var(--color-muted); }
 .indicators-dark { fill: var(--color-body); }
