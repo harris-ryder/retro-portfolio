@@ -70,8 +70,7 @@ export const agentV6: Project = {
       title: 'Before and after',
       body: <>
         <p>This is a long article about rewriting an AI agent, and most of it is measurement: where the time went, what each widget cost, which prompts failed and why. It is easy to read all of that and still not know what changed for the person holding the phone. So before any of it, the change itself.</p>
-        <p>Both phones below get the same request, a widget that shows where the International Space Station is. On the left is the agent as I found it. It thinks for a minute and a half and hands back a tile of text with a button. On the right is the agent after the rewrite. It is done in half the time, at a 50th of the cost, and what lands is a widget you would keep on your home screen.</p>
-        <p>The rest of the article is how we got from one to the other.</p>
+        <p>Both phones below get the same request. The rest of the article is how we got from one to the other.</p>
       </>,
       media: (
         <MediaRow together>
