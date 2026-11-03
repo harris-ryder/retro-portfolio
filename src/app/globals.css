@@ -6,7 +6,7 @@
        below, so a class like text-neutral-400 produces nothing; use these. */
     --color-*: initial;
     --color-body: #323232;   /* running text */
-    --color-muted: #626262;  /* labels, captions, breadcrumbs, index numbers, article titles */
+    --color-muted: #838383;  /* Radix gray-10; labels, captions, breadcrumbs, index numbers, article titles */
     --color-faint: #b4b4b4;  /* chapter list, dim ascii, every container's border */
     --color-line: #e3e3e3;   /* the video bar's rail */
     --color-fill: #efefef;   /* the one grey fill (ascii highlights, phone pill) */
