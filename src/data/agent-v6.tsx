@@ -54,21 +54,46 @@ const sweep = (() => {
   return rows.join('\n')
 })()
 
-// the overview's measures as paired bars, each scaled so the legacy bar fills 50 columns
-const measures = ([
-  ['Cost for 100 widgets', '$25.34', '$0.47', 25.34, 0.47],
-  ['Widgets that never render', '7%', '0%', 7, 0],
-  ['Median time to a widget', '92 s', '49 s', 92, 49],
-  ['Tools', '17', '8', 17, 8],
-  ['Sub-agents per turn', '3', '0', 3, 0],
-] as const).map(([title, oldLabel, newLabel, old, nw]) => {
-  const bar = (v: number) => (v > 0 ? '█'.repeat(Math.max(1, Math.round((v / old) * 50))) : '')
+// the overview's three measures as paired columns, drawn like a box-office chart:
+// the legacy agent in colons, the new one in Xs, each chart scaled so the legacy
+// column stands ten rows, with a half row in lower case (or dots) on top
+const measures = (() => {
+  const H = 10, W = 7, SLOT = 20, GAP = 4
+  const charts = [
+    ['Cost, 100 widgets', '$25.34', '$0.47', 25.34, 0.47],
+    ['Time to a widget', '92 s', '49 s', 92, 49],
+    ['Never render', '7%', '0%', 7, 0],
+  ] as const
+  // one column's cell on row r, counted up from 0: a full row, a half row, its value, or blank
+  const cell = (v: number, max: number, value: string, r: number, full: string, half: string) => {
+    const halves = v > 0 ? Math.max(1, Math.round((v / max) * H * 2)) : 0
+    const top = Math.ceil(halves / 2)
+    if (r < Math.floor(halves / 2)) return full.repeat(W)
+    if (r < top) return half.repeat(W)
+    if (r === top) return value.padStart(Math.ceil((W + value.length) / 2)).padEnd(W)
+    return ' '.repeat(W)
+  }
+  const accent = (s: string) => (s.trim() ? `«a|${s}»` : s)
+  const rows: string[] = []
+  for (let r = H; r >= 0; r--) {
+    const line = charts.map(([, oldValue, newValue, old, nw]) =>
+      `${cell(old, old, oldValue, r, ':', '.')}  ${accent(cell(nw, old, newValue, r, 'X', 'x'))}`
+      + ' '.repeat(SLOT - 2 * W - 2))
+    rows.push(`  ${line.join(' '.repeat(GAP))}`.trimEnd())
+  }
+  const titles = charts.map(([title]) => {
+    const pad = Math.max(0, Math.floor((2 * W + 2 - title.length) / 2))
+    return `${' '.repeat(pad)}«b|${title}»${' '.repeat(SLOT - pad - title.length)}`
+  })
   return [
-    `  «t|${title}»`,
-    `  Legacy agent   ${oldLabel.padStart(6)}   «d|${bar(old)}»`,
-    `  New agent      «a|${`${newLabel.padStart(6)}   ${bar(nw)}`.trimEnd()}»`,
+    '  :: = Legacy agent',
+    '  «a|XX» = New agent',
+    '',
+    ...rows,
+    '',
+    `  ${titles.join(' '.repeat(GAP))}`.trimEnd(),
   ].join('\n')
-}).join('\n\n')
+})()
 
 export const agentV6: Project = {
   slug: 'agent-v6',
@@ -100,11 +125,11 @@ export const agentV6: Project = {
     {
       title: 'Overview',
       body: <>
-        <p>Essential Apps turns a sentence into a widget on a Nothing phone. An agent writes the code, a build compiles it, the phone renders it. By October 2026 the agent was 18,400 lines of Python, ran three helper models a turn, and one widget in ten that it called built never drew anything.</p>
-        <p>I investigated why, wrote the replacement, and built the way we measure it. The new agent is one model, eight tools and the real compiler in the loop. It runs on a much smaller model than the legacy agent needed, renders everything it builds, in half the time, at a 50th of the cost.</p>
+        <p>Essential Apps turns a sentence into a widget on a Nothing phone. An agent writes the code, a build compiles it, the phone renders it. By October 2026 the agent was 18,400 lines of Python, ran three sub-agents a turn, and one widget in ten that it called built never drew anything.</p>
+        <p>I investigated why, wrote the replacement, and built the way we measure it. The new agent is one model with no sub-agents, eight tools where the legacy agent had seventeen, and the real compiler in the loop. It runs on a much smaller model than the legacy agent needed, renders everything it builds, in half the time, at a 50th of the cost.</p>
       </>,
       media: (
-        <Ascii label="Legacy agent against new agent in five bar charts. Cost for 100 widgets $25.34 against $0.47, widgets that never render 7% against 0%, median time to a widget 92 s against 49 s, tools 17 against 8, sub-agents per turn 3 against 0">{`
+        <Ascii label="Legacy agent against new agent in three column charts. Cost for 100 widgets $25.34 against $0.47, median time to a widget 92 s against 49 s, widgets that never render 7% against 0%">{`
 ${measures}
 `}</Ascii>
       ),
