@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Project } from '@/data/projects'
 import { Ascii } from '@/components/agent-v6/Ascii'
-import { Metrics } from '@/components/agent-v6/Metrics'
+import { Rulers } from '@/components/agent-v6/Rulers'
 import { Img } from '@/components/Img'
 import { MediaRow } from '@/components/MediaRow'
 import { Video } from '@/components/Video'
@@ -89,12 +89,12 @@ export const agentV6: Project = {
         <p>I investigated why, wrote the replacement, and built the way we measure it. The new agent is one model with no sub-agents, eight tools where the legacy agent had seventeen, and the real compiler in the loop. It runs on a much smaller model than the legacy agent needed, renders everything it builds, in half the time, at a 50th of the cost.</p>
       </>,
       media: (
-        <Metrics
-          label="Three grids of 100 squares, the legacy agent's amount, with the new agent's share filled. Time to a widget 53 of 100, 47% faster. Cost 2 of 100, 54 times cheaper. Widgets that never render 0 of 100, 100% fewer."
-          metrics={[
-            { label: 'Median time to a widget', filled: 53, change: '47%', direction: 'faster', detail: '49 s from prompt to widget, against 92 s for the legacy agent.' },
-            { label: 'Cost for 100 widgets', filled: 2, change: '54×', direction: 'cheaper', detail: '$0.47 for 100 widgets, against $25.34 for the legacy agent.' },
-            { label: 'Widgets that never render', filled: 0, change: '100%', direction: 'fewer', detail: 'None of 100 failed to draw on the phone, against 7 of 100 for the legacy agent.' },
+        <Rulers
+          label="Three rulers, legacy agent against new agent. Median time to a widget 92 s against 49 s, 47% faster. Cost for 100 widgets $25.34 against $0.47, 54 times cheaper. Widgets that never render 7 of 100 against 0, 100% fewer."
+          rulers={[
+            { label: 'Median time to a widget', change: '47% faster', gap: '−43 S', legacy: { value: 92, label: '92 S' }, after: { value: 49, label: '49 S' }, max: 100, minor: 2, major: 10, suffix: 'S' },
+            { label: 'Cost for 100 widgets', change: '54× cheaper', gap: '−$24.87', legacy: { value: 25.34, label: '$25.34' }, after: { value: 0.47, label: '$0.47' }, max: 30, minor: 1, major: 5, prefix: '$' },
+            { label: 'Never render, of 100', change: '100% fewer', gap: '−7', legacy: { value: 7, label: '7' }, after: { value: 0, label: '0' }, max: 10, minor: 0.5, major: 1 },
           ]}
         />
       ),

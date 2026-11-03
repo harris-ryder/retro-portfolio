@@ -1166,69 +1166,30 @@ body.wf-cursor-on * {
         color: var(--color-body);
     }
 }
-/* the overview's measures (see components/agent-v6/Metrics): the tiles sit
-   1px apart on an ink ground, which draws the frame and its rules */
-.metrics-wrap { container-type: inline-size; }
-.metrics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    padding: 1px;
-    background: var(--color-body);
+/* the overview's measures read off rulers (see components/agent-v6/Rulers) */
+.rulers svg {
+    display: block;
+    overflow: visible;
 }
-.metrics-tile {
-    /* label, grid and figures share rows across the tiles, so they align */
-    display: grid;
-    grid-row: span 3;
-    grid-template-rows: subgrid;
-    row-gap: max(14px, 3.4cqw);
-    min-width: 0;
-    padding: max(14px, 3.4cqw);
-    background: var(--color-page);
-    color: var(--color-body);
+.rulers text {
+    font-family: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', 'Roboto Mono', monospace;
+    letter-spacing: 0.06em;
 }
-.metrics-tile p { margin: 0; }
-.metrics-label {
-    font-size: max(12px, 2.4cqw);
-    line-height: 1.3;
-}
-.metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    gap: max(2px, 0.6cqw);
-}
-.metrics-grid span {
-    aspect-ratio: 1;
-    box-shadow: inset 0 0 0 1px var(--color-faint);
-}
-.metrics-grid .metrics-on {
-    background: var(--color-body);
-    box-shadow: none;
-}
-.metrics-change {
-    font-size: max(30px, 7cqw);
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-}
-.metrics-direction {
-    margin-left: 0.25em;
-    font-size: max(12px, 2.4cqw);
-}
-.metrics-detail {
-    margin-top: max(8px, 1.4cqw) !important;
-    font-size: max(11px, 2cqw);
-    line-height: 1.45;
-    color: var(--color-muted);
-}
-/* a phone: one measure to a row, its grid at a readable size */
-@container (max-width: 480px) {
-    .metrics { grid-template-columns: 1fr; }
-    .metrics-tile { padding: 20px; row-gap: 16px; }
-    .metrics-grid { max-width: 220px; gap: 3px; }
-    .metrics-label { font-size: 14px; }
-    .metrics-change { font-size: 40px; }
-    .metrics-direction { font-size: 15px; }
-    .metrics-detail { font-size: 13px; }
+.rulers-line { stroke: var(--color-body); stroke-width: 1; }
+.rulers-minor { stroke: var(--color-faint); stroke-width: 1; }
+.rulers-open { fill: var(--color-page); stroke: var(--color-body); stroke-width: 1; }
+.rulers-shut { fill: var(--color-body); }
+.rulers-index { font-size: 10px; fill: var(--color-faint); }
+.rulers-head { font-size: 11px; fill: var(--color-body); }
+.rulers-tag { font-size: 10px; fill: var(--color-muted); }
+.rulers-tag-new { fill: var(--color-body); }
+.rulers-scale { font-size: 9px; fill: var(--color-muted); }
+.rulers-value {
+    font-size: 10px;
+    fill: var(--color-body);
+    paint-order: stroke;
+    stroke: var(--color-page);
+    stroke-width: 4px;
 }
 /* a figure drawn in monospace text (see components/agent-v6/Ascii): the site's
    greys only; the focal thing is black and bold, what failed is quiet and underlined */
