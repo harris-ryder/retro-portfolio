@@ -73,11 +73,12 @@ const measures = (() => {
     if (r === top) return value.padStart(Math.ceil((W + value.length) / 2)).padEnd(W)
     return ' '.repeat(W)
   }
-  const accent = (s: string) => (s.trim() ? `«a|${s}»` : s)
+  // a cell in ink, so the colons are not dimmed as a frame would be
+  const mark = (k: string, s: string) => (s.trim() ? `«${k}|${s}»` : s)
   const rows: string[] = []
   for (let r = H; r >= 0; r--) {
     const line = charts.map(([, oldValue, newValue, old, nw]) =>
-      `${cell(old, old, oldValue, r, ':', '.')}  ${accent(cell(nw, old, newValue, r, 'X', 'x'))}`
+      `${mark('b', cell(old, old, oldValue, r, ':', '.'))}  ${mark('a', cell(nw, old, newValue, r, 'X', 'x'))}`
       + ' '.repeat(SLOT - 2 * W - 2))
     rows.push(`  ${line.join(' '.repeat(GAP))}`.trimEnd())
   }
@@ -86,7 +87,7 @@ const measures = (() => {
     return `${' '.repeat(pad)}«b|${title}»${' '.repeat(SLOT - pad - title.length)}`
   })
   return [
-    '  :: = Legacy agent',
+    '  «b|::» = Legacy agent',
     '  «a|XX» = New agent',
     '',
     ...rows,
