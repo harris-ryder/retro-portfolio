@@ -1166,32 +1166,76 @@ body.wf-cursor-on * {
         color: var(--color-body);
     }
 }
-/* paired outlined columns (see components/agent-v6/Columns) */
-.columns,
-.columns * {
-    font-family: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', 'Roboto Mono', monospace;
+/* the overview's square of measures (see components/agent-v6/Metrics) */
+.metrics {
+    container-type: inline-size;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 38fr 24fr 38fr;
+    grid-template-areas:
+        'note one'
+        'note three'
+        'two three';
+    gap: 4px;
+    aspect-ratio: 1;
 }
-.columns {
-    display: block;
-    width: 100%;
-    height: auto;
-    overflow: visible;
+.metrics-note { grid-area: note; }
+.metrics-1 { grid-area: one; }
+.metrics-2 { grid-area: two; }
+.metrics-3 { grid-area: three; }
+.metrics-tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+    padding: max(14px, 4cqw);
+    border-radius: 6px;
+    background: var(--color-fill);
+    color: var(--color-body);
 }
-.columns-before { fill: none; stroke: var(--color-faint); stroke-width: 1.5; }
-.columns-after { fill: none; stroke: var(--color-body); stroke-width: 2.5; }
-.columns-rule { stroke: var(--color-body); stroke-width: 1; }
-.columns-title { font-size: 13px; letter-spacing: 0.08em; fill: var(--color-body); }
-.columns-small,
-.columns-big {
-    paint-order: stroke;
-    stroke: var(--color-page);
-    stroke-width: 6px;
-    stroke-linejoin: round;
+.metrics-tile p { margin: 0; }
+.metrics-note {
+    justify-content: flex-start;
+    gap: 0.8em;
+    background: var(--color-page);
+    box-shadow: inset 0 0 0 1px var(--color-line);
 }
-.columns-small { font-size: 12px; fill: var(--color-muted); }
-.columns-big { font-size: 22px; fill: var(--color-body); }
-.columns-name { font-size: 10px; fill: var(--color-muted); }
-.columns-caption { font-size: 11px; letter-spacing: 0.12em; fill: var(--color-body); }
+.metrics-3 {
+    background: var(--color-ink);
+    color: var(--color-page);
+}
+.metrics-title {
+    font-size: max(16px, 4.4cqw);
+    line-height: 1.15;
+}
+.metrics-text {
+    font-size: max(12px, 2.6cqw);
+    line-height: 1.45;
+    color: var(--color-muted);
+}
+.metrics-label {
+    font-size: max(12px, 2.8cqw);
+    line-height: 1.3;
+}
+.metrics-figure {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 8px;
+}
+/* on a narrow tile the old figure takes its own line above the new one */
+.metrics-was {
+    font-size: max(11px, 2.4cqw);
+    white-space: nowrap;
+    opacity: 0.6;
+}
+.metrics-value {
+    margin-left: auto;
+    font-size: max(28px, 9cqw);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
 /* a figure drawn in monospace text (see components/agent-v6/Ascii): the site's
    greys only; the focal thing is black and bold, what failed is quiet and underlined */
 .ascii,

@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Project } from '@/data/projects'
 import { Ascii } from '@/components/agent-v6/Ascii'
-import { Columns } from '@/components/agent-v6/Columns'
+import { Metrics } from '@/components/agent-v6/Metrics'
 import { Img } from '@/components/Img'
 import { MediaRow } from '@/components/MediaRow'
 import { Video } from '@/components/Video'
@@ -89,17 +89,17 @@ export const agentV6: Project = {
         <p>I investigated why, wrote the replacement, and built the way we measure it. The new agent is one model with no sub-agents, eight tools where the legacy agent had seventeen, and the real compiler in the loop. It runs on a much smaller model than the legacy agent needed, renders everything it builds, in half the time, at a 50th of the cost.</p>
       </>,
       media: (
-        <Columns
-          title="Legacy and new agent"
-          names={['Legacy', 'New']}
-          label="Legacy agent against new agent in three column charts. Cost for 100 widgets $25.34 against $0.47, median time to a widget 92 s against 49 s, widgets that never render 7% against 0%"
-          charts={[
-            { caption: ['Cost', '(100 widgets)'], before: { value: 25.34, label: '$25.34' }, after: { value: 0.47, label: '$0.47' } },
-            { caption: ['Time to a widget', '(median)'], before: { value: 92, label: '92 s' }, after: { value: 49, label: '49 s' } },
-            { caption: ['Never render', '(of 100)'], before: { value: 7, label: '7%' }, after: { value: 0, label: '0%' } },
+        <Metrics
+          title="Legacy agent against new agent"
+          note="The same 100 prompts, built by each agent on a phone."
+          metrics={[
+            { label: 'Median time to a widget', value: '49 s', was: '92 s' },
+            { label: 'Widgets that never render', value: '0%', was: '7%' },
+            { label: 'Cost for 100 widgets', value: '$0.47', was: '$25.34' },
           ]}
         />
       ),
+      bare: true,
     },
 
     // ------------------------------------------------------------ 2
