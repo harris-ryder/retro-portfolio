@@ -135,7 +135,7 @@
     max-width: 350px;
 }
 .frame-meta dt {
-    font-family: var(--font-geist-pixel-square), ui-monospace, monospace;
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
 }
 .frame-caption,
 .frame-text {
