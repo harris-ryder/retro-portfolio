@@ -3,6 +3,7 @@ import type { Project } from '@/data/projects'
 import { Ascii } from '@/components/agent-v6/Ascii'
 import { Indicators } from '@/components/agent-v6/Indicators'
 import { Turn } from '@/components/agent-v6/Turn'
+import { ModulePath } from '@/components/agent-v6/ModulePath'
 import { Img } from '@/components/Img'
 import { MediaRow } from '@/components/MediaRow'
 import { Video } from '@/components/Video'
@@ -139,16 +140,25 @@ export const agentV6: Project = {
       level: 2,
       body: <p>The tested modules we wanted in every widget, such as location, audio and storage, reached it through the capability resolver. Once the Haiku model had picked a capability, its module was flattened into the system prompt, and the main Sonnet model retyped it into <code>App.tsx</code>. The audio module alone was 900 lines, or 8,400 tokens re-read on every step and then typed out once more. The validator checked the paste by grepping for a marker name.</p>,
       media: (
-        <Turn
-          label="How a tested module reached a legacy widget. The capability resolver, a Haiku model, picks audio. The 900-line audio.tsx is pasted into the system prompt, 8.4k tokens re-read on every step. The main model, Sonnet, retypes it into App.tsx, and the validator checks it by grepping for a marker name."
-          steps={[
-            { name: 'Capability resolver', tag: 'Haiku', lines: ['Picks audio from the chat'] },
-            { name: 'audio.tsx', lines: ['900 tested lines'] },
-            { name: 'System prompt', lines: ['The module pasted in whole', '8.4k tokens, re-read on every step'] },
-            { name: 'Main model', tag: 'Sonnet', lines: ['Retypes all 900 lines'] },
-            { name: 'App.tsx', lines: ['The module, typed out once more'] },
-            { name: 'Validator', lines: ['Greps for a marker name', 'A rename fails, a rewrite passes'] },
+        <ModulePath
+          label="How tested modules reached a legacy widget. For a run tracker that beeps every kilometre, the capability resolver, a Haiku model, picks location.tsx and audio.tsx from a library of eleven module files. Both are pasted whole into the main Sonnet model's system prompt beside 7.5k tokens of rules and re-sent on every step. Sonnet retypes each into App.tsx, and the validator checks the copies only by grepping for a marker name."
+          chat="A run tracker that beeps every kilometre"
+          modules={[
+            { name: 'location.tsx', picked: true },
+            { name: 'audio.tsx', picked: true },
+            { name: 'storage.tsx' },
+            { name: 'camera.tsx' },
+            { name: 'gallery.tsx' },
+            { name: 'compass.tsx' },
+            { name: 'accelerometer.tsx' },
+            { name: 'pedometer.tsx' },
+            { name: 'contacts_read.tsx' },
+            { name: 'calendar_write.tsx' },
+            { name: 'daily_tracker.tsx' },
           ]}
+          rules="rules, 7.5k tokens"
+          copies={['location, retyped', 'audio, retyped', 'the widget']}
+          validator={['Greps for each module’s marker name', 'A rename fails, a rewrite passes']}
         />
       ),
       bare: true,

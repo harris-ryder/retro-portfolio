@@ -1293,6 +1293,48 @@ body.wf-cursor-on * {
 @container (max-width: 360px) {
     .turn-tools { grid-template-columns: 1fr; }
 }
+/* ModulePath (agent-v6/ModulePath): files as small outlined rectangles,
+   kept in their own case. Dark when picked, faint when not, dashed when the
+   model has retyped one. */
+.mp-chat {
+    margin-top: 8px;
+    font-size: 10px;
+    line-height: 16px;
+    color: var(--color-body);
+    text-transform: none;
+}
+.mp-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+.mp-file {
+    padding: 4px 8px;
+    border: 1px solid var(--color-faint);
+    font-size: 10px;
+    line-height: 16px;
+    color: var(--color-faint);
+    text-transform: none;
+    background: var(--color-page);
+}
+.mp-file[data-picked] {
+    border-color: var(--color-body);
+    color: var(--color-body);
+}
+.mp-rules {
+    border-color: var(--color-muted);
+    color: var(--color-muted);
+}
+.mp-copy {
+    border: 1px dashed var(--color-body);
+    color: var(--color-body);
+}
+/* the system prompt, ruled off inside the main model's box */
+.mp-section {
+    padding: 12px 16px;
+    border-top: 1px solid var(--color-muted);
+}
 /* a figure drawn in monospace text (see components/agent-v6/Ascii): the site's
    greys only; the focal thing is black and bold, what failed is quiet and underlined */
 .ascii,
