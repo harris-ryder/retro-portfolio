@@ -116,17 +116,17 @@ export const agentV6: Project = {
       </>,
       media: (
         <Turn
-          label="One turn of the legacy agent. A Haiku model picks device modules before the turn, a system prompt is re-sent on every step, and the main model calls tools, three of which make Haiku calls of their own."
+          label="One turn of the legacy agent. A Haiku model picks device modules before the turn, a system prompt is re-sent on every step, and the main model, Sonnet, calls tools, three of which make Haiku calls of their own; the theme tool makes two, one choosing the Nothing look or a custom one and one picking five colours."
           steps={[
             { name: 'Capability resolver', tag: 'Haiku', lines: ['Picks device modules from the whole chat'] },
             { name: 'System prompt', lines: ['7.5k tokens of rules + 3.6–8.4k of pasted code', 'Re-sent, uncached, on every step'] },
-            { name: 'Main model', lines: ['Up to 15 steps over 17 tools', 'Next move chosen by grepping for [ERROR]'] },
+            { name: 'Main model', tag: 'Sonnet', lines: ['Up to 15 steps over 17 tools', 'Next move chosen by grepping for [ERROR]'] },
           ]}
           tools={[
             { name: 'Write file', lines: ['Straight to the database'] },
             { name: 'Layout', lines: ['Guesses, never measures'] },
             { name: 'Validator', lines: ['61 regexes, never compiles', 'Twelve guards around it'] },
-            { name: 'Theme', tag: 'Haiku ×2', lines: ['Picks the colours'] },
+            { name: 'Theme', tag: 'Haiku ×2', lines: ['First picks Nothing or custom', 'Second picks five colours'] },
             { name: 'App link', tag: 'Haiku', lines: ['Picks the app a tap opens'] },
             { name: 'Search', tag: 'Haiku', lines: ['Finds a public API'] },
           ]}
