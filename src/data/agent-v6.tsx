@@ -2,6 +2,7 @@ import React from 'react'
 import type { Project } from '@/data/projects'
 import { Ascii } from '@/components/agent-v6/Ascii'
 import { Indicators } from '@/components/agent-v6/Indicators'
+import { Turn } from '@/components/agent-v6/Turn'
 import { Img } from '@/components/Img'
 import { MediaRow } from '@/components/MediaRow'
 import { Video } from '@/components/Video'
@@ -110,37 +111,28 @@ export const agentV6: Project = {
       title: 'Architecture',
       level: 2,
       body: <>
-        <p>A turn began before the main model had read the request. A Haiku model guessed the widget&apos;s capabilities from the whole chat, and its answer was pasted into the system prompt and re-sent, uncached, on every step. Then the main model ran up to fifteen steps over seventeen tools.</p>
-        <p>Two more helper models hid in those tools. One chose the colour theme, in two Haiku calls. One chose which app a tap should open. Each had its own prompt, parser and silent fallback. When the theme picker failed, the widget fell back to the default Nothing theme, usually a dark colour scheme with red accents. That is why so many of them looked the same.</p>
+        <p>A turn began before the main model had read the request. A Haiku model read the whole chat and guessed which device capabilities the widget needed, such as location, audio or storage, and the tested module for each was pasted into the system prompt. It was there to make the main model use those modules, because left to choose it had used the location module in only 7 of 12 widgets that needed one. The paste was re-sent, uncached, on every step. Then the main model ran up to fifteen steps over seventeen tools.</p>
+        <p>Three more helper models hid in those tools. One chose the colour theme, in two Haiku calls. One chose which app a tap should open. One searched the web for a public API. Each had its own prompt, parser and silent fallback. When the theme picker failed, the widget fell back to the default Nothing theme, usually a dark colour scheme with red accents. That is why so many of them looked the same.</p>
       </>,
       media: (
-        <Ascii label="One turn of the legacy agent: a Haiku pre-step, a fifteen-step loop with helper models inside its tools, a regex validator, and files written to the database as it goes">{`
-  phone ------> backend
-                   |
-                   v
-  «h| CAPABILITY RESOLVER »   «a|a Haiku model, before every turn,»
-                   |          «a|guessing from the whole chat»
-                   v
-  +--------------------------------------------------------------+
-  | System prompt     7.5k tokens of rules + 3.6-8.4k pasted code |
-  |                   re-sent, uncached, on every step            |
-  +--------------------------------------------------------------+
-                   |
-                   v
-  +--------------------------------------------------------------+
-  | Main model        up to 15 steps, 17 tools                    |
-  |                   next move chosen by grepping for "[ERROR]"  |
-  |                   twelve guards around the validator          |
-  +-------+------------------+------------------+-----------------+
-          |                  |                  |
-       files              layout            validator
-       straight to        guesses, never    61 regexes
-       the database       measures          never compiles
-
-  «h| THEME »  «h| APP LINK »  «h| SEARCH »     «a|three more Haiku calls, inside the tools»
-`}</Ascii>
+        <Turn
+          label="One turn of the legacy agent. A Haiku model picks device modules before the turn, a system prompt is re-sent on every step, and the main model calls tools, three of which make Haiku calls of their own."
+          steps={[
+            { name: 'Capability resolver', tag: 'Haiku', lines: ['Picks device modules from the whole chat'] },
+            { name: 'System prompt', lines: ['7.5k tokens of rules + 3.6–8.4k of pasted code', 'Re-sent, uncached, on every step'] },
+            { name: 'Main model', lines: ['Up to 15 steps over 17 tools', 'Next move chosen by grepping for [ERROR]'] },
+          ]}
+          tools={[
+            { name: 'Write file', lines: ['Straight to the database'] },
+            { name: 'Layout', lines: ['Guesses, never measures'] },
+            { name: 'Validator', lines: ['61 regexes, never compiles', 'Twelve guards around it'] },
+            { name: 'Theme', tag: 'Haiku ×2', lines: ['Picks the colours'] },
+            { name: 'App link', tag: 'Haiku', lines: ['Picks the app a tap opens'] },
+            { name: 'Search', tag: 'Haiku', lines: ['Finds a public API'] },
+          ]}
+        />
       ),
-      caption: 'One turn. Each marked label is a separate model call, two to four per new widget.',
+      bare: true,
     },
     {
       title: 'Code through the model',
@@ -207,7 +199,6 @@ ${sweep}
   «d|░» rendered   «r|█» stuck on the host's spinner, forever   «r|○» drew nothing
 `}</Ascii>
       ),
-      caption: 'Found by hashing the frames. Every stuck widget shared one byte-identical spinner image.',
     },
     {
       title: 'How I found it',
@@ -230,7 +221,6 @@ ${sweep}
   and the model then types the 900 lines out once more as output
 `}</Ascii>
       ),
-      caption: 'Measured by rendering the prompt and tool schemas from the code; tokens are characters ÷ 4.',
     },
 
     // ------------------------------------------------------------ 3
@@ -266,7 +256,7 @@ ${sweep}
     {
       title: 'Results',
       level: 2,
-      body: <p>The first runs did exactly what the legacy agent did, with nothing broken, on the same model. Then came the part the legacy agent could not do. Its regexes needed the strongest model to stay out of trouble. The new agent checks its own work, so it can run a much smaller model, and it lost nothing in the move.</p>,
+      body: <p>The first runs did exactly what the legacy agent did, with nothing broken, on the same model. Then came the part the legacy agent could not do. Its regexes needed the strongest model to stay out of trouble. The new agent checks its own work, so it can run a much smaller model, and it lost nothing in the move. The legacy agent&apos;s cost is estimated from its tokens at list price; the new agent&apos;s is what was billed.</p>,
       media: (
         <Ascii label="Legacy agent and new agent on the same 100 prompts: median time, cost per widget, and rendered counts">{`
                     median time to a widget      cost per widget
@@ -280,7 +270,6 @@ ${sweep}
   mean input tokens per widget  52,174 -> 4,371
 `}</Ascii>
       ),
-      caption: 'Legacy cost is estimated from tokens at list price; the new agent’s is what was billed.',
     },
     {
       title: 'Faster checks',
@@ -315,7 +304,6 @@ ${sweep}
           <Img src="/images/agent-v6/iss-radix-indigo-4x4.webp" alt="The same ISS tracker in the Radix indigo scale" width={720} height={720} />
         </MediaRow>
       ),
-      caption: 'The same ISS tracker, one scale swapped for another and nothing else changed.',
     },
 
     // ------------------------------------------------------------ 4
@@ -342,7 +330,7 @@ ${sweep}
       title: 'Using the data we had',
       level: 2,
       body: <>
-        <p>We took the first prompt of every production conversation, hashed the user ids, scrubbed anything personal, and had a model label each by category, topic and whether it needed live data or the Nothing look.</p>
+        <p>We took the first prompt of every production conversation from September 2025 to October 2026, hashed the user ids, scrubbed anything personal, and had a model label each by category, topic and whether it needed live data or the Nothing look.</p>
         <p>Most requests are variations on about ten widget types, and a third of second prompts are corrections. From that we wrote the test set, 100 prompts weighted like real use and ten-turn chains that edit one widget again and again.</p>
       </>,
       media: (
@@ -367,7 +355,6 @@ ${sweep}
   Can't reach phone data  «r|███» 4.8%
 `}</Ascii>
       ),
-      caption: 'Every production conversation’s first prompt, Sep 2025 – Oct 2026.',
     },
     {
       title: 'A new eval system',
@@ -417,7 +404,7 @@ ${strips}
     {
       title: 'Picking with Jev',
       level: 2,
-      body: <p>A decision model returns a probability for each allowed answer instead of writing text. One call to Jev asks three questions at once, picking the template and the look and deciding whether settings alone will do. It beat embeddings on every count, at the same speed, and its third answer saves a wasted settings call on the prompts that need the agent.</p>,
+      body: <p>A decision model returns a probability for each allowed answer instead of writing text. One call to Jev asks three questions at once, picking the template and the look and deciding whether settings alone will do. Across 34 hand-labelled test prompts it beat embeddings on every count, at the same speed, and its third answer saves a wasted settings call on the prompts that need the agent.</p>,
       media: (
         <Ascii label="Jev decisions against embeddings and the old chat picker on 34 test prompts: template, look and route accuracy, and time">{`
   +-----------------------+----------+----------+----------+--------+
@@ -429,12 +416,11 @@ ${strips}
   +-----------------------+----------+----------+----------+--------+
 `}</Ascii>
       ),
-      caption: '34 test prompts, labelled by hand; two runs gave the same answers.',
     },
     {
       title: 'Results',
       level: 2,
-      body: <p>On the phone a world clock went from 51 seconds to 27, and to 21 with the pre-built bundle. The agent&apos;s share of the cost fell to a quarter, because 20 of 30 test prompts needed only the settings call. Delivery is now the wait; the same bundle installs in 9 seconds over USB.</p>,
+      body: <p>In a teammate&apos;s spike from October 2026, still behind flags, a world clock on the phone went from 51 seconds to 27, and to 21 with the pre-built bundle. The agent&apos;s share of the cost fell to a quarter, because 20 of 30 test prompts needed only the settings call. Delivery is now the wait; the same bundle installs in 9 seconds over USB.</p>,
       media: (
         <Ascii label="Two routes for a first prompt: from scratch through the agent in about 49 seconds, or through a template library in 21 to 27 seconds and a quarter of the cost">{`
   «d|From scratch»                                        about 49 s
@@ -451,7 +437,6 @@ ${strips}
                             the agent edits the template instead
 `}</Ascii>
       ),
-      caption: 'A teammate’s spike, October 2026, behind flags.',
     },
   ],
 }
