@@ -2,7 +2,6 @@
 
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
-import { GeistMono } from 'geist/font/mono'
 import { useSelectedLayoutSegment } from 'next/navigation'
 import { ProjectList } from '@/components/ProjectList'
 import type { Project, Section } from '@/data/projects'
@@ -191,7 +190,7 @@ export function Frame({ project, list }: { project: Project | null; list?: List 
                   </svg>
                 </Link>
               </p>
-              <dl className={`frame-meta ${GeistMono.variable}`}>
+              <dl className="frame-meta">
                 {project.company && (
                   <div>
                     <dt className="text-muted">Company</dt>
