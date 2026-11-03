@@ -80,7 +80,6 @@ export const agentV6: Project = {
         </MediaRow>
       ),
       bare: true,
-      caption: 'The left phone runs at 10× while it waits, with the clock in the block keeping real time. The right phone runs at real time.',
     },
     // ------------------------------------------------------------ 1
     {
