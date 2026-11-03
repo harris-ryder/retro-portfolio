@@ -137,26 +137,21 @@ export const agentV6: Project = {
     {
       title: 'Code through the model',
       level: 2,
-      body: <p>The tested modules we wanted in every widget, location, audio, storage, reached it by being flattened into the prompt and retyped by the model into <code>App.tsx</code>. The audio module alone was 900 lines, or 8,400 tokens re-read on every step and then typed out once more. The validator checked the paste by grepping for a marker name.</p>,
+      body: <p>The tested modules we wanted in every widget, such as location, audio and storage, reached it through the capability resolver. Once the Haiku model had picked a capability, its module was flattened into the system prompt, and the main Sonnet model retyped it into <code>App.tsx</code>. The audio module alone was 900 lines, or 8,400 tokens re-read on every step and then typed out once more. The validator checked the paste by grepping for a marker name.</p>,
       media: (
-        <Ascii label="How a tested module reached the widget before and after: retyped by the model and checked by name, against written as a read-only file and imported">{`
-  «d|Legacy agent»
-
-  audio.tsx ----> prompt ----> «a|model retypes it» ----> validator
-  900 tested      8.4k tokens  «a|900 lines, into App.tsx»  greps for a
-  lines           a step                                 marker name
-
-  It compared names, not code. A paste that renamed one helper
-  failed, a rewrite that kept the names passed.
-
-  «d|New agent»
-
-  audio.tsx ----> «a|declare writes it» ----> model imports it ----> tsc
-  unchanged       «a|a read-only file»        one line               a wrong
-                  «a|0 tokens»                                       import is
-                                                                   a type error
-`}</Ascii>
+        <Turn
+          label="How a tested module reached a legacy widget. The capability resolver, a Haiku model, picks audio. The 900-line audio.tsx is pasted into the system prompt, 8.4k tokens re-read on every step. The main model, Sonnet, retypes it into App.tsx, and the validator checks it by grepping for a marker name."
+          steps={[
+            { name: 'Capability resolver', tag: 'Haiku', lines: ['Picks audio from the chat'] },
+            { name: 'audio.tsx', lines: ['900 tested lines'] },
+            { name: 'System prompt', lines: ['The module pasted in whole', '8.4k tokens, re-read on every step'] },
+            { name: 'Main model', tag: 'Sonnet', lines: ['Retypes all 900 lines'] },
+            { name: 'App.tsx', lines: ['The module, typed out once more'] },
+            { name: 'Validator', lines: ['Greps for a marker name', 'A rename fails, a rewrite passes'] },
+          ]}
+        />
       ),
+      bare: true,
     },
     {
       title: 'No compiler',

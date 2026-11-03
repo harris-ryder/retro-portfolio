@@ -1,7 +1,7 @@
 import React from 'react'
 
 /** One turn of an agent as a column of boxes joined by hairlines, the last
- *  box holding the tools it calls in a ruled grid. A tag (a small grey chip)
+ *  box holding the tools it calls, if any, in a ruled grid. A tag (a small grey chip)
  *  marks a box or tool that is a model call of its own. Plain HTML, so the
  *  rules and text line up on any width and wrap rather than overflow. */
 
@@ -23,8 +23,8 @@ function Box({ box, className }: { box: TurnBox; className: string }) {
   )
 }
 
-export function Turn({ steps, tools, label }: { steps: TurnBox[]; tools: TurnBox[]; label: string }) {
-  const last = steps.length - 1
+export function Turn({ steps, tools = [], label }: { steps: TurnBox[]; tools?: TurnBox[]; label: string }) {
+  const last = tools.length ? steps.length - 1 : steps.length
   return (
     <div className="turn" role="img" aria-label={label}>
       {steps.map((step, i) => (
