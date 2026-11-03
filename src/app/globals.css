@@ -1226,6 +1226,10 @@ body.wf-cursor-on * {
 .turn-box:has(> .turn-main) {
     padding: 0;
 }
+/* the main model's header is hatched, a bar the tools below hang from */
+.turn-main {
+    background: repeating-linear-gradient(-45deg, var(--color-line) 0 1px, transparent 1px 8px);
+}
 /* the hairline between two boxes, on the boxes' text edge */
 .turn-link {
     width: 1px;
