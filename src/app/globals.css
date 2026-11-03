@@ -1054,20 +1054,16 @@ body.wf-cursor-on * {
     line-height: inherit;
     color: var(--color-body);
 }
-/* chapter and sub-chapter titles share one grey, a step lighter than the text */
+/* chapter and sub-chapter titles read as one level: one grey, a step
+   lighter than the text, and one gap down to it */
 .article-chapter h2,
 .article-sub h3 {
     color: var(--color-muted);
-}
-.article-chapter h2 {
-    margin-bottom: 1.6em;
+    margin-bottom: 0.4em;
 }
 .article-sub {
     margin-top: 48px;
     scroll-margin-top: 46px;
-}
-.article-sub h3 {
-    margin-bottom: 0.4em;
 }
 .article-body > * + * {
     margin-top: 1em;
