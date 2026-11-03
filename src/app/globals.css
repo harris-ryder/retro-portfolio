@@ -134,6 +134,9 @@
 .frame-meta dd {
     max-width: 350px;
 }
+.frame-meta dt {
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
 .frame-caption,
 .frame-text {
     max-width: 350px;
