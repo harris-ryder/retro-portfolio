@@ -13,6 +13,7 @@ import { FirstVersionDemo } from '@/components/workflow/FirstVersionDemo'
 import { MainDemo } from '@/components/workflow/MainDemo'
 import { promptLego } from '@/data/prompt-lego'
 import { essentialAppsMobile } from '@/data/essential-apps-mobile'
+import { agentV6 } from '@/data/agent-v6'
 
 export type Project = {
   slug: string
@@ -27,6 +28,9 @@ export type Project = {
   hidden?: boolean
   // written but not published: not listed, and its URL is a 404
   draft?: boolean
+  // 'article': one centred column read top to bottom, with a chapter list
+  // (see ArticleFrame); otherwise the Work frame
+  layout?: 'article'
   // the article, one section per screen
   sections: Section[]
   // rendered once alongside the sections, e.g. the Try-me cursor overlay
@@ -40,6 +44,13 @@ export type Section = {
   // nothing to add: the side column keeps the previous section's text up
   // through this one (see WorkFrame)
   keepText?: boolean
+  // in an 'article' layout: 2 for a sub-chapter of the chapter before it
+  level?: 1 | 2
+  // in an 'article' layout: a line under the figure
+  caption?: string
+  // in an 'article' layout: the figure sits on the page with no card
+  // around it (device renders, which carry their own edge)
+  bare?: boolean
 }
 
 // a run of same-sized boards, one per section under a shared title
@@ -138,6 +149,7 @@ export const projects: Project[] = [
     ],
   },
   essentialAppsMobile,
+  agentV6,
   promptLego,
   {
     slug: 'essential-search',

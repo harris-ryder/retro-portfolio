@@ -2,6 +2,7 @@ import { projectsBySlug } from '@/data/projects'
 import { workItems } from '@/data/links'
 import { notFound } from 'next/navigation'
 import { Frame } from '@/components/WorkFrame'
+import { ArticleFrame } from '@/components/ArticleFrame'
 
 export default async function WorkPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -10,6 +11,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
 
   // a listed article is drawn by the Work layout's frame, which has it
   // already (see WorkFrame); an unlisted one gets a frame of its own
+  if (project.layout === 'article') return <ArticleFrame project={project} />
   if (workItems.some(item => item.slug === slug)) return null
   return <Frame project={project} />
 }

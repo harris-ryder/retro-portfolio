@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { PlaybackBar } from '@/components/PlaybackBar'
 import { useVideoSequence } from '@/components/VideoSequence'
+import { useVideoTogether } from '@/components/VideoTogether'
 import { onceFullyInView } from '@/components/inView'
 
 type Props = {
@@ -60,19 +61,25 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
   // a fixed size is a width the wrapper (or the block, with controls) keeps
   const fixed: React.CSSProperties = boxHeight ? { width: `min(100%, ${Math.round(boxHeight * boxAr)}px)` } : {}
 
+  // in a row that plays as one, the others in the row play alongside
+  const together = useVideoTogether()
   useEffect(() => {
     const v = ref.current
     if (!v) return
     all.add(v)
     const onPlay = () => {
-      for (const other of all) if (other !== v && !other.paused) other.pause()
+      for (const other of all) if (other !== v && !other.paused && !together?.has(other)) other.pause()
     }
     v.addEventListener('play', onPlay)
     return () => {
       v.removeEventListener('play', onPlay)
       all.delete(v)
     }
-  }, [])
+  }, [together])
+  useEffect(() => {
+    if (!together || !ref.current) return
+    return together.register(ref.current)
+  }, [together])
 
   // in a row, the videos take turns rather than each looping on its own
   const sequence = useVideoSequence()
@@ -83,13 +90,15 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
 
   // on its own, the video loops, but holds its first frame until it is
   // fully on screen (a row's provider does the same for its first video)
+  const grouped = !!sequence || !!together
   useEffect(() => {
     const v = ref.current
-    if (sequence || !v) return
+    if (grouped || !v) return
     return onceFullyInView(v, () => void v.play().catch(() => {}))
-  }, [sequence])
+  }, [grouped])
 
   const toggle = () => {
+    if (together) return together.toggle()
     const v = ref.current
     if (!v) return
     if (v.paused) void v.play()
@@ -108,7 +117,7 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
       )}
       <video
         src={chosen}
-        loop={!sequence}
+        loop={!sequence && !together}
         muted
         playsInline
         // a waiting video shows its first frame rather than the skeleton
@@ -150,7 +159,8 @@ export function Video({ src, width, height, wrapperStyle, controls = true, displ
       <img className="phone-frame-render" src={frame.src} alt="" width={frame.width} height={frame.height} draggable={false} />
     </span>
   ) : card
-  if (!controls) return shown
+  // in a row that plays as one, the row has the bar
+  if (!controls || together) return shown
 
   // the video and its bar share one block, which takes the video's width
   return (
