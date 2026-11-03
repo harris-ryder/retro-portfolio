@@ -1230,6 +1230,10 @@ body.wf-cursor-on * {
 .turn-main {
     background: repeating-linear-gradient(-45deg, var(--color-line) 0 1px, transparent 1px 8px);
 }
+/* body grey on the hatching, which the muted grey loses against */
+.turn-main .turn-line {
+    color: var(--color-body);
+}
 /* the hairline between two boxes, on the boxes' text edge */
 .turn-link {
     width: 1px;
