@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Project } from '@/data/projects'
 import { Ascii } from '@/components/agent-v6/Ascii'
-import { Rulers } from '@/components/agent-v6/Rulers'
+import { Indicators } from '@/components/agent-v6/Indicators'
 import { Img } from '@/components/Img'
 import { MediaRow } from '@/components/MediaRow'
 import { Video } from '@/components/Video'
@@ -89,12 +89,12 @@ export const agentV6: Project = {
         <p>I investigated why, wrote the replacement, and built the way we measure it. The new agent is one model with no sub-agents, eight tools where the legacy agent had seventeen, and the real compiler in the loop. It runs on a much smaller model than the legacy agent needed, renders everything it builds, in half the time, at a 50th of the cost.</p>
       </>,
       media: (
-        <Rulers
-          label="Three rulers, legacy agent against new agent. Median time to a widget 92 s against 49 s, 47% faster. Cost for 100 widgets $25.34 against $0.47, 54 times cheaper. Widgets that never render 7 of 100 against 0, 100% fewer."
-          rulers={[
-            { label: 'Median time to a widget', change: '47% faster', gap: '−43 S', legacy: { value: 92, label: '92 S' }, after: { value: 49, label: '49 S' }, max: 100, minor: 2, major: 10, suffix: 'S' },
-            { label: 'Cost for 100 widgets', change: '54× cheaper', gap: '−$24.87', legacy: { value: 25.34, label: '$25.34' }, after: { value: 0.47, label: '$0.47' }, max: 30, minor: 1, major: 5, prefix: '$' },
-            { label: 'Never render, of 100', change: '100% fewer', gap: '−7', legacy: { value: 7, label: '7' }, after: { value: 0, label: '0' }, max: 10, minor: 0.5, major: 1 },
+        <Indicators
+          label="One bar for the legacy agent at 100%, with the new agent marked inside it. Widgets that never render at 0%, none of 100 against 7. Cost at 2%, $0.47 against $25.34 for 100 widgets, 54 times cheaper. Time to a widget at 53%, 49 s against 92 s, 47% faster."
+          indicators={[
+            { share: 0, change: '100% fewer failures', detail: '0 of 100 against 7', level: 0, tone: 'light' },
+            { share: 0.47 / 25.34, change: '54× cheaper', detail: '$0.47 against $25.34 per 100', level: 1, tone: 'mid' },
+            { share: 49 / 92, change: '47% faster', detail: '49 s against 92 s', level: 2, tone: 'dark' },
           ]}
         />
       ),

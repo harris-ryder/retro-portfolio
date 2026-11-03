@@ -1166,31 +1166,22 @@ body.wf-cursor-on * {
         color: var(--color-body);
     }
 }
-/* the overview's measures read off rulers (see components/agent-v6/Rulers) */
-.rulers svg {
-    display: block;
-    overflow: visible;
-}
-.rulers text {
+/* the overview's measures as markers in one bar (see components/agent-v6/Indicators) */
+/* before the script measures the column, the drawing is 600px wide; clip it */
+.indicators { overflow: hidden; }
+.indicators svg { display: block; }
+.indicators text {
     font-family: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', 'Roboto Mono', monospace;
     letter-spacing: 0.06em;
 }
-.rulers-line { stroke: var(--color-body); stroke-width: 1; }
-.rulers-minor { stroke: var(--color-faint); stroke-width: 1; }
-.rulers-open { fill: var(--color-page); stroke: var(--color-body); stroke-width: 1; }
-.rulers-shut { fill: var(--color-body); }
-.rulers-index { font-size: 10px; fill: var(--color-faint); }
-.rulers-head { font-size: 11px; fill: var(--color-body); }
-.rulers-tag { font-size: 10px; fill: var(--color-muted); }
-.rulers-tag-new { fill: var(--color-body); }
-.rulers-scale { font-size: 9px; fill: var(--color-muted); }
-.rulers-value {
-    font-size: 10px;
-    fill: var(--color-body);
-    paint-order: stroke;
-    stroke: var(--color-page);
-    stroke-width: 4px;
-}
+.indicators-bar { fill: var(--color-page); stroke: var(--color-muted); stroke-width: 1; }
+.indicators-lead { stroke: var(--color-body); stroke-width: 1; }
+.indicators-light { fill: var(--color-faint); }
+.indicators-mid { fill: var(--color-muted); }
+.indicators-dark { fill: var(--color-body); }
+.indicators-change { font-size: 12px; fill: var(--color-body); }
+.indicators-detail { font-size: 10px; fill: var(--color-muted); }
+.indicators-scale { font-size: 9px; fill: var(--color-muted); }
 /* a figure drawn in monospace text (see components/agent-v6/Ascii): the site's
    greys only; the focal thing is black and bold, what failed is quiet and underlined */
 .ascii,
