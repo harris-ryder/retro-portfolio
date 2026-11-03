@@ -1060,7 +1060,7 @@ body.wf-cursor-on * {
 .article-chapter h2,
 .article-sub h3 {
     color: var(--color-muted);
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 .article-sub {
     margin-top: 48px;
