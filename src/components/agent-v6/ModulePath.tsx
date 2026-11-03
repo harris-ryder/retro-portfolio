@@ -4,7 +4,8 @@ import React from 'react'
  *  through. The capability resolver's frame holds the chat and the library of
  *  module files, the picked ones dark; the main model's frame holds its system
  *  prompt, with those files pasted in beside the rules; App.tsx holds the
- *  model's retyped copies, dashed; the validator checks them by name. Drawn
+ *  model's retyped copies beside the rest of its code, which is muted like
+ *  the rules; the validator checks the copies by name. Drawn
  *  with Turn's frame, type and hairlines (see .turn in globals.css). */
 
 export interface ModuleFile {
@@ -26,7 +27,7 @@ export function ModulePath({ label, chat, modules, rules, copies, validator }: {
   chat: string
   modules: ModuleFile[]
   rules: string
-  copies: string[]
+  copies: { name: string; muted?: boolean }[]
   validator: string[]
 }) {
   const picked = modules.filter(m => m.picked)
@@ -66,7 +67,7 @@ export function ModulePath({ label, chat, modules, rules, copies, validator }: {
         <Head name="App.tsx" />
         <div className="turn-line">The widget, with every module typed out once more</div>
         <div className="mp-files">
-          {copies.map(c => <span key={c} className="mp-file mp-copy">{c}</span>)}
+          {copies.map(c => <span key={c.name} className={`mp-file ${c.muted ? 'mp-rules' : ''}`} data-picked={c.muted ? undefined : true}>{c.name}</span>)}
         </div>
       </div>
 

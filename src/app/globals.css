@@ -1294,8 +1294,8 @@ body.wf-cursor-on * {
     .turn-tools { grid-template-columns: 1fr; }
 }
 /* ModulePath (agent-v6/ModulePath): files as small outlined rectangles,
-   kept in their own case. Dark when picked, faint when not, dashed when the
-   model has retyped one. */
+   kept in their own case. Dark when picked or retyped, faint when not, muted
+   for what is not a module (the rules, the rest of the code). */
 .mp-chat {
     margin-top: 8px;
     font-size: 10px;
@@ -1325,10 +1325,6 @@ body.wf-cursor-on * {
 .mp-rules {
     border-color: var(--color-muted);
     color: var(--color-muted);
-}
-.mp-copy {
-    border: 1px dashed var(--color-body);
-    color: var(--color-body);
 }
 /* the system prompt, ruled off inside the main model's box */
 .mp-section {

@@ -158,7 +158,7 @@ export const agentV6: Project = {
             { name: 'daily_tracker.tsx' },
           ]}
           rules="rules, 7.5k tokens"
-          copies={['location, retyped', 'audio, retyped', 'the widget']}
+          copies={[{ name: 'location, retyped' }, { name: 'audio, retyped' }, { name: 'the rest of the code', muted: true }]}
           validator={['Greps for each module’s marker name', 'A rename fails, a rewrite passes']}
         />
       ),
