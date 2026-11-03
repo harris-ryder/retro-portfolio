@@ -3,7 +3,9 @@
 // Colour audit, switched on by adding ?colours to any URL (and ?colours=0
 // to switch it off again; it stays on for the tab as you click around).
 // Lists every colour the page renders (hex, the token it came from, how
-// many elements use it); hovering a row outlines those elements.
+// many elements use it); hovering a row outlines those elements. SVG
+// counts too, by its fill and stroke, and glows instead of outlining since
+// an outline does not draw around a shape.
 // Self-contained: delete this file and its one-line mount in
 // app/layout.tsx and nothing else changes.
 
@@ -27,10 +29,13 @@ function wanted(): boolean {
   }
 }
 
-type Role = 'text' | 'bg' | 'border'
+type Role = 'text' | 'bg' | 'border' | 'fill' | 'stroke'
 type Entry = { hex: string; names: string[]; roles: Set<Role>; els: Set<Element> }
 
 const HIT = 'ci-hit'
+const HIT_SVG = 'ci-hit-svg'
+// the parts of a drawing that paint; <svg> and <g> only group them
+const SHAPES = 'path,rect,circle,ellipse,line,polyline,polygon,text,tspan'
 
 const toHex = (() => {
   const probe = typeof document !== 'undefined' ? document.createElement('span') : null
@@ -89,9 +94,17 @@ function scan(): Entry[] {
     e.els.add(el)
   }
   for (const el of Array.from(document.body.querySelectorAll('*'))) {
-    if (el.closest('[data-color-inspector]') || el instanceof SVGElement) continue
+    if (el.closest('[data-color-inspector]')) continue
     const cs = getComputedStyle(el)
     if (cs.display === 'none' || cs.visibility === 'hidden') continue
+    if (el instanceof SVGElement) {
+      if (!el.matches(SHAPES)) continue
+      const isText = el.matches('text,tspan')
+      // a line has a fill that never paints
+      if (!el.matches('line')) add(toHex(cs.fill), isText ? 'text' : 'fill', el)
+      if (parseFloat(cs.strokeWidth) > 0) add(toHex(cs.stroke), 'stroke', el)
+      continue
+    }
     const hasText = Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent?.trim())
     if (hasText) add(toHex(cs.color), 'text', el)
     add(toHex(cs.backgroundColor), 'bg', el)
@@ -136,13 +149,13 @@ export default function ColorInspector() {
   if (!on) return null
 
   const highlight = (e: Entry | null) => {
-    document.querySelectorAll(`.${HIT}`).forEach((el) => el.classList.remove(HIT))
-    e?.els.forEach((el) => el.classList.add(HIT))
+    document.querySelectorAll(`.${HIT}, .${HIT_SVG}`).forEach((el) => el.classList.remove(HIT, HIT_SVG))
+    e?.els.forEach((el) => el.classList.add(el instanceof SVGElement ? HIT_SVG : HIT))
   }
 
   return (
     <div data-color-inspector style={{ position: 'fixed', top: 8, right: 8, zIndex: 99999, font: '11px/1.4 ui-monospace, monospace', color: '#000' }}>
-      <style>{`.${HIT}{outline:2px solid #ff00ff!important;outline-offset:1px!important;background-image:linear-gradient(rgba(255,0,255,.18),rgba(255,0,255,.18))!important}`}</style>
+      <style>{`.${HIT}{outline:2px solid #ff00ff!important;outline-offset:1px!important;background-image:linear-gradient(rgba(255,0,255,.18),rgba(255,0,255,.18))!important}.${HIT_SVG}{filter:drop-shadow(0 0 1px #ff00ff) drop-shadow(0 0 2px #ff00ff)!important}`}</style>
       <button type="button" onClick={() => setOpen(!open)} style={{ float: 'right', position: 'relative', zIndex: 1, background: '#fff', border: '1px solid #000', borderBottom: open ? 'none' : '1px solid #000', marginBottom: open ? -1 : 0, padding: open ? '2px 6px 3px' : '2px 6px', cursor: 'pointer', font: 'inherit' }}>
         {open ? 'colours ×' : `colours (${entries.length})`}
       </button>
