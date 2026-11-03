@@ -90,12 +90,10 @@ export const agentV6: Project = {
       </>,
       media: (
         <Metrics
-          title="Legacy agent against new agent"
-          note="The same 100 prompts, built by each agent on a phone."
           metrics={[
-            { label: 'Median time to a widget', value: '49 s', was: '92 s' },
-            { label: 'Widgets that never render', value: '0%', was: '7%' },
-            { label: 'Cost for 100 widgets', value: '$0.47', was: '$25.34' },
+            { label: 'Widgets that never render', change: '100%', direction: 'fewer', detail: 'None of 100 failed to draw on the phone, against 7 of 100 for the legacy agent.' },
+            { label: 'Median time to a widget', change: '47%', direction: 'faster', detail: '49 s from prompt to widget, against 92 s for the legacy agent.' },
+            { label: 'Cost for 100 widgets', change: '54×', direction: 'cheaper', detail: '$0.47 for 100 widgets, against $25.34 for the legacy agent.' },
           ]}
         />
       ),
