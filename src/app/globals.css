@@ -414,7 +414,7 @@ body.wf-cursor-on * {
 :root {
     --shadow-media: 0 4px 12px -2px #0000000d, 0 1px 3px 0 #00000008;
     --squircle-radius: 12px;
-    --media-margin: 54px;
+    --media-margin: 56px;
 }
 
 /* Dots cycle (empty) → . → .. → ..., fixed-width container so "loading" never shifts */
@@ -1020,15 +1020,16 @@ body.wf-cursor-on * {
 .article {
     position: relative;
     min-height: 100dvh;
-    padding: 46px 43px 160px;
+    padding: 48px 44px 160px;
     font-size: 14px;
     line-height: 1.6;
     color: var(--color-body);
 }
-/* the back arrow, exactly where the Work frame puts it */
+/* the back arrow, level with the column's top padding; fixed gaps on the
+   article are multiples of 4px, and blocks sit one 1.6em line apart */
 .article-back {
     position: fixed;
-    top: 46px;
+    top: 48px;
     left: 40px;
     z-index: 2;
 }
@@ -1044,7 +1045,7 @@ body.wf-cursor-on * {
 }
 .article-chapter {
     margin-top: 96px;
-    scroll-margin-top: 46px;
+    scroll-margin-top: 48px;
 }
 .article-chapter h2,
 .article-sub h3,
@@ -1059,14 +1060,15 @@ body.wf-cursor-on * {
 .article-chapter h2,
 .article-sub h3 {
     color: var(--color-muted);
-    margin-bottom: 0.4em;
+    margin-bottom: 4px;
 }
 .article-sub {
     margin-top: 48px;
-    scroll-margin-top: 46px;
+    scroll-margin-top: 48px;
 }
+/* paragraphs and figures sit one line apart: 1.6em, the line height */
 .article-body > * + * {
-    margin-top: 1em;
+    margin-top: 1.6em;
 }
 .article-body code {
     font-family: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', 'Roboto Mono', monospace;
@@ -1143,7 +1145,7 @@ body.wf-cursor-on * {
     .article-chapters {
         position: fixed;
         top: 50%;
-        left: 43px;
+        left: 44px;
         transform: translateY(-50%);
         display: block;
         width: 220px;

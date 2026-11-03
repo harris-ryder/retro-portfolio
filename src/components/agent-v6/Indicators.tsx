@@ -18,12 +18,13 @@ export interface Indicator {
   tone: 'light' | 'mid' | 'dark'
 }
 
-const LEVELS = [14, 56, 98]
-const BAR_TOP = 132
+// every offset in the drawing is a multiple of 4px
+const LEVELS = [16, 60, 104]
+const BAR_TOP = 136
 const BAR = 56
 const D = 14
 // the bar's 0% and 100% sit this far in, so a diamond at either end stays inside
-const INSET = 22
+const INSET = 24
 
 export function Indicators({ indicators, label }: { indicators: Indicator[]; label: string }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -50,9 +51,9 @@ export function Indicators({ indicators, label }: { indicators: Indicator[]; lab
           const top = LEVELS[ind.level]
           return (
             <g key={ind.change}>
-              <line x1={cx} x2={cx} y1={top - 10} y2={mid - D} className={`indicators-lead indicators-lead-${ind.tone}`} />
-              <text x={cx + 7} y={top} className="indicators-change">{ind.change.toUpperCase()}</text>
-              <text x={cx + 7} y={top + 15} className="indicators-detail">{ind.detail.toUpperCase()}</text>
+              <line x1={cx} x2={cx} y1={top - 12} y2={mid - D} className={`indicators-lead indicators-lead-${ind.tone}`} />
+              <text x={cx + 8} y={top} className="indicators-change">{ind.change.toUpperCase()}</text>
+              <text x={cx + 8} y={top + 16} className="indicators-detail">{ind.detail.toUpperCase()}</text>
               <rect
                 x={cx - D / Math.SQRT2} y={mid - D / Math.SQRT2}
                 width={D * Math.SQRT2} height={D * Math.SQRT2}
@@ -64,8 +65,8 @@ export function Indicators({ indicators, label }: { indicators: Indicator[]; lab
         })}
 
         {/* the scale ends sit under the bar's ends */}
-        <text x={0} y={height - 6} className="indicators-scale">0%</text>
-        <text x={width} y={height - 6} textAnchor="end" className="indicators-scale">100%</text>
+        <text x={0} y={height - 4} className="indicators-scale">0%</text>
+        <text x={width} y={height - 4} textAnchor="end" className="indicators-scale">100%</text>
       </svg>
     </div>
   )
