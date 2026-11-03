@@ -7,8 +7,8 @@
     --color-*: initial;
     --color-body: #323232;   /* running text */
     --color-muted: #626262;  /* labels, captions, breadcrumbs, index numbers */
-    --color-faint: #b4b4b4;  /* chapter list, article subheads, dim ascii */
-    --color-line: #e3e3e3;   /* hairlines, media edges, rails */
+    --color-faint: #b4b4b4;  /* chapter list, article subheads, dim ascii, every container's border */
+    --color-line: #e3e3e3;   /* the video bar's rail */
     --color-fill: #efefef;   /* the one grey fill (ascii highlights, phone pill) */
     --color-page: #ffffff;
     --color-link: #0000ee;
@@ -185,7 +185,7 @@
     transition: outline-color 0.25s;
 }
 .frame-article .media-wrapper.media-skeleton {
-    outline-color: var(--color-line);
+    outline-color: var(--color-faint);
 }
 /* a video's corners are rounded; one in a phone render takes the
    screen's corners instead */
@@ -452,7 +452,7 @@ body.wf-cursor-on * {
     overflow: hidden;
     width: 100%;
     border-radius: var(--squircle-radius);
-    border: 1px solid var(--color-line);
+    border: 1px solid var(--color-faint);
     box-shadow: var(--shadow-media);
     transition: box-shadow 0.25s;
     margin-top: var(--media-margin);
@@ -1076,7 +1076,7 @@ body.wf-cursor-on * {
     margin: 1.6em 0 0;
 }
 .article-card {
-    border: 1px solid var(--color-line);
+    border: 1px solid var(--color-faint);
     background: var(--color-page);
     padding: 20px;
     overflow: hidden;

@@ -42,7 +42,7 @@ export function DemoFrame({
   return (
     <figure
       ref={figureRef}
-      className="wf-demo relative my-[var(--media-margin)] overflow-hidden rounded-[12px] border border-line bg-page shadow-[var(--shadow-media)] select-none"
+      className="wf-demo relative my-[var(--media-margin)] overflow-hidden rounded-[12px] border border-faint bg-page shadow-[var(--shadow-media)] select-none"
       // lets the sectioned article size the demo by its aspect ratio
       style={{ '--ar': designWidth / designHeight } as React.CSSProperties}
     >
